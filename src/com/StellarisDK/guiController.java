@@ -63,6 +63,11 @@ public class guiController extends AnchorPane {
     protected void compEditor(){
         compUI = new CompUI();
         mainWindow.getChildren().add(compUI);
+        try{
+            parseCompUtil(path.getPath());
+        } catch(IOException e){
+
+        }
     }
 
     @FXML

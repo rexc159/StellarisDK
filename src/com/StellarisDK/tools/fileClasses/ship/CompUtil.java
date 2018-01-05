@@ -12,30 +12,22 @@ public class CompUtil extends Component_Template {
     public CompUtil(){
     }
 
-    public CompUtil(String data){
-        Pattern p = Pattern.compile("");   // the pattern to search for
-        Matcher m = p.matcher(data);
+    public CompUtil(String input){
 
-    }
+        Matcher kv_match = kv.matcher(input);
+        Matcher cv_match = cv.matcher(input);
 
-    public String getModifier() {
-        return modifier;
-    }
+        while(kv_match.find()){
+            System.out.println(kv_match.group(1)+":"+kv_match.group(2));
+        }
 
-    public void setModifier(String modifier) {
-        this.modifier = modifier;
-    }
-
-    public weight_modifier getWeight() {
-        return weight;
-    }
-
-    public void setWeight(weight_modifier weight) {
-        this.weight = weight;
+        while(cv_match.find()){
+            System.out.println(cv_match.group());
+        }
     }
 
     @Override
     public String toString() {
-        return getKey();
+        return data.get("key").toString();
     }
 }
