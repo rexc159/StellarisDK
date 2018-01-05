@@ -14,7 +14,7 @@ public class ModDescUI extends AbstractUI {
 
     private Label list[] = new Label[6];
 
-    private ModDescriptor md = new ModDescriptor();
+    public ModDescriptor md = new ModDescriptor();
 
     public ModDescUI() {
         init();
@@ -38,21 +38,21 @@ public class ModDescUI extends AbstractUI {
             System.out.println(e.getStackTrace());
         }
 
-        this.keys[0].setText(md.getName());
-        this.keys[1].setText(md.getPath());
-        this.keys[2].setText(md.getReplacePath());
-        this.keys[3].setText(md.getPicture());
-        this.keys[4].setText(md.getRemoteFileID());
-        this.keys[5].setText(md.getVersion());
+//        this.keys[0].setText(md.getName());
+//        this.keys[1].setText(md.getPath());
+//        this.keys[2].setText(md.getReplacePath());
+//        this.keys[3].setText(md.getPicture());
+//        this.keys[4].setText(md.getRemoteFileID());
+//        this.keys[5].setText(md.getVersion());
     }
 
     public ModDescriptor save() {
-        md.setName(this.keys[0].getText());
-        md.setPath(this.keys[1].getText());
-        md.setReplacePath(this.keys[2].getText());
-        md.setPicture(this.keys[3].getText());
-        md.setRemoteFileID(this.keys[4].getText());
-        md.setVersion(this.keys[5].getText());
+//        md.setName(this.keys[0].getText());
+//        md.setPath(this.keys[1].getText());
+//        md.setReplacePath(this.keys[2].getText());
+//        md.setPicture(this.keys[3].getText());
+//        md.setRemoteFileID(this.keys[4].getText());
+//        md.setVersion(this.keys[5].getText());
         return md;
     }
 }

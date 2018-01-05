@@ -1,9 +1,5 @@
 package com.StellarisDK.tools.fileClasses.ship;
 
-import com.StellarisDK.tools.fileClasses.technology.technology;
-
-import com.StellarisDK.tools.fileClasses.gfx.Icon;
-
 import java.util.HashMap;
 import java.util.regex.Pattern;
 

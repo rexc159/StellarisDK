@@ -1,150 +1,68 @@
 package com.StellarisDK.tools.fileClasses;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ModDescriptor {
-    private String name;
-    private String path;
-    private LinkedList<String> dependencies = new LinkedList<>();
-    private String replacePath;
-    private LinkedList<String> tags = new LinkedList<>();
-    private String picture;
-    private String remoteFileID;
-    private String version;
+    private HashMap<String, Object> data = new HashMap<>();
+    private String keys[] = {"name", "path", "archive", "dependencies", "tags", "picture", "remote_file_id", "supported_version"};
 
-    public String getName() {
-        return name;
+    public ModDescriptor() {
+        for (String key : keys) {
+            data.put(key, null);
+        }
     }
 
-    public String getPath() {
-        return path;
-    }
+    // Pattern matches for single value variable
+    // i.e. key, size, power
+    protected Pattern kv = Pattern.compile("(\\w+)=([^{].*)");
 
-    public LinkedList<String> getDependencies() {
-        return dependencies;
-    }
-
-    public String getReplacePath() {
-        return replacePath;
-    }
-
-    public LinkedList<String> getTags() {
-        return tags;
-    }
-
-    public String getPicture() {
-        return picture;
-    }
-
-    public String getRemoteFileID() {
-        return remoteFileID;
-    }
-
-    public String getVersion() {
-        return version;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    public void setDependencies(LinkedList<String> dependencies) {
-        this.dependencies = dependencies;
-    }
-
-    public void setReplacePath(String replacePath) {
-        this.replacePath = replacePath;
-    }
-
-    public void setTags(LinkedList<String> tags) {
-        this.tags = tags;
-    }
-
-    public void setPicture(String picture) {
-        this.picture = picture;
-    }
-
-    public void setRemoteFileID(String remoteFileID) {
-        this.remoteFileID = remoteFileID;
-    }
-
-    public void setVersion(String version) {
-        this.version = version;
-    }
+    // Pattern matches for multi value variables
+    // i.e. modifier, prerequisites
+    protected Pattern cv = Pattern.compile("(?s)(?m)(\\w+)=\\{(.+?)\\}");
 
     public void load(String path) throws IOException {
-        File file = new File(path);
-        Scanner scan = new Scanner(file);
-        name = scan.nextLine().split("=\"")[1].replaceAll("\"", "");
-        String temp = scan.nextLine();
-        if (temp.contains("path")) {
-            this.path = temp.split("=\"")[1].replaceAll("\"", "");
-            temp = scan.nextLine();
+        String input = new String(Files.readAllBytes(Paths.get(path)));
+
+        Matcher kv_match = kv.matcher(input);
+        Matcher cv_match = cv.matcher(input);
+
+        while (kv_match.find()) {
+            data.replace(kv_match.group(1), kv_match.group(2).replaceAll("\"", ""));
         }
 
-        if (temp.contains("dependencies")) {
-            do {
-                dependencies.add(scan.nextLine().replaceAll("\"", ""));
-                temp = scan.nextLine();
-            } while (!temp.contains("}"));
-            temp = scan.nextLine();
-        }
-
-        if (temp.contains("tags")) {
-            do {
-                tags.add(scan.nextLine().replaceAll("[\t\"]", ""));
-                temp = scan.nextLine();
-            } while (!temp.contains("}"));
-        }
-
-        while (scan.hasNextLine()) {
-            temp = scan.nextLine();
-            if (temp.contains("replacePath")) {
-                replacePath = temp.split("=\"")[1].replaceAll("\"", "");
-            } else if (temp.contains("picture")) {
-                picture = temp.split("=\"")[1].replaceAll("\"", "");
-            } else if (temp.contains("remoteFileID")) {
-                remoteFileID = temp.split("=\"")[1].replaceAll("\"", "");
-            } else if (temp.contains("supported_version")) {
-                version = temp.split("=\"")[1].replaceAll("\"", "");
-            }
+        while (cv_match.find()) {
+            LinkedList<String> temp = new LinkedList<String>() {
+                @Override
+                public String toString() {
+                    String out = "{\n";
+                    for (String i : this) {
+                        out += "\t\""+i.trim() +"\"\n";
+                    }
+                    System.out.println(out);
+                    return out + "}\n";
+                }
+            };
+            Collections.addAll(temp, cv_match.group(2).replaceAll("[\"\t]","").trim().split("\n",0));
+            data.replace(cv_match.group(1), temp);
         }
     }
 
     @Override
     public String toString() {
-        return name;
-    }
-
-    public String output() {
-        System.out.println("name=\"" + name + "\"");
-        System.out.println("path=\"" + path + "\"");
-        if (dependencies.size() != 0) {
-            System.out.println("dependencies={");
-            for (String dependency : dependencies) {
-                System.out.println("\t\"" + dependency + "\"");
-            }
-            System.out.println("}");
+        String out = "";
+        for (String key : keys) {
+            if (data.get(key) instanceof String)
+                out += key + "=\"" + data.get(key).toString() + "\"\n";
+            else if(data.get(key) instanceof LinkedList)
+                out += key + "=" + data.get(key).toString();
         }
-        System.out.println("tags={");
-        for (String tag : tags) {
-            System.out.println("\t\"" + tag + "\"");
-        }
-        System.out.println("}");
-        if(picture!=null){
-            System.out.println("picture=\"" + picture + "\"");
-        }
-        if(remoteFileID !=null){
-            System.out.println("remoteFileID=\"" + remoteFileID + "\"");
-        }
-        System.out.println("supported_version=\"" + version + "\"");
-        return "";
+        return out;
     }
 }

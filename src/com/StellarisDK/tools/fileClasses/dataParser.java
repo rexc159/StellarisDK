@@ -1,6 +1,5 @@
 package com.StellarisDK.tools.fileClasses;
 
-import com.StellarisDK.tools.fileClasses.eventGroup.Event;
 import com.StellarisDK.tools.fileClasses.ship.CompUtil;
 
 import java.io.File;
@@ -19,6 +18,17 @@ public class dataParser {
     // ^\t\w+ = [^{^\n]+ - For inlines
     // ^\t\w+ = {[^}]+} - "Group" lines
 
+    public static void parseData(String path) throws IOException {
+        Scanner scan = new Scanner(new File(path));
+        String temp = "";
+        while(temp != null){
+            temp = scan.findWithinHorizon(constant,0);
+            System.out.println(temp);
+        }
+        String test = scan.findWithinHorizon(pattern, 0);
+        new CompUtil(test);
+    }
+
     public static LinkedList<CompUtil> parseCompUtil(String path) throws IOException {
         LinkedList<CompUtil> out = new LinkedList<>();
         Scanner scan = new Scanner(new File(path));
@@ -34,25 +44,5 @@ public class dataParser {
         String test = scan.findWithinHorizon(pattern, 0);
         out.add(new CompUtil(test));
         return out;
-    }
-
-    public static Event parseEvent(String path) throws IOException {
-        String id;
-        String title;
-        String desc;
-        String gfx;
-        String sound;
-        String location;
-        String trigger;
-        String effect;
-        String options;
-
-        Scanner scan = new Scanner(new File(path));
-        while (scan.hasNextLine()) {
-            System.out.println(scan.nextLine());
-//            scan.nextLine();
-        }
-
-        return new Event();
     }
 }

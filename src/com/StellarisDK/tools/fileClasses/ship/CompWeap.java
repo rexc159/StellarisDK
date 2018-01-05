@@ -1,8 +1,6 @@
 package com.StellarisDK.tools.fileClasses.ship;
 
-import java.util.HashMap;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class CompWeap extends Component_Template{
     private String keys[] = {"key", "size", "icon", "icon_frame", "power", "cost", "prerequisites", "component_set"};

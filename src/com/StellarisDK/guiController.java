@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 
 import static com.StellarisDK.tools.fileClasses.dataParser.parseCompUtil;
+import static com.StellarisDK.tools.fileClasses.dataParser.parseData;
 
 public class guiController extends AnchorPane {
     private Stage stage;
@@ -64,7 +65,7 @@ public class guiController extends AnchorPane {
         compUI = new CompUI();
         mainWindow.getChildren().add(compUI);
         try{
-            parseCompUtil(path.getPath());
+            parseData(path.getPath());
         } catch(IOException e){
 
         }
@@ -90,13 +91,7 @@ public class guiController extends AnchorPane {
         if (modPath != null){
             modDescUI.load(modPath.getPath());
             System.out.println(modPath.getPath());
-            ModDescriptor md = new ModDescriptor();
-            try{
-                md.load(modPath.getPath());
-                md.output();
-            } catch(IOException e){
-                System.out.println(e.getStackTrace());
-            }
+            System.out.println(modDescUI.md);
         }
     }
 
