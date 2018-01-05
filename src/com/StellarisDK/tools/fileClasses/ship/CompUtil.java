@@ -14,7 +14,7 @@ public class CompUtil extends Component_Template {
         Matcher int_match;
 
         while(kv_match.find()){
-            System.out.println(kv_match.group(1)+":"+kv_match.group(2));
+            System.out.println(kv_match.group(1)+":"+kv_match.group(2).replaceAll("\"",""));
         }
 
         while(cv_match.find()){

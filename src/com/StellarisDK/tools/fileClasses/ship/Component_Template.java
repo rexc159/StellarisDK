@@ -23,5 +23,5 @@ public abstract class Component_Template {
 
     // Pattern matches for variables within cv
     // i.e. ship_shield_hp_add...
-    protected Pattern internal = Pattern.compile("(\\w+)( . )?([^\"\\n ]*)|(#.+)");
+    protected Pattern internal = Pattern.compile("(\\w+)( . )?([^\"\\n\\{ ]*)|(#.+)");
 }
