@@ -1,13 +1,8 @@
 package com.StellarisDK.tools.fileClasses.ship;
 
-import com.StellarisDK.tools.fileClasses.modifier.weight_modifier;
-
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class CompUtil extends Component_Template {
-    private String modifier;
-    private weight_modifier weight;
 
     public CompUtil(){
     }
@@ -16,14 +11,20 @@ public class CompUtil extends Component_Template {
 
         Matcher kv_match = kv.matcher(input);
         Matcher cv_match = cv.matcher(input);
+        Matcher int_match;
 
         while(kv_match.find()){
             System.out.println(kv_match.group(1)+":"+kv_match.group(2));
         }
 
         while(cv_match.find()){
-            System.out.println(cv_match.group());
+            System.out.println(cv_match.group(1)+":");
+            int_match = internal.matcher(cv_match.group(2));
+            while(int_match.find()){
+                System.out.println("\t"+int_match.group(1)+":"+int_match.group(3));
+            }
         }
+        System.out.println();
     }
 
     @Override
