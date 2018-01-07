@@ -27,10 +27,8 @@ public abstract class AbstractUI extends Region {
         });
 
         titleBar.setOnMouseDragged(event -> {
-            if (event.getScreenX() + mouse[0] > -1 && event.getScreenY() + mouse[1] > -1) {
-                setLayoutX(event.getScreenX() + mouse[0]);
-                setLayoutY(event.getScreenY() + mouse[1]);
-            }
+            setLayoutX(Math.max(event.getScreenX() + mouse[0], 0));
+            setLayoutY(Math.max(event.getScreenY() + mouse[1], 0));
         });
 
         this.setOnMouseClicked(event -> {
