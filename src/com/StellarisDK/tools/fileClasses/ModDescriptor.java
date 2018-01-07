@@ -13,12 +13,6 @@ public class ModDescriptor {
     private HashMap<String, Object> data = new HashMap<>();
     private String keys[] = {"name", "path", "archive", "dependencies", "tags", "picture", "remote_file_id", "supported_version"};
 
-    public ModDescriptor() {
-        for (String key : keys) {
-            data.put(key, null);
-        }
-    }
-
     // Pattern matches for single value variable
     // i.e. key, size, power
     protected Pattern kv = Pattern.compile("(\\w+)=([^{].*)");
@@ -26,6 +20,16 @@ public class ModDescriptor {
     // Pattern matches for multi value variables
     // i.e. modifier, prerequisites
     protected Pattern cv = Pattern.compile("(?s)(?m)(\\w+)=\\{(.+?)\\}");
+
+    public ModDescriptor() {
+        for (String key : keys) {
+            data.put(key, null);
+        }
+    }
+
+    public String[] getKeys() {
+        return keys;
+    }
 
     public void load(String path) throws IOException {
         String input = new String(Files.readAllBytes(Paths.get(path)));
@@ -45,7 +49,6 @@ public class ModDescriptor {
                     for (String i : this) {
                         out += "\t\""+i.trim() +"\"\n";
                     }
-                    System.out.println(out);
                     return out + "}\n";
                 }
             };
@@ -58,10 +61,12 @@ public class ModDescriptor {
     public String toString() {
         String out = "";
         for (String key : keys) {
-            if (data.get(key) instanceof String)
-                out += key + "=\"" + data.get(key).toString() + "\"\n";
-            else if(data.get(key) instanceof LinkedList)
-                out += key + "=" + data.get(key).toString();
+            if(data.get(key)!=null){
+                if (data.get(key) instanceof String)
+                    out += key + "=\"" + data.get(key).toString() + "\"\n";
+                else
+                    out += key + "=" + data.get(key).toString();
+            }
         }
         return out;
     }

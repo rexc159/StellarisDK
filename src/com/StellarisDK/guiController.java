@@ -1,6 +1,5 @@
 package com.StellarisDK;
 
-import com.StellarisDK.tools.fileClasses.ModDescriptor;
 import com.StellarisDK.tools.gui.CompUI;
 import com.StellarisDK.tools.gui.EventUI;
 import com.StellarisDK.tools.gui.ModDescUI;
@@ -13,9 +12,9 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 
-import static com.StellarisDK.tools.fileClasses.dataParser.parseCompUtil;
 import static com.StellarisDK.tools.fileClasses.dataParser.parseData;
 
 public class guiController extends AnchorPane {
@@ -79,7 +78,26 @@ public class guiController extends AnchorPane {
 
     @FXML
     protected void mdEditor(){
-        mainWindow.getChildren().add(modDescUI);
+        if(!mainWindow.getChildren().contains(modDescUI))
+            mainWindow.getChildren().add(modDescUI);
+        else
+            modDescUI.load(modPath.getPath());
+    }
+
+    @FXML
+    protected void export(){
+        FileChooser fc = new FileChooser();
+        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Mod Descriptors (*.mod)","*.mod"));
+        File mod = fc.showSaveDialog(stage);
+        if (mod != null) {
+            try {
+                FileWriter fw = new FileWriter(mod);
+                fw.write(modDescUI.md.toString());
+                fw.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @FXML
@@ -91,7 +109,6 @@ public class guiController extends AnchorPane {
         if (modPath != null){
             modDescUI.load(modPath.getPath());
             System.out.println(modPath.getPath());
-            System.out.println(modDescUI.md);
         }
     }
 

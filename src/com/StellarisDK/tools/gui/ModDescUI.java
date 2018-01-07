@@ -3,7 +3,6 @@ package com.StellarisDK.tools.gui;
 import com.StellarisDK.tools.fileClasses.ModDescriptor;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
@@ -14,11 +13,13 @@ public class ModDescUI extends AbstractUI {
 
     private Label list[] = new Label[6];
 
-    public ModDescriptor md = new ModDescriptor();
+    public ModDescriptor md;
 
     public ModDescUI() {
+        md = new ModDescriptor();
+        key_labels = md.getKeys();
         init();
-        String labels[] = {"Name: ", "Path: ", "Replace Path: ", "Remote File ID: ", "Picture: ", "GAme Version: "};
+        String labels[] = {"Name: ", "Path: ", "Replace Path: ", "Remote File ID: ", "Picture: ", "Game Version: "};
         VBox fp = new VBox();
         title.setText("Mod Descriptor");
         for (int i = 0; i < 6; i++) {
@@ -35,7 +36,7 @@ public class ModDescUI extends AbstractUI {
         try {
             md.load(path);
         } catch (IOException e) {
-            System.out.println(e.getStackTrace());
+            e.printStackTrace();
         }
 
 //        this.keys[0].setText(md.getName());
@@ -47,12 +48,7 @@ public class ModDescUI extends AbstractUI {
     }
 
     public ModDescriptor save() {
-//        md.setName(this.keys[0].getText());
-//        md.setPath(this.keys[1].getText());
-//        md.setReplacePath(this.keys[2].getText());
-//        md.setPicture(this.keys[3].getText());
-//        md.setRemoteFileID(this.keys[4].getText());
-//        md.setVersion(this.keys[5].getText());
+        md.getKeys();
         return md;
     }
 }

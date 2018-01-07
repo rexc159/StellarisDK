@@ -1,13 +1,20 @@
-package com.StellarisDK.tools.fileClasses.ship;
+package com.StellarisDK.tools.fileClasses.Component;
 
 import java.util.regex.Matcher;
 
-public class CompUtil extends Component_Template {
+public class Utility extends Component_Template {
+    protected String keys[] = {"key", "hidden", "size", "icon", "icon_frame", "power", "cost",
+            "ftl", "armor_value",
+            "ship_modifier", "modifier", "ai_weight", "prerequisites",
+            "class_restriction", "component_set"};
 
-    public CompUtil(){
+    public Utility(){
+        for (String key : keys) {
+            data.put(key, null);
+        }
     }
 
-    public CompUtil(String input){
+    public Utility(String input){
 
         Matcher kv_match = kv.matcher(input);
         Matcher cv_match = cv.matcher(input);

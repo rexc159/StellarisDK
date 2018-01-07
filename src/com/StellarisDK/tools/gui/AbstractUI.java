@@ -12,6 +12,8 @@ public abstract class AbstractUI extends Region {
     protected BorderPane window = new BorderPane();
     protected Label title = new Label();
 
+    protected String key_labels[];
+
     public void init() {
         double mouse[] = new double[2];
         Button close = new Button("x");

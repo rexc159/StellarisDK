@@ -1,14 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.SeparatorMenuItem?>
-<?import javafx.scene.control.SplitPane?>
-<?import javafx.scene.control.TreeView?>
-<?import javafx.scene.layout.AnchorPane?>
-
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" type="AnchorPane" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <SplitPane dividerPositions="0.5" layoutY="32.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="32.0">
@@ -17,8 +10,8 @@
           <AnchorPane fx:id="mainWindow" minHeight="0.0">
                <children>
                   <Button layoutX="231.0" layoutY="321.0" mnemonicParsing="false" onAction="#compEditor" text="New" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0" />
-                  <Button layoutX="181.0" layoutY="321.0" mnemonicParsing="false" onAction="#eventEditor" text="New" />
-                  <Button layoutX="131.0" layoutY="321.0" mnemonicParsing="false" onAction="#mdEditor" text="New" />
+                  <Button layoutX="181.0" layoutY="321.0" mnemonicParsing="false" onAction="#eventEditor" text="New" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="114.0" />
+                  <Button layoutX="181.0" layoutY="321.0" mnemonicParsing="false" onAction="#mdEditor" text="New" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="64.0" />
                </children>
             </AnchorPane>
         </items>
@@ -33,7 +26,7 @@
                   <MenuItem mnemonicParsing="false" onAction="#openMod" text="Open Mod" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" text="Save" />
-                  <MenuItem mnemonicParsing="false" text="Export..." />
+                  <MenuItem mnemonicParsing="false" onAction="#export" text="Export..." />
               <MenuItem mnemonicParsing="false" text="Close" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" text="Settings" />

@@ -1,4 +1,4 @@
-package com.StellarisDK.tools.fileClasses.ship;
+package com.StellarisDK.tools.fileClasses.Component;
 
 import java.util.HashMap;
 import java.util.regex.Pattern;
@@ -20,4 +20,5 @@ public abstract class Component_Template {
     // Pattern matches for variables within cv
     // i.e. ship_shield_hp_add...
     protected Pattern internal = Pattern.compile("(\\w+)( . )?([^\"\\n\\{ ]*)|(#.+)");
+
 }
