@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 
 public class dataParser {
 
-    private final static Pattern pattern = Pattern.compile("(?s)(?m)^\\w+\\s=\\s\\{.+?\\n\\}\\n?");
+    private final static Pattern pattern = Pattern.compile("(?s)(?m)(^\\w+)\\s=\\s\\{(.+?)\\n\\}\\n?");
     private final static Pattern constants = Pattern.compile("(\\@\\w+) = (.+)");
 
     // ^\w+\s=\s\{.+?\n\}\n? - RegEx for matching files ** Remember DOTALL & MULTILINE

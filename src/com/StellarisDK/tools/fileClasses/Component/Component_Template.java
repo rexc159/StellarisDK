@@ -15,7 +15,7 @@ public abstract class Component_Template {
 
     // Pattern matches for multi value variables
     // i.e. modifier, prerequisites
-    protected Pattern cv = Pattern.compile("(?s)(?m)^\\t(\\w+) = \\{(.+?)(^\\t\\}|[^\\t]})");
+    protected Pattern cv = Pattern.compile("(?s)(?m)^\\t(\\w+) = \\{(.+?)(^[^\\n]\\}|})");
 
     // Pattern matches for variables within cv
     // i.e. ship_shield_hp_add...
