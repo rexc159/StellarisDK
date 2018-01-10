@@ -31,6 +31,14 @@ public class ModDescriptor {
         return keys;
     }
 
+    public Object getValue(String key){
+        return data.get(key);
+    }
+
+    public void setValue(String key, String value){
+        data.replace(key, value);
+    }
+
     public void load(String path) throws IOException {
         String input = new String(Files.readAllBytes(Paths.get(path)));
 
@@ -62,10 +70,13 @@ public class ModDescriptor {
         String out = "";
         for (String key : keys) {
             if(data.get(key)!=null){
-                if (data.get(key) instanceof String)
-                    out += key + "=\"" + data.get(key).toString() + "\"\n";
-                else
+                if (data.get(key) instanceof String){
+                    if(((String) data.get(key)).length() != 0)
+                        out += key + "=\"" + data.get(key).toString() + "\"\n";
+                }
+                else {
                     out += key + "=" + data.get(key).toString();
+                }
             }
         }
         return out;
