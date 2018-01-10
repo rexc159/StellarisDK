@@ -1,5 +1,6 @@
 package com.StellarisDK;
 
+import com.StellarisDK.tools.fileClasses.Locale;
 import com.StellarisDK.tools.gui.CompUI;
 import com.StellarisDK.tools.gui.EventUI;
 import com.StellarisDK.tools.gui.ModDescUI;
@@ -60,6 +61,17 @@ public class guiController extends AnchorPane {
     }
 
     @FXML
+    protected void openLocale() {
+        FileChooser fc = new FileChooser();
+        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Locale files (*.yml)","*.yml"));
+        fc.setTitle("Open File");
+        path = fc.showOpenDialog(stage);
+        if (path != null){
+            System.out.println(path.getPath());
+        }
+    }
+
+    @FXML
     protected void compEditor(){
         compUI = new CompUI();
         mainWindow.getChildren().add(compUI);
@@ -74,6 +86,15 @@ public class guiController extends AnchorPane {
     protected void eventEditor(){
         eventUI = new EventUI();
         mainWindow.getChildren().add(eventUI);
+    }
+
+    @FXML
+    protected void localeTest(){
+        try{
+            System.out.println(new Locale(path.getPath()));
+        }catch (IOException e){
+            e.printStackTrace();
+        }
     }
 
     @FXML

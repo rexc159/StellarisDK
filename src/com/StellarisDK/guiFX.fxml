@@ -12,6 +12,7 @@
                   <Button layoutX="231.0" layoutY="321.0" mnemonicParsing="false" onAction="#compEditor" text="New" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0" />
                   <Button layoutX="181.0" layoutY="321.0" mnemonicParsing="false" onAction="#eventEditor" text="New" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="114.0" />
                   <Button layoutX="181.0" layoutY="321.0" mnemonicParsing="false" onAction="#mdEditor" text="New" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="64.0" />
+                  <Button layoutX="216.0" layoutY="290.0" mnemonicParsing="false" onAction="#localeTest" text="Button" AnchorPane.bottomAnchor="45.0" AnchorPane.rightAnchor="14.0" />
                </children>
             </AnchorPane>
         </items>
@@ -23,6 +24,7 @@
                   <MenuItem mnemonicParsing="false" text="New Mod" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" onAction="#openFile" text="Open File" />
+                  <MenuItem mnemonicParsing="false" onAction="#openLocale" text="Open Locale" />
                   <MenuItem mnemonicParsing="false" onAction="#openMod" text="Open Mod" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" text="Save" />
