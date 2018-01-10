@@ -8,6 +8,8 @@ import java.util.LinkedList;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
+import static com.StellarisDK.tools.fileClasses.recursiveParser.parse;
+
 public class dataParser {
 
     private final static Pattern pattern = Pattern.compile("(?s)(?m)(^\\w+)\\s=\\s\\{(.+?)\\n\\}\\n?");
@@ -27,7 +29,8 @@ public class dataParser {
         }
         while(scan.hasNext()){
             String test = scan.findWithinHorizon(pattern, 0);
-            new Utility(test);
+            parse(test);
+//            new Utility(test);
         }
     }
 
