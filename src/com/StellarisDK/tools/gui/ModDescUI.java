@@ -9,6 +9,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ModDescUI extends AbstractUI {
 
@@ -51,9 +54,18 @@ public class ModDescUI extends AbstractUI {
     public void load(String path) {
         try {
             md.load(path);
-            for (TextField key: keys) {
-                if(md.getValue(key.getId()) != null)
-                    key.setText(md.getValue(key.getId()).toString());
+            for (TextField key : keys) {
+                if(md.getValue(key.getId()) != null){
+                    if(md.getValue(key.getId()) instanceof LinkedList){
+                        String temp = "";
+                        for(String tag: (LinkedList<String>)md.getValue(key.getId())){
+                            temp += tag+"\t";
+                        }
+                        key.setText(temp.trim().replaceAll("\t",", "));
+                    }else{
+                        key.setText(md.getValue(key.getId()).toString());
+                    }
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -61,8 +73,26 @@ public class ModDescUI extends AbstractUI {
     }
 
     public ModDescriptor save() {
-        for (TextField key: keys) {
-            md.setValue(key.getId(), key.getText());
+        for (TextField key : keys) {
+            if(key.getId().equals("tags")){
+                LinkedList<String> temp = new LinkedList<String>() {
+                    @Override
+                    public String toString() {
+                        String out = "{\n";
+                        for (String i : this) {
+                            out += "\t\""+i.trim() +"\"\n";
+                        }
+                        return out + "}\n";
+                    }
+                };
+                Matcher match = Pattern.compile("[^,]+").matcher(key.getText());
+                while(match.find()){
+                    temp.add(match.group());
+                }
+                md.setValue(key.getId(), temp);
+            }else{
+                md.setValue(key.getId(), key.getText());
+            }
         }
         return md;
     }

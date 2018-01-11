@@ -35,7 +35,7 @@ public class ModDescriptor {
         return data.get(key);
     }
 
-    public void setValue(String key, String value){
+    public void setValue(String key, Object value){
         data.replace(key, value);
     }
 
