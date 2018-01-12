@@ -7,9 +7,10 @@ public class recursiveParser {
 
 //    private final static Pattern object = Pattern.compile("(?s)(?m)(^\\w+) = \\{(.+?)\\n\\}\\n?");
 //    private final static Pattern constant = Pattern.compile("(\\@\\w+) = (.+)");
-    private final static Pattern type1 = Pattern.compile("(?m)^\\t(\\w+) = \\{\\s*(.+?)\\}");
-    private final static Pattern type2 = Pattern.compile("(?s)(?m)^\\t(\\w+) = \\{[\\r\\n](.+?)^\t\\}");
-    private final static Pattern kv = Pattern.compile("(?m)^\\t?(\\w+) . ([^\\{#\\n]+)(#.+)*");
+    private static final Pattern type1 = Pattern.compile("(?m)^\\t(\\w+) = \\{\\s*(.+?)\\}");
+    private static final Pattern type1_sub = Pattern.compile("(?m)(\\w+) = ([^ \\n]+)|(\\w+)");
+    private static final Pattern type2 = Pattern.compile("(?s)(?m)^\\t(\\w+) = \\{[\\r\\n](.+?)^\t\\}");
+    private static final Pattern kv = Pattern.compile("(?m)^\\t?(\\w+) . ([^\\{#\\n]+)(#.+)*");
 
     public static void parse(String input){
 
