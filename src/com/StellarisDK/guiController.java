@@ -6,7 +6,6 @@ import com.StellarisDK.tools.gui.EventUI;
 import com.StellarisDK.tools.gui.ModDescUI;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.TextField;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
@@ -27,8 +26,7 @@ public class guiController extends AnchorPane {
     private EventUI eventUI;
     private ModDescUI modDescUI = new ModDescUI();
 
-    @FXML private TreeView objectList;
-    @FXML private TextField directory;
+    @FXML private TreeView itemView;
 
     @FXML private AnchorPane mainWindow;
 
@@ -36,7 +34,6 @@ public class guiController extends AnchorPane {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("guiFX.fxml"));
         loader.setRoot(this);
         loader.setController(this);
-
 
         try {
             loader.load();
@@ -68,6 +65,23 @@ public class guiController extends AnchorPane {
         path = fc.showOpenDialog(stage);
         if (path != null){
             System.out.println(path.getPath());
+        }
+    }
+
+    @FXML
+    protected void openMod() {
+        FileChooser fc = new FileChooser();
+        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Mod Descriptors (*.mod)","*.mod"));
+        fc.setTitle("Select Mod Descriptor");
+        modPath = fc.showOpenDialog(stage);
+        if (modPath != null){
+            modDescUI.load(modPath.getPath());
+            System.out.println(modDescUI.md.getValue("path"));
+            if(modDescUI.md.getValue("path") == null){
+                System.out.println(modDescUI.md.getValue("archive"));
+            }
+            System.out.println(modPath.getParent());
+//            System.out.println(modPath.getPath());
         }
     }
 
@@ -118,18 +132,6 @@ public class guiController extends AnchorPane {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-    }
-
-    @FXML
-    protected void openMod() {
-        FileChooser fc = new FileChooser();
-        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Mod Descriptors (*.mod)","*.mod"));
-        fc.setTitle("Select Mod Descriptor");
-        modPath = fc.showOpenDialog(stage);
-        if (modPath != null){
-            modDescUI.load(modPath.getPath());
-            System.out.println(modPath.getPath());
         }
     }
 
