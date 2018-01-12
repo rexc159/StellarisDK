@@ -1,5 +1,6 @@
 package com.StellarisDK.tools.gui;
 
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -7,12 +8,23 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 
+import java.io.IOException;
+
 public abstract class AbstractUI extends Region {
 
     protected BorderPane window = new BorderPane();
     protected Label title = new Label();
 
     protected String key_labels[];
+
+    public void test_init(){
+        try{
+            window = FXMLLoader.load(getClass().getResource("./FXML/mdFX.fxml"));
+            this.setRoot(window);
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
 
     public void init() {
         double mouse[] = new double[2];
