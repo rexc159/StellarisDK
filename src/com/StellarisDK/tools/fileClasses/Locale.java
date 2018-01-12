@@ -32,7 +32,10 @@ public class Locale {
     }
 
     public static String getLocale(String key){
-        return data.get(key).getValue();
+        if(data.get(key) != null)
+            return data.get(key).getValue();
+        else
+            return null;
     }
 
     @Override

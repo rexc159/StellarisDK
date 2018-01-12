@@ -35,6 +35,10 @@ public class Utility extends Component_Template {
 
     @Override
     public String toString() {
-        return Locale.getLocale((String)data.get("key"));
+        String temp = Locale.getLocale((String)data.get("key"));
+        if(temp != null)
+            return temp;
+        else
+            return data.get("key").toString();
     }
 }
