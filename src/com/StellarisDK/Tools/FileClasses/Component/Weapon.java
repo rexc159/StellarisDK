@@ -1,4 +1,4 @@
-package com.StellarisDK.tools.fileClasses.Component;
+package com.StellarisDK.Tools.FileClasses.Component;
 
 public class Weapon extends Component_Template{
     protected String keys[] = {"key", "hidden", "size", "icon", "icon_frame", "power", "cost",

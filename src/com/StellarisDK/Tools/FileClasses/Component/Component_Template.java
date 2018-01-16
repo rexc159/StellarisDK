@@ -1,4 +1,4 @@
-package com.StellarisDK.tools.fileClasses.Component;
+package com.StellarisDK.Tools.FileClasses.Component;
 
 import java.util.HashMap;
 import java.util.regex.Matcher;

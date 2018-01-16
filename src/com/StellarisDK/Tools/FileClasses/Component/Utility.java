@@ -1,6 +1,6 @@
-package com.StellarisDK.tools.fileClasses.Component;
+package com.StellarisDK.Tools.FileClasses.Component;
 
-import com.StellarisDK.tools.fileClasses.Locale;
+import com.StellarisDK.Tools.FileClasses.Locale;
 
 public class Utility extends Component_Template {
     protected String keys[] = {"key", "hidden", "size", "icon", "icon_frame", "power", "cost",

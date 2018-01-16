@@ -1,6 +1,6 @@
-package com.StellarisDK.tools.fileClasses;
+package com.StellarisDK.Tools.FileClasses;
 
-import com.StellarisDK.tools.fileClasses.Component.Utility;
+import com.StellarisDK.Tools.FileClasses.Component.Utility;
 
 import java.io.File;
 import java.io.IOException;
@@ -8,7 +8,7 @@ import java.util.LinkedList;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
-public class dataParser {
+public class DataParser {
 
     private final static Pattern pattern = Pattern.compile("(?s)(?m)(^\\w+)\\s=\\s\\{(.+?)\\n\\}\\n?");
     private final static Pattern constants = Pattern.compile("(\\@\\w+) = (.+)");
@@ -27,7 +27,7 @@ public class dataParser {
         }
         while(scan.hasNext()){
             String test = scan.findWithinHorizon(pattern, 0);
-//            parse(test);
+//            parse(window);
             System.out.println(new Utility(test));
         }
     }
@@ -36,8 +36,8 @@ public class dataParser {
         LinkedList<Utility> out = new LinkedList<>();
         Scanner scan = new Scanner(new File(path));
 //        while(scan.hasNext()){
-//            String test = scan.findWithinHorizon(pattern, 0);
-//            out.add(new Utility(test));
+//            String window = scan.findWithinHorizon(pattern, 0);
+//            out.add(new Utility(window));
 //        }
         String temp = "";
         while(temp != null){

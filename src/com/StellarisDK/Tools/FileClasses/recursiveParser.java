@@ -1,8 +1,9 @@
-package com.StellarisDK.tools.fileClasses;
+package com.StellarisDK.Tools.FileClasses;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+// Dummy reference class
 public class recursiveParser {
 
 //    private final static Pattern object = Pattern.compile("(?s)(?m)(^\\w+) = \\{(.+?)\\n\\}\\n?");

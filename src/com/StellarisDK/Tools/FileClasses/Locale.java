@@ -1,4 +1,4 @@
-package com.StellarisDK.tools.fileClasses;
+package com.StellarisDK.Tools.FileClasses;
 
 import javafx.util.Pair;
 

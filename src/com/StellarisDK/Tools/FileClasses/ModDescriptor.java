@@ -1,4 +1,4 @@
-package com.StellarisDK.tools.fileClasses;
+package com.StellarisDK.Tools.FileClasses;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -31,22 +31,26 @@ public class ModDescriptor {
         return keys;
     }
 
-    public Object getValue(String key){
+    public Object getValue(String key) {
         return data.get(key);
     }
 
-    public void setValue(String key, Object value){
+    public void setValue(String key, Object value) {
         data.replace(key, value);
     }
 
     public void load(String path) throws IOException {
+        for (String key : keys) {
+            data.replace(key, null);
+        }
         String input = new String(Files.readAllBytes(Paths.get(path)));
 
         Matcher kv_match = kv.matcher(input);
         Matcher cv_match = cv.matcher(input);
 
         while (kv_match.find()) {
-            data.replace(kv_match.group(1), kv_match.group(2).replaceAll("\"", ""));
+            data.replace(kv_match.group(1), kv_match.group(2).replaceAll("\"", "")
+                    .replaceAll("\\\\\\\\", "\\\\"));
         }
 
         while (cv_match.find()) {
@@ -55,12 +59,12 @@ public class ModDescriptor {
                 public String toString() {
                     String out = "{\n";
                     for (String i : this) {
-                        out += "\t\""+i.trim() +"\"\n";
+                        out += "\t\"" + i.trim() + "\"\n";
                     }
                     return out + "}\n";
                 }
             };
-            Collections.addAll(temp, cv_match.group(2).replaceAll("[\"\t]","").trim().split("\n",0));
+            Collections.addAll(temp, cv_match.group(2).replaceAll("[\"\t]", "").replaceAll("\r", "").trim().split("\n", 0));
             data.replace(cv_match.group(1), temp);
         }
     }
@@ -69,16 +73,15 @@ public class ModDescriptor {
     public String toString() {
         String out = "";
         for (String key : keys) {
-            if(data.get(key)!=null){
-                if (data.get(key) instanceof String){
-                    if(((String) data.get(key)).length() != 0)
+            if (data.get(key) != null) {
+                if (data.get(key) instanceof String) {
+                    if (((String) data.get(key)).length() != 0)
                         out += key + "=\"" + data.get(key).toString() + "\"\n";
-                }
-                else {
+                } else {
                     out += key + "=" + data.get(key).toString();
                 }
             }
         }
-        return out;
+        return out.replaceAll("\\\\", "\\\\\\\\");
     }
 }
