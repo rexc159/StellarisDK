@@ -33,6 +33,10 @@ public class Utility extends Component_Template {
         return out;
     }
 
+    public String getGroup(){
+        return data.get("component_set").toString();
+    }
+
     @Override
     public String toString() {
         String temp = Locale.getLocale((String)data.get("key"));

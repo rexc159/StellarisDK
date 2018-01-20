@@ -27,6 +27,15 @@ public class ModDescriptor {
         }
     }
 
+    public ModDescriptor(String path){
+        this();
+        try{
+            load(path);
+        } catch(IOException e){
+            System.out.println("File not Found.");
+        }
+    }
+
     public String[] getKeys() {
         return keys;
     }
@@ -69,8 +78,7 @@ public class ModDescriptor {
         }
     }
 
-    @Override
-    public String toString() {
+    public String export() {
         String out = "";
         for (String key : keys) {
             if (data.get(key) != null) {
@@ -83,5 +91,10 @@ public class ModDescriptor {
             }
         }
         return out.replaceAll("\\\\", "\\\\\\\\");
+    }
+
+    @Override
+    public String toString() {
+        return data.get("name").toString();
     }
 }

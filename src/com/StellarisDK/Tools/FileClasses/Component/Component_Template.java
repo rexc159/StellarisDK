@@ -38,8 +38,8 @@ public abstract class Component_Template {
             while(t1s_match.find()){
                 if(t1s_match.group(1) !=null)
                     System.out.println(t1s_match.group(1)+":"+t1s_match.group(2));
-                else
-                    System.out.println(t1s_match.group(3));
+//                else
+//                    System.out.println(t1s_match.group(3));
             }
 //            System.out.println(t1_match.group(1).trim()+":{");
 //            parse(t1_match.group(2).replaceAll("(?m)^\t",""));

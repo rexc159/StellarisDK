@@ -22,21 +22,26 @@ public class ModDescUI extends AbstractUI {
 
     @Override
     public void load(Object object) {
-        try {
-            md.load((String) object);
-            System.out.println("Loaded");
-            for (Node node : ((GridPane) main.getChildren().get(0)).getChildren()) {
-                if (node.getId() != null) {
-                    if (node.getId().equals("tags") || node.getId().equals("dependencies")) {
-                        if (md.getValue(node.getId()) != null)
-                            ((ListView) node).getItems().addAll((LinkedList) md.getValue(node.getId()));
-                    } else {
-                        ((TextField) node).setText((String) md.getValue(node.getId()));
+        if(object instanceof String){
+            try {
+                md.load((String) object);
+                System.out.println("Loaded");
+                for (Node node : ((GridPane) main.getChildren().get(0)).getChildren()) {
+                    if (node.getId() != null) {
+                        if (node.getId().equals("tags") || node.getId().equals("dependencies")) {
+                            if (md.getValue(node.getId()) != null)
+                                ((ListView) node).getItems().addAll((LinkedList) md.getValue(node.getId()));
+                        } else {
+                            ((TextField) node).setText((String) md.getValue(node.getId()));
+                        }
                     }
                 }
+            } catch (IOException e) {
+                System.out.println("File Not Found");
             }
-        } catch (IOException e) {
-            System.out.println("File Not Found");
+        }else{
+            System.out.println("Not String lol");
+            md = (ModDescriptor) object;
         }
     }
 
@@ -64,6 +69,7 @@ public class ModDescUI extends AbstractUI {
                 }
             }
         }
+        itemView.refresh();
         return md;
     }
 }

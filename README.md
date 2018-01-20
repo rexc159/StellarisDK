@@ -12,7 +12,7 @@ The SDK is expected to cost around 120-160 person-hours to complete.
 However, as this is currently a single person project, estimation is subject to change.
 
 ## Current Features
-W.I.P.
+* Mod Descriptor Editor
 
 ## Current Tasks
 * Data parser - `5%`

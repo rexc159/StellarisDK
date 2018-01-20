@@ -1,11 +1,14 @@
 package com.StellarisDK;
 
+import com.StellarisDK.Tools.FileClasses.DataParser;
 import com.StellarisDK.Tools.FileClasses.Locale;
+import com.StellarisDK.Tools.FileClasses.ModDescriptor;
 import com.StellarisDK.Tools.GUI.CompUI;
 import com.StellarisDK.Tools.GUI.EventUI;
 import com.StellarisDK.Tools.GUI.ModDescUI;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
@@ -20,9 +23,11 @@ public class guiController extends AnchorPane {
     private File modPath;
     private File path;
 
-    private CompUI compUI;
-    private EventUI eventUI;
+    private CompUI compUI = new CompUI();
+    private EventUI eventUI = new EventUI();
     private ModDescUI modDescUI = new ModDescUI();
+
+    private ModDescriptor mainMd;
 
     @FXML
     private TreeView itemView;
@@ -37,6 +42,9 @@ public class guiController extends AnchorPane {
 
         try {
             loader.load();
+            compUI.setTree(itemView);
+            eventUI.setTree(itemView);
+            modDescUI.setTree(itemView);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -75,31 +83,26 @@ public class guiController extends AnchorPane {
         fc.setTitle("Select Mod Descriptor");
         modPath = fc.showOpenDialog(stage);
         if (modPath != null) {
+            mainMd = new ModDescriptor(modPath.getPath());
+            itemView.setRoot(new TreeItem(mainMd));
             modDescUI.load(modPath.getPath());
-//            System.out.println(modDescUI.md.getValue("path"));
-//            if (modDescUI.md.getValue("path") == null) {
-//                System.out.println(modDescUI.md.getValue("archive"));
-//            }
-//            System.out.println(modPath.getParent());
-//            System.out.println(modPath.getPath());
         }
     }
 
     @FXML
     protected void compEditor() {
-        compUI = new CompUI();
-        mainWindow.getChildren().add(compUI);
-//        try{
-//            parseData(path.getPath());
-//        } catch(IOException e){
-//
-//        }
+        if (!mainWindow.getChildren().contains(compUI))
+            mainWindow.getChildren().add(compUI);
+        try{
+            DataParser.parseData(path.getPath());
+        } catch(IOException e){
+        }
     }
 
     @FXML
     protected void eventEditor() {
-        eventUI = new EventUI();
-        mainWindow.getChildren().add(eventUI);
+        if (!mainWindow.getChildren().contains(eventUI))
+            mainWindow.getChildren().add(eventUI);
     }
 
     @FXML
@@ -115,8 +118,7 @@ public class guiController extends AnchorPane {
     protected void mdEditor() {
         if (!mainWindow.getChildren().contains(modDescUI))
             mainWindow.getChildren().add(modDescUI);
-        else
-            modDescUI.load(modPath.getPath());
+        modDescUI.load(mainMd);
     }
 
     @FXML
@@ -127,7 +129,7 @@ public class guiController extends AnchorPane {
         if (mod != null) {
             try {
                 FileWriter fw = new FileWriter(mod);
-                fw.write(modDescUI.md.toString());
+                fw.write(mainMd.export());
                 fw.close();
             } catch (IOException e) {
                 System.out.println("Export Failed.");

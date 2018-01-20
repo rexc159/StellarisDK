@@ -1,15 +1,13 @@
 package com.StellarisDK.Tools.GUI;
 
 import com.StellarisDK.Tools.FileClasses.Component.Utility;
-import javafx.scene.control.TextField;
 
 public class CompUI extends AbstractUI {
 
-    private TextField text = new TextField("YAY");
     private Utility utility;
 
     public CompUI() {
-        init("");
+        init("./FXML/compUI.fxml");
         window.setText("Component Editor");
     }
 
