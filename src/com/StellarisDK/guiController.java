@@ -1,7 +1,5 @@
 package com.StellarisDK;
 
-import com.StellarisDK.Tools.FileClasses.DataParser;
-import com.StellarisDK.Tools.FileClasses.Locale;
 import com.StellarisDK.Tools.FileClasses.ModDescriptor;
 import com.StellarisDK.Tools.GUI.CompUI;
 import com.StellarisDK.Tools.GUI.EventUI;
@@ -96,7 +94,7 @@ public class guiController extends AnchorPane {
                     if(event.getClickCount() >= 2){
                         Node node = event.getPickResult().getIntersectedNode();
                         if(node instanceof Text || (node instanceof TreeCell && ((TreeCell) node).getText() != null)){
-                            mdEditor();
+                            openMD(((TreeCell)node).getTreeItem().getValue());
                         }
                     }
                 }
@@ -105,36 +103,10 @@ public class guiController extends AnchorPane {
         }
     }
 
-    @FXML
-    protected void compEditor() {
-        if (!mainWindow.getChildren().contains(compUI))
-            mainWindow.getChildren().add(compUI);
-        try{
-            DataParser.parseData(path.getPath());
-        } catch(IOException e){
-        }
-    }
-
-    @FXML
-    protected void eventEditor() {
-        if (!mainWindow.getChildren().contains(eventUI))
-            mainWindow.getChildren().add(eventUI);
-    }
-
-    @FXML
-    protected void localeTest() {
-        try {
-            System.out.println(new Locale(path.getPath()));
-        } catch (IOException e) {
-            System.out.println("Locale Failed");
-        }
-    }
-
-    @FXML
-    protected void mdEditor() {
+    protected void openMD(Object md) {
         if (!mainWindow.getChildren().contains(modDescUI))
             mainWindow.getChildren().add(modDescUI);
-        modDescUI.load(mainMd);
+        modDescUI.load(md);
     }
 
     @FXML

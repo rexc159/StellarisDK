@@ -2,19 +2,12 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" type="AnchorPane" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" type="AnchorPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <SplitPane dividerPositions="0.5" layoutY="32.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="32.0">
             <items>
                 <TreeView fx:id="itemView" maxWidth="600.0" minWidth="-Infinity" prefWidth="200.0" SplitPane.resizableWithParent="false" />
-                <AnchorPane fx:id="mainWindow" minHeight="0.0">
-                    <children>
-                        <Button layoutX="231.0" layoutY="321.0" mnemonicParsing="false" onAction="#compEditor" text="New" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0" />
-                        <Button layoutX="181.0" layoutY="321.0" mnemonicParsing="false" onAction="#eventEditor" text="New" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="114.0" />
-                        <Button layoutX="181.0" layoutY="321.0" mnemonicParsing="false" onAction="#mdEditor" text="New" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="64.0" />
-                        <Button layoutX="216.0" layoutY="290.0" mnemonicParsing="false" onAction="#localeTest" text="Button" AnchorPane.bottomAnchor="45.0" AnchorPane.rightAnchor="14.0" />
-                    </children>
-                </AnchorPane>
+                <AnchorPane fx:id="mainWindow" minHeight="0.0" />
             </items>
         </SplitPane>
         <MenuBar maxWidth="1.7976931348623157E308" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
