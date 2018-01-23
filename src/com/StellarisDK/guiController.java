@@ -6,11 +6,16 @@ import com.StellarisDK.Tools.FileClasses.ModDescriptor;
 import com.StellarisDK.Tools.GUI.CompUI;
 import com.StellarisDK.Tools.GUI.EventUI;
 import com.StellarisDK.Tools.GUI.ModDescUI;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -85,6 +90,17 @@ public class guiController extends AnchorPane {
         if (modPath != null) {
             mainMd = new ModDescriptor(modPath.getPath());
             itemView.setRoot(new TreeItem(mainMd));
+            itemView.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    if(event.getClickCount() >= 2){
+                        Node node = event.getPickResult().getIntersectedNode();
+                        if(node instanceof Text || (node instanceof TreeCell && ((TreeCell) node).getText() != null)){
+                            mdEditor();
+                        }
+                    }
+                }
+            });
             modDescUI.load(modPath.getPath());
         }
     }
