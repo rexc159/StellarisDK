@@ -17,7 +17,7 @@ public abstract class Component_Template {
     // Pattern matches for all "complex" key variable
     // i.e. modifier, preq...
     protected final Pattern type1 = Pattern.compile("(?m)^\\t(\\w+) = \\{\\s*(.+?)\\}");
-    protected final Pattern type1_sub = Pattern.compile("(?m)(\\w+) = ([^ \\n]+)|(\\w+)");
+    protected final Pattern type1_sub = Pattern.compile("\\t?(\\w+)( . )?([\\d.]+)?");
     protected final Pattern type2 = Pattern.compile("(?s)(?m)^\\t(\\w+) = \\{[\\r\\n](.+?)^\t\\}");
 
     public void parse(String input){
@@ -35,12 +35,12 @@ public abstract class Component_Template {
         while(t1_match.find()){
             data.replace(t1_match.group(1).trim(), t1_match.group(2).trim());
             Matcher t1s_match = type1_sub.matcher(t1_match.group(2));
-            while(t1s_match.find()){
-                if(t1s_match.group(1) !=null)
-                    System.out.println(t1s_match.group(1)+":"+t1s_match.group(2));
+//            while(t1s_match.find()){
+//                if(t1s_match.group(1) !=null)
+//                    System.out.println(t1s_match.group(1)+":"+t1s_match.group(2));
 //                else
 //                    System.out.println(t1s_match.group(3));
-            }
+//            }
 //            System.out.println(t1_match.group(1).trim()+":{");
 //            parse(t1_match.group(2).replaceAll("(?m)^\t",""));
         }

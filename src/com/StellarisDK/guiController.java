@@ -1,10 +1,10 @@
 package com.StellarisDK;
 
+import com.StellarisDK.Tools.FileClasses.DataParser;
 import com.StellarisDK.Tools.FileClasses.ModDescriptor;
 import com.StellarisDK.Tools.GUI.CompUI;
 import com.StellarisDK.Tools.GUI.EventUI;
 import com.StellarisDK.Tools.GUI.ModDescUI;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -24,6 +24,7 @@ import java.io.IOException;
 public class guiController extends AnchorPane {
     private Stage stage;
     private File modPath;
+    private String mainLoadPath;
     private File path;
 
     private CompUI compUI = new CompUI();
@@ -88,18 +89,30 @@ public class guiController extends AnchorPane {
         if (modPath != null) {
             mainMd = new ModDescriptor(modPath.getPath());
             itemView.setRoot(new TreeItem(mainMd));
-            itemView.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
-                    if(event.getClickCount() >= 2){
-                        Node node = event.getPickResult().getIntersectedNode();
-                        if(node instanceof Text || (node instanceof TreeCell && ((TreeCell) node).getText() != null)){
-                            openMD(((TreeCell)node).getTreeItem().getValue());
-                        }
+            itemView.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+                if (event.getClickCount() >= 2) {
+                    Node node = event.getPickResult().getIntersectedNode();
+                    if (node instanceof Text || (node instanceof TreeCell && ((TreeCell) node).getText() != null)) {
+                        openMD(((TreeCell) node).getTreeItem().getValue());
                     }
                 }
             });
+            if (mainMd.getValue("path") != null) {
+                mainLoadPath = modPath.getParentFile().getParent() + "\\" + (mainMd.getValue("path").toString().replaceAll("/", "\\\\"));
+                loadMod();
+            }
             modDescUI.load(modPath.getPath());
+        }
+    }
+
+    protected void loadMod() {
+        try{
+            System.out.println(mainLoadPath+DataLoc.component_templates);
+            for(File file:new File(mainLoadPath+"\\"+DataLoc.component_templates).listFiles()){
+                DataParser.parseData(file);
+            }
+        }catch (Exception e){
+            System.out.println("Empty/Missing Folder.");
         }
     }
 

@@ -32,6 +32,20 @@ public class DataParser {
         }
     }
 
+    public static void parseData(File file) throws IOException {
+        Scanner scan = new Scanner(file);
+        String temp = "";
+        while(temp != null){
+            temp = scan.findWithinHorizon(constants,0);
+            System.out.println(temp);
+        }
+        while(scan.hasNext()){
+            String test = scan.findWithinHorizon(pattern, 0);
+//            parse(window);
+            System.out.println(new Utility(test).output()+"\n");
+        }
+    }
+
     public static LinkedList<Utility> parseCompUtil(String path) throws IOException {
         LinkedList<Utility> out = new LinkedList<>();
         Scanner scan = new Scanner(new File(path));

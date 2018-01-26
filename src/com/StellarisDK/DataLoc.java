@@ -1,0 +1,81 @@
+package com.StellarisDK;
+
+
+/**
+ * Not sure what's the point of this class yet
+ */
+public class DataLoc {
+    public static final String agendas = "common\\agendas";
+    public static final String ambient_objects = "common\\ambient_objects";
+    public static final String anomalies = "common\\anomalies";
+    public static final String armies = "common\\armies";
+    public static final String army_attachments = "common\\army_attachments";
+    public static final String ascension_perks = "common\\ascension_perks";
+    public static final String attitudes = "common\\attitudes";
+    public static final String buildable_pops = "common\\buildable_pops";
+    public static final String building_tags = "common\\building_tags";
+    public static final String buildings = "common\\buildings";
+    public static final String component_sets = "common\\component_sets";
+    public static final String component_templates = "common\\component_templates";
+    public static final String country_customization = "common\\country_customization";
+    public static final String country_types = "common\\country_types";
+    public static final String defines = "common\\defines";
+    public static final String deposits = "common\\deposits";
+    public static final String diplo_phrases = "common\\diplo_phrases";
+    public static final String diplomatic_actions = "common\\diplomatic_actions";
+    public static final String edicts = "common\\edicts";
+    public static final String ethics = "common\\ethics";
+    public static final String event_chains = "common\\event_chains";
+    public static final String fallen_empires = "common\\fallen_empires";
+    public static final String game_rules = "common\\game_rules";
+    public static final String global_ship_designs = "common\\global_ship_designs";
+    public static final String governments = "common\\governments";
+    public static final String gov_authorities = "common\\governments\\authorities";
+    public static final String gov_civics = "common\\governments\\civics";
+    public static final String graphical_culture = "common\\graphical_culture";
+    public static final String mandates = "common\\mandates";
+    public static final String map_modes = "common\\map_modes";
+    public static final String megastructures = "common\\megastructures";
+    public static final String name_lists = "common\\name_lists";
+    public static final String notification_modifiers = "common\\notification_modifiers";
+    public static final String observation_station_missions = "common\\observation_station_missions";
+    public static final String on_actions = "common\\on_actions";
+    public static final String opinion_modifiers = "common\\opinion_modifiers";
+    public static final String personalities = "common\\personalities";
+    public static final String planet_classes = "common\\planet_classes";
+    public static final String planet_modifiers = "common\\planet_modifiers";
+    public static final String policies = "common\\policies";
+    public static final String pop_faction_types = "common\\pop_faction_types";
+    public static final String precursor_civilizations = "common\\precursor_civilizations";
+    public static final String random_names = "common\\random_names";
+    public static final String random_name_base = "common\\random_names\\base";
+    public static final String scripted_effects = "common\\scripted_effects";
+    public static final String scripted_loc = "common\\scripted_loc";
+    public static final String scripted_triggers = "common\\scripted_triggers";
+    public static final String section_templates = "common\\section_templates";
+    public static final String sector_types = "common\\sector_types";
+    public static final String ship_behaviors = "common\\ship_behaviors";
+    public static final String ship_sizes = "common\\ship_sizes";
+    public static final String solar_system_initializers = "common\\solar_system_initializers";
+    public static final String spaceport_modules = "common\\spaceport_modules";
+    public static final String special_projects = "common\\special_projects";
+    public static final String species_archetypes = "common\\species_archetypes";
+    public static final String species_classes = "common\\species_classes";
+    public static final String species_names = "common\\species_names";
+    public static final String species_rights = "common\\species_rights";
+    public static final String star_classes = "common\\star_classes";
+    public static final String start_screen_messages = "common\\start_screen_messages";
+    public static final String static_modifiers = "common\\static_modifiers";
+    public static final String strategic_resources = "common\\strategic_resources";
+    public static final String subjects = "common\\subjects";
+    public static final String technology = "common\\technology";
+    public static final String tech_cat = "common\\technology\\category";
+    public static final String tech_tier = "common\\technology\\tier";
+    public static final String terraform = "common\\terraform";
+    public static final String tile_blockers = "common\\tile_blockers";
+    public static final String tradition_categories = "common\\tradition_categories";
+    public static final String traditions = "common\\traditions";
+    public static final String traits = "common\\traits";
+    public static final String war_demand_counters = "common\\war_demand_counters";
+    public static final String war_demand_types = "common\\war_demand_types";
+}
