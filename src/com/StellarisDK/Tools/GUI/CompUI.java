@@ -13,7 +13,7 @@ public class CompUI extends AbstractUI {
 
     @Override
     public void load(Object object){
-
+        System.out.println("Under Construction!");
     }
 
     @Override

@@ -5,6 +5,7 @@ import com.StellarisDK.Tools.FileClasses.ModDescriptor;
 import com.StellarisDK.Tools.GUI.CompUI;
 import com.StellarisDK.Tools.GUI.EventUI;
 import com.StellarisDK.Tools.GUI.ModDescUI;
+import com.sun.javafx.scene.control.skin.LabeledText;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -89,11 +90,22 @@ public class guiController extends AnchorPane {
         if (modPath != null) {
             mainMd = new ModDescriptor(modPath.getPath());
             itemView.setRoot(new TreeItem(mainMd));
+            itemView.getRoot().setExpanded(true);
             itemView.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
                 if (event.getClickCount() >= 2) {
+                    System.out.println("Starting Editor");
                     Node node = event.getPickResult().getIntersectedNode();
                     if (node instanceof Text || (node instanceof TreeCell && ((TreeCell) node).getText() != null)) {
-                        openMD(((TreeCell) node).getTreeItem().getValue());
+                        Object temp;
+                        if((node instanceof LabeledText)){
+                            temp = ((TreeCell) node.getParent()).getTreeItem().getValue();
+                        }
+                        else
+                            temp = ((TreeCell) node).getTreeItem().getValue();
+                        if(temp instanceof ModDescriptor){
+                            openMD(temp);
+                        }else
+                            openCU(temp);
                     }
                 }
             });
@@ -109,11 +121,18 @@ public class guiController extends AnchorPane {
         try{
             System.out.println(mainLoadPath+DataLoc.component_templates);
             for(File file:new File(mainLoadPath+"\\"+DataLoc.component_templates).listFiles()){
-                DataParser.parseData(file);
+                System.out.println(itemView.getRoot().getChildren());
+                itemView.getRoot().getChildren().addAll(DataParser.parseCompUtil(file));
             }
         }catch (Exception e){
             System.out.println("Empty/Missing Folder.");
         }
+    }
+
+    protected void openCU(Object comp) {
+        if (!mainWindow.getChildren().contains(compUI))
+            mainWindow.getChildren().add(compUI);
+        compUI.load(comp);
     }
 
     protected void openMD(Object md) {
