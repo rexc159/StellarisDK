@@ -20,6 +20,14 @@ public abstract class Component_Template {
     protected final Pattern type1_sub = Pattern.compile("\\t?(\\w+)( . )?([\\d.]+)?");
     protected final Pattern type2 = Pattern.compile("(?s)(?m)^\\t(\\w+) = \\{[\\r\\n](.+?)^\t\\}");
 
+    public Object getValue(String key) {
+        return data.get(key);
+    }
+
+    public void setValue(String key, Object value) {
+        data.replace(key, value);
+    }
+
     public void parse(String input){
 
         Matcher kv_match = kv.matcher(input);

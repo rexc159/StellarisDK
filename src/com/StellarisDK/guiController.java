@@ -97,14 +97,13 @@ public class guiController extends AnchorPane {
                     Node node = event.getPickResult().getIntersectedNode();
                     if (node instanceof Text || (node instanceof TreeCell && ((TreeCell) node).getText() != null)) {
                         Object temp;
-                        if((node instanceof LabeledText)){
+                        if ((node instanceof LabeledText)) {
                             temp = ((TreeCell) node.getParent()).getTreeItem().getValue();
-                        }
-                        else
+                        } else
                             temp = ((TreeCell) node).getTreeItem().getValue();
-                        if(temp instanceof ModDescriptor){
+                        if (temp instanceof ModDescriptor) {
                             openMD(temp);
-                        }else
+                        } else
                             openCU(temp);
                     }
                 }
@@ -118,13 +117,12 @@ public class guiController extends AnchorPane {
     }
 
     protected void loadMod() {
-        try{
-            System.out.println(mainLoadPath+DataLoc.component_templates);
-            for(File file:new File(mainLoadPath+"\\"+DataLoc.component_templates).listFiles()){
-                System.out.println(itemView.getRoot().getChildren());
+        try {
+            System.out.println(mainLoadPath + DataLoc.component_templates);
+            for (File file : new File(mainLoadPath + "\\" + DataLoc.component_templates).listFiles()) {
                 itemView.getRoot().getChildren().addAll(DataParser.parseCompUtil(file));
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println("Empty/Missing Folder.");
         }
     }
