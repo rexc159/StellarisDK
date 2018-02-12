@@ -1,11 +1,9 @@
 package com.StellarisDK;
 
+import com.StellarisDK.Tools.FileClasses.Component.Utility;
 import com.StellarisDK.Tools.FileClasses.DataParser;
 import com.StellarisDK.Tools.FileClasses.ModDescriptor;
-import com.StellarisDK.Tools.GUI.CompSetUI;
-import com.StellarisDK.Tools.GUI.CompUI;
-import com.StellarisDK.Tools.GUI.EventUI;
-import com.StellarisDK.Tools.GUI.ModDescUI;
+import com.StellarisDK.Tools.GUI.*;
 import com.sun.javafx.scene.control.skin.LabeledText;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -104,9 +102,11 @@ public class guiController extends AnchorPane {
                         } else
                             temp = ((TreeCell) node).getTreeItem().getValue();
                         if (temp instanceof ModDescriptor) {
-                            openMD(temp);
-                        } else
-                            openCU(temp);
+                            open(temp, modDescUI);
+                        } else if(temp instanceof Utility)
+                            open(temp, compUI);
+                        else
+                            open(temp, compSetUI);
                     }
                 }
             });
@@ -132,22 +132,10 @@ public class guiController extends AnchorPane {
         }
     }
 
-    protected void openCU(Object comp) {
-        if (!mainWindow.getChildren().contains(compUI))
-            mainWindow.getChildren().add(compUI);
-        compUI.load(comp);
-    }
-
-    protected void openSU(Object set) {
-        if (!mainWindow.getChildren().contains(compSetUI))
-            mainWindow.getChildren().add(compSetUI);
-        compSetUI.load(set);
-    }
-
-    protected void openMD(Object md) {
-        if (!mainWindow.getChildren().contains(modDescUI))
-            mainWindow.getChildren().add(modDescUI);
-        modDescUI.load(md);
+    protected void open(Object obj, AbstractUI ui){
+        if (!mainWindow.getChildren().contains(ui))
+            mainWindow.getChildren().add(ui);
+        ui.load(obj);
     }
 
     @FXML
