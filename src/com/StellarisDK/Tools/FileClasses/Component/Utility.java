@@ -17,7 +17,7 @@ public class Utility extends Component_Template {
 
     public Utility(String input){
         this();
-        parse(input);
+        this.parse(input);
     }
 
     public String output() {

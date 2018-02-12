@@ -1,5 +1,6 @@
 package com.StellarisDK.Tools.FileClasses;
 
+import com.StellarisDK.Tools.FileClasses.Component.CompSet;
 import com.StellarisDK.Tools.FileClasses.Component.Utility;
 import javafx.scene.control.TreeItem;
 
@@ -43,6 +44,21 @@ public class DataParser {
             String test = scan.findWithinHorizon(pattern, 0);
             System.out.println(new Utility(test).output() + "\n");
         }
+    }
+
+    public static LinkedList<TreeItem> parseSet(File file) throws IOException {
+        LinkedList<TreeItem> out = new LinkedList<>();
+        Scanner scan = new Scanner(file);
+        String temp = "";
+        while (temp != null) {
+            temp = scan.findWithinHorizon(constants, 0);
+//            System.out.println(temp);
+        }
+        while (scan.hasNext()) {
+            String objectDat = scan.findWithinHorizon(pattern, 0);
+            out.add(new TreeItem<>(new CompSet(objectDat)));
+        }
+        return out;
     }
 
     public static LinkedList<TreeItem> parseCompUtil(File file) throws IOException {

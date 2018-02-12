@@ -2,6 +2,7 @@ package com.StellarisDK;
 
 import com.StellarisDK.Tools.FileClasses.DataParser;
 import com.StellarisDK.Tools.FileClasses.ModDescriptor;
+import com.StellarisDK.Tools.GUI.CompSetUI;
 import com.StellarisDK.Tools.GUI.CompUI;
 import com.StellarisDK.Tools.GUI.EventUI;
 import com.StellarisDK.Tools.GUI.ModDescUI;
@@ -29,6 +30,7 @@ public class guiController extends AnchorPane {
     private File path;
 
     private CompUI compUI = new CompUI();
+    private CompSetUI compSetUI = new CompSetUI();
     private EventUI eventUI = new EventUI();
     private ModDescUI modDescUI = new ModDescUI();
 
@@ -122,6 +124,9 @@ public class guiController extends AnchorPane {
             for (File file : new File(mainLoadPath + "\\" + DataLoc.component_templates).listFiles()) {
                 itemView.getRoot().getChildren().addAll(DataParser.parseCompUtil(file));
             }
+            for (File file : new File(mainLoadPath + "\\" + DataLoc.component_sets).listFiles()) {
+                itemView.getRoot().getChildren().addAll(DataParser.parseSet(file));
+            }
         } catch (Exception e) {
             System.out.println("Empty/Missing Folder.");
         }
@@ -131,6 +136,12 @@ public class guiController extends AnchorPane {
         if (!mainWindow.getChildren().contains(compUI))
             mainWindow.getChildren().add(compUI);
         compUI.load(comp);
+    }
+
+    protected void openSU(Object set) {
+        if (!mainWindow.getChildren().contains(compSetUI))
+            mainWindow.getChildren().add(compSetUI);
+        compSetUI.load(set);
     }
 
     protected void openMD(Object md) {

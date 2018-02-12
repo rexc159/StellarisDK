@@ -7,17 +7,19 @@
    <children>
       <GridPane fx:id="grid" layoutX="10.0" layoutY="10.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <TextField id="key" GridPane.columnIndex="1" />
-            <TextField id="icon" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <TextField id="cost" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-            <Label text="Component Key" />
-            <Label text="Size" GridPane.rowIndex="1" />
-            <Label text="Icon" GridPane.rowIndex="2" />
-            <Label text="Power" GridPane.rowIndex="3" />
-            <Label text="Cost" GridPane.rowIndex="4" />
-            <CheckBox id="hidden" alignment="CENTER" mnemonicParsing="false" text="Is Hidden" GridPane.columnIndex="2" GridPane.halignment="CENTER" />
-            <ChoiceBox id="size" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <TextField id="power" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <TextField id="key" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextField id="icon" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <TextField id="cost" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <Label text="Component Key" GridPane.rowIndex="1" />
+            <Label text="Size" GridPane.rowIndex="2" />
+            <Label text="Icon" GridPane.rowIndex="3" />
+            <Label text="Power" GridPane.rowIndex="4" />
+            <Label text="Cost" GridPane.rowIndex="5" />
+            <CheckBox id="hidden" alignment="CENTER" mnemonicParsing="false" text="Is Hidden" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+            <ChoiceBox id="size" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <TextField id="power" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <Label text="Component Set" />
+            <TextField id="component_set" GridPane.columnIndex="1" />
          </children>
          <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" minWidth="110.0" />
@@ -28,6 +30,7 @@
             <Insets bottom="40.0" />
          </padding>
          <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
