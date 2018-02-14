@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class ModDescriptor {
     private HashMap<String, Object> data = new HashMap<>();
@@ -15,11 +14,11 @@ public class ModDescriptor {
 
     // Pattern matches for single value variable
     // i.e. key, size, power
-    protected Pattern kv = Pattern.compile("(\\w+)=([^{].*)");
+//    protected Pattern kv = Pattern.compile("(\\w+)=([^{].*)");
 
     // Pattern matches for multi value variables
     // i.e. modifier, prerequisites
-    protected Pattern cv = Pattern.compile("(?s)(?m)(\\w+)=\\{(.+?)\\}");
+//    protected Pattern cv = Pattern.compile("(?s)(?m)(\\w+)=\\{(.+?)\\}");
 
     public ModDescriptor() {
         for (String key : keys) {
@@ -54,11 +53,11 @@ public class ModDescriptor {
         }
         String input = new String(Files.readAllBytes(Paths.get(path)));
 
-        Matcher kv_match = kv.matcher(input);
-        Matcher cv_match = cv.matcher(input);
+        Matcher kv_match = DataPattern.kv.matcher(input);
+        Matcher cv_match = DataPattern.type2.matcher(input);
 
         while (kv_match.find()) {
-            data.replace(kv_match.group(1), kv_match.group(2).replaceAll("\"", "")
+            data.replace(kv_match.group(1), kv_match.group(3).replaceAll("\"", "")
                     .replaceAll("\\\\\\\\", "\\\\"));
         }
 
@@ -73,7 +72,7 @@ public class ModDescriptor {
                     return out + "}\n";
                 }
             };
-            Collections.addAll(temp, cv_match.group(2).replaceAll("[\"\t]", "").replaceAll("\r", "").trim().split("\n", 0));
+            Collections.addAll(temp, cv_match.group(3).replaceAll("[\"\t]", "").replaceAll("\r", "").trim().split("\n", 0));
             data.replace(cv_match.group(1), temp);
         }
     }
