@@ -1,13 +1,13 @@
 package com.StellarisDK.Tools.GUI;
 
-import com.StellarisDK.Tools.FileClasses.Component.Utility;
+import com.StellarisDK.Tools.FileClasses.Component.Component;
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 
 public class CompUI extends AbstractUI {
 
-    private Utility util;
+    private Component util;
 
     public CompUI() {
         init("./FXML/compUI.fxml");
@@ -20,7 +20,7 @@ public class CompUI extends AbstractUI {
             util.load((String) object);
             System.out.println("Loaded");
         } else {
-            util = (Utility) object;
+            util = (Component) object;
         }
         for (Node node : ((GridPane) main.getChildren().get(0)).getChildren()) {
             if (node.getId() != null) {

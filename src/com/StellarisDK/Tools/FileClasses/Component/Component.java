@@ -3,22 +3,17 @@ package com.StellarisDK.Tools.FileClasses.Component;
 import com.StellarisDK.Tools.FileClasses.DataPattern;
 import com.StellarisDK.Tools.FileClasses.GenericData;
 import com.StellarisDK.Tools.FileClasses.Locale;
-import com.StellarisDK.Tools.FileClasses.MapKeys;
+import javafx.util.Pair;
 
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.regex.Matcher;
 
-public class Utility extends GenericData {
+public class Component extends GenericData {
     public static int tab = 1;
 
-    public Utility() {
-        super(MapKeys.util);
-    }
-
-    public Utility(String input) {
-        this();
-        this.load(input);
+    public Component(String path){
+        super(path);
     }
 
     @Override
@@ -31,26 +26,26 @@ public class Utility extends GenericData {
         Matcher mC_match = DataPattern.mComplex.matcher(input);
 
         while (kv_match.find()) {
-            data.replace(kv_match.group(1).trim(), kv_match.group(3).replaceAll("\"", "").trim());
+            data.put(kv_match.group(1).trim(), kv_match.group(3).replaceAll("\"", "").trim());
         }
 
         while (sC_match.find()) {
             Matcher sCs_match = DataPattern.sComplex_sub.matcher(sC_match.group(2));
             if (sCs_match.find() && sCs_match.group(2) != null) {
-                HashMap<String, Object> sCsMap = new HashMap<String, Object>() {
+                HashMap<String, Pair<String, String>> sCsMap = new HashMap<String, Pair<String, String>>() {
                     @Override
                     public String toString() {
                         String out = "";
                         for (String key : keySet()) {
-                            out += key + "\n";
+                            out += " " + key + " " + this.get(key).getKey() + " " + this.get(key).getValue();
                         }
-                        return out;
+                        return out + " ";
                     }
                 };
                 do {
-                    sCsMap.put(sCs_match.group(1).trim(), sCs_match.group(3).trim());
+                    sCsMap.put(sCs_match.group(1).trim(), new Pair<>(sCs_match.group(2).trim(), sCs_match.group(3).trim()));
                 } while (sCs_match.find());
-                data.replace(sC_match.group(1).trim(), sCsMap);
+                data.put(sC_match.group(1).trim(), sCsMap);
             } else {
                 LinkedList<String> sCsList = new LinkedList<String>() {
                     @Override
@@ -65,12 +60,12 @@ public class Utility extends GenericData {
                 do {
                     sCsList.add(sCs_match.group(2));
                 } while (sCs_match.find());
-                data.replace(sC_match.group(1).trim(), sCsList);
+                data.put(sC_match.group(1).trim(), sCsList);
             }
         }
 
         while (mC_match.find()) {
-            data.replace(mC_match.group(1).trim(), mC_match.group(3).trim());
+            data.put(mC_match.group(1).trim(), mC_match.group(3).trim());
 //            System.out.println("\t"+mC_match.group(1).trim()+":");
 //            load(mC_match.group(2).replaceAll("(?m)^\t",""));
         }
@@ -80,7 +75,7 @@ public class Utility extends GenericData {
     @Override
     public String export() {
         String out = "";
-        for (String key : MapKeys.util) {
+        for (String key : data.keySet()) {
             if (data.get(key) != null) {
                 if (data.get(key) instanceof String)
                     out += key + " = \"" + data.get(key).toString() + "\"\n";

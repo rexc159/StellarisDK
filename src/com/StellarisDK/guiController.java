@@ -1,6 +1,6 @@
 package com.StellarisDK;
 
-import com.StellarisDK.Tools.FileClasses.Component.Utility;
+import com.StellarisDK.Tools.FileClasses.Component.Component;
 import com.StellarisDK.Tools.FileClasses.DataParser;
 import com.StellarisDK.Tools.FileClasses.ModDescriptor;
 import com.StellarisDK.Tools.GUI.*;
@@ -103,7 +103,7 @@ public class guiController extends AnchorPane {
                             temp = ((TreeCell) node).getTreeItem().getValue();
                         if (temp instanceof ModDescriptor) {
                             open(temp, modDescUI);
-                        } else if(temp instanceof Utility)
+                        } else if(temp instanceof Component)
                             open(temp, compUI);
                         else
                             open(temp, compSetUI);

@@ -1,7 +1,7 @@
 package com.StellarisDK.Tools.FileClasses;
 
 import com.StellarisDK.Tools.FileClasses.Component.CompSet;
-import com.StellarisDK.Tools.FileClasses.Component.Utility;
+import com.StellarisDK.Tools.FileClasses.Component.Component;
 import javafx.scene.control.TreeItem;
 
 import java.io.File;
@@ -29,7 +29,7 @@ public class DataParser {
         }
         while (scan.hasNext()) {
             String test = scan.findWithinHorizon(pattern, 0);
-            System.out.println(new Utility(test));
+            System.out.println(new Component(test));
         }
     }
 
@@ -42,7 +42,7 @@ public class DataParser {
         }
         while (scan.hasNext()) {
             String test = scan.findWithinHorizon(pattern, 0);
-            System.out.println(new Utility(test).export() + "\n");
+            System.out.println(new Component(test).export() + "\n");
         }
     }
 
@@ -71,7 +71,7 @@ public class DataParser {
         }
         while (scan.hasNext()) {
             String objectDat = scan.findWithinHorizon(pattern, 0);
-            out.add(new TreeItem<>(new Utility(objectDat)));
+            out.add(new TreeItem<>(new Component(objectDat)));
         }
         return out;
     }

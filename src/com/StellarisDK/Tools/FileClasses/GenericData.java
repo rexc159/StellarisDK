@@ -11,14 +11,9 @@ import java.util.HashMap;
 public abstract class GenericData {
     protected HashMap<String, Object> data = new HashMap<>();
 
-    public GenericData(String keys[]) {
-        for (String key : keys) {
-            data.put(key, null);
-        }
-    }
+    public GenericData(){}
 
-    public GenericData(String keys[], String path){
-        this(keys);
+    public GenericData(String path){
         try{
             load(path);
         } catch(IOException e){

@@ -17,17 +17,15 @@ public class ModDescriptor extends GenericData {
 // i.e. modifier, prerequisites
 //     protected Pattern cv = Pattern.compile("(?s)(?m)(\\w+)=\\{(.+?)\\}");
 
-    public ModDescriptor(){
-        super(MapKeys.modDescriptor);
-    }
+    public ModDescriptor(){}
 
     public ModDescriptor(String path){
-        super(MapKeys.modDescriptor, path);
+        super(path);
     }
 
     @Override
     public Object load(String path) throws IOException {
-        for (String key : MapKeys.modDescriptor) {
+        for (String key : data.keySet()) {
             data.replace(key, null);
         }
         String input = new String(Files.readAllBytes(Paths.get(path)));
@@ -36,7 +34,7 @@ public class ModDescriptor extends GenericData {
         Matcher cv_match = DataPattern.mComplex.matcher(input);
 
         while (kv_match.find()) {
-            data.replace(kv_match.group(1), kv_match.group(3).replaceAll("\"", "")
+            data.put(kv_match.group(1), kv_match.group(3).replaceAll("\"", "")
                     .replaceAll("\\\\\\\\", "\\\\"));
         }
 
@@ -52,7 +50,7 @@ public class ModDescriptor extends GenericData {
                 }
             };
             Collections.addAll(temp, cv_match.group(3).replaceAll("[\"\t]", "").replaceAll("\r", "").trim().split("\n", 0));
-            data.replace(cv_match.group(1), temp);
+            data.put(cv_match.group(1), temp);
         }
         return this.toString();
     }
@@ -60,7 +58,7 @@ public class ModDescriptor extends GenericData {
     @Override
     public String export() {
         String out = "";
-        for (String key : MapKeys.modDescriptor) {
+        for (String key : data.keySet()) {
             if (data.get(key) != null) {
                 if (data.get(key) instanceof String) {
                     if (((String) data.get(key)).length() != 0)
