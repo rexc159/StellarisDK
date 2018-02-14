@@ -17,7 +17,7 @@ public class CompUI extends AbstractUI {
     @Override
     public void load(Object object) {
         if (object instanceof String) {
-            util.parse((String) object);
+            util.load((String) object);
             System.out.println("Loaded");
         } else {
             util = (Utility) object;

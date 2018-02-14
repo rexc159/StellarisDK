@@ -120,14 +120,13 @@ public class guiController extends AnchorPane {
 
     protected void loadMod() {
         try {
-            System.out.println(mainLoadPath + DataLoc.component_templates);
-            for (File file : new File(mainLoadPath + "\\" + DataLoc.component_templates).listFiles()) {
-                itemView.getRoot().getChildren().addAll(DataParser.parseCompUtil(file));
-            }
             for (File file : new File(mainLoadPath + "\\" + DataLoc.component_sets).listFiles()) {
                 itemView.getRoot().getChildren().addAll(DataParser.parseSet(file));
             }
-        } catch (Exception e) {
+            for (File file : new File(mainLoadPath + "\\" + DataLoc.component_templates).listFiles()) {
+                itemView.getRoot().getChildren().addAll(DataParser.parseCompUtil(file));
+            }
+        } catch (IOException e) {
             System.out.println("Empty/Missing Folder.");
         }
     }

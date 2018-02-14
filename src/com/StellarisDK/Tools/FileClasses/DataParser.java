@@ -42,7 +42,7 @@ public class DataParser {
         }
         while (scan.hasNext()) {
             String test = scan.findWithinHorizon(pattern, 0);
-            System.out.println(new Utility(test).output() + "\n");
+            System.out.println(new Utility(test).export() + "\n");
         }
     }
 
