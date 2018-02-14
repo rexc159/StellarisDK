@@ -126,8 +126,10 @@ public class guiController extends AnchorPane {
             for (File file : new File(mainLoadPath + "\\" + DataLoc.component_templates).listFiles()) {
                 itemView.getRoot().getChildren().addAll(DataParser.parseCompUtil(file));
             }
-        } catch (IOException e) {
+        } catch (NullPointerException e) {
             System.out.println("Empty/Missing Folder.");
+        } catch (IOException e){
+            System.out.println("Malformed Input");
         }
     }
 
