@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.regex.Matcher;
 
@@ -25,6 +27,7 @@ public class ModDescriptor extends GenericData {
 
     @Override
     public Object load(String path) throws IOException {
+        HashMap<String, Object> data = new LinkedHashMap<>();
         for (String key : data.keySet()) {
             data.replace(key, null);
         }
@@ -52,7 +55,7 @@ public class ModDescriptor extends GenericData {
             Collections.addAll(temp, cv_match.group(2).replaceAll("[\"\t]", "").replaceAll("\r", "").trim().split("\n", 0));
             data.put(cv_match.group(1), temp);
         }
-        return this.toString();
+        return data;
     }
 
     @Override

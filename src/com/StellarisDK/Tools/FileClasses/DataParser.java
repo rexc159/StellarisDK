@@ -15,11 +15,6 @@ public class DataParser {
     private final static Pattern pattern = Pattern.compile("(?s)(?m)(^\\w+)\\s=\\s\\{(.+?)\\n\\}\\n?");
     private final static Pattern constants = Pattern.compile("(\\@\\w+) = (.+)");
 
-    // ^\w+\s=\s\{.+?\n\}\n? - RegEx for matching files ** Remember DOTALL & MULTILINE
-    // [^]+?^} - Also works, Need testing
-    // ^\t\w+ = [^{^\n]+ - For inlines
-    // ^\t\w+ = {[^}]+} - "Group" lines
-
     public static void parseData(String path) throws IOException {
         Scanner scan = new Scanner(new File(path));
         String temp = "";
@@ -29,20 +24,9 @@ public class DataParser {
         }
         while (scan.hasNext()) {
             String test = scan.findWithinHorizon(pattern, 0);
-            System.out.println(new Component(test));
-        }
-    }
-
-    public static void parseData(File file) throws IOException {
-        Scanner scan = new Scanner(file);
-        String temp = "";
-        while (temp != null) {
-            temp = scan.findWithinHorizon(constants, 0);
-            System.out.println(temp);
-        }
-        while (scan.hasNext()) {
-            String test = scan.findWithinHorizon(pattern, 0);
-            System.out.println(new Component(test).export() + "\n");
+//            System.out.println("Original: "+test);
+//            new Component(test).export();
+            System.out.println("New: " + new Component(test).export() + "\n\n");
         }
     }
 

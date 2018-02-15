@@ -6,6 +6,7 @@ import com.StellarisDK.Tools.FileClasses.Locale;
 import javafx.util.Pair;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.regex.Matcher;
 
@@ -25,7 +26,7 @@ public class Component extends GenericData {
 
     @Override
     public Object load(String input) {
-//        HashMap<String, Object> mCData = new HashMap<>();
+        HashMap<String, Object> data = new LinkedHashMap<>();
 
         Matcher kv_match = DataPattern.kv.matcher(input);
 
@@ -42,11 +43,11 @@ public class Component extends GenericData {
                 HashMap<String, Pair<String, String>> sCsMap = new HashMap<String, Pair<String, String>>() {
                     @Override
                     public String toString() {
-                        String out = "";
+                        String out = "{";
                         for (String key : keySet()) {
                             out += " " + key + " " + this.get(key).getKey() + " " + this.get(key).getValue();
                         }
-                        return out + " ";
+                        return out + " }";
                     }
                 };
                 do {
@@ -72,11 +73,12 @@ public class Component extends GenericData {
         }
 
         while (mC_match.find()) {
-            data.put(mC_match.group(1).trim(), mC_match.group(3).trim());
+//            System.out.println(mC_match.group(3).replaceAll("(?m)^\t",""));
+            data.put(mC_match.group(1).trim(), load(mC_match.group(3).replaceAll("(?m)^\t","")));
 //            System.out.println("\t"+mC_match.group(1).trim()+":");
-//            load(mC_match.group(2).replaceAll("(?m)^\t",""));
+//            load(mC_match.group(3).replaceAll("(?m)^\t",""));
         }
-        return null;
+        return data;
     }
 
     @Override

@@ -16,7 +16,7 @@ public abstract class GenericData {
 
     public GenericData(String path){
         try{
-            load(path);
+            data = (HashMap)load(path);
         } catch(IOException e){
             System.out.println("File not Found.");
         }

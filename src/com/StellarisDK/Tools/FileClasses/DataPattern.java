@@ -22,7 +22,7 @@ public class DataPattern {
     // Group 1 : Key
     // Group 2 : Modifier specific for conditions
     // Group 3 : Value
-    public static final Pattern sComplex_sub = Pattern.compile("\\t?(\\w+)( . )?([\\d.]+)?");
+    public static final Pattern sComplex_sub = Pattern.compile("\\t?(\\w+)( . )?([\\w\\d.]+)?");
 
     // Pattern matches for multi line "complex" key variable
     // i.e. immediate, trigger, mainly event related variables
