@@ -2,6 +2,7 @@ package com.StellarisDK.Tools.FileClasses;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 /*
     This class may prove most data classes worthless as a common parser works
@@ -9,7 +10,7 @@ import java.util.HashMap;
     More details later.
  */
 public abstract class GenericData {
-    protected HashMap<String, Object> data = new HashMap<>();
+    protected HashMap<String, Object> data = new LinkedHashMap<>();
 
     public GenericData(){}
 

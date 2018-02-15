@@ -31,7 +31,7 @@ public class ModDescriptor extends GenericData {
         String input = new String(Files.readAllBytes(Paths.get(path)));
 
         Matcher kv_match = DataPattern.kv.matcher(input);
-        Matcher cv_match = DataPattern.mComplex.matcher(input);
+        Matcher cv_match = DataPattern.mDSpec.matcher(input);
 
         while (kv_match.find()) {
             data.put(kv_match.group(1), kv_match.group(3).replaceAll("\"", "")
@@ -49,7 +49,7 @@ public class ModDescriptor extends GenericData {
                     return out + "}\n";
                 }
             };
-            Collections.addAll(temp, cv_match.group(3).replaceAll("[\"\t]", "").replaceAll("\r", "").trim().split("\n", 0));
+            Collections.addAll(temp, cv_match.group(2).replaceAll("[\"\t]", "").replaceAll("\r", "").trim().split("\n", 0));
             data.put(cv_match.group(1), temp);
         }
         return this.toString();

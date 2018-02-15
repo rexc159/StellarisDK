@@ -1,9 +1,6 @@
 package com.StellarisDK;
 
-
-/**
- * Not sure what's the point of this class yet
- */
+@Deprecated
 public class DataLoc {
     public static final String agendas = "common\\agendas";
     public static final String ambient_objects = "common\\ambient_objects";

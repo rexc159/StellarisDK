@@ -9,8 +9,15 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.regex.Matcher;
 
+enum CompType {
+    UTILITY,
+    STRIKE_CRAFT,
+    WEAPON
+}
+
 public class Component extends GenericData {
     public static int tab = 1;
+    private CompType type;
 
     public Component(String path){
         super(path);
@@ -18,7 +25,7 @@ public class Component extends GenericData {
 
     @Override
     public Object load(String input) {
-//        HashMap<String, List<Object>> mCData = new HashMap<>();
+//        HashMap<String, Object> mCData = new HashMap<>();
 
         Matcher kv_match = DataPattern.kv.matcher(input);
 
@@ -52,13 +59,13 @@ public class Component extends GenericData {
                     public String toString() {
                         String out = "{";
                         for (String i : this) {
-                            out += " \"" + i.trim() + "\"";
+                            out += " \"" + i + "\"";
                         }
                         return out + " }";
                     }
                 };
                 do {
-                    sCsList.add(sCs_match.group(2));
+                    sCsList.add(sCs_match.group(1).trim());
                 } while (sCs_match.find());
                 data.put(sC_match.group(1).trim(), sCsList);
             }
@@ -80,7 +87,7 @@ public class Component extends GenericData {
                 if (data.get(key) instanceof String)
                     out += key + " = \"" + data.get(key).toString() + "\"\n";
                 else
-                    out += key + " = " + data.get(key).toString();
+                    out += key + " = " + data.get(key).toString() + "\n";
             }
         }
         return out;

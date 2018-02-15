@@ -15,7 +15,7 @@ public class DataPattern {
 
     // Pattern matches for single line "complex" key variable
     // i.e. modifier, preq...
-    public static final Pattern sComplex = Pattern.compile("(?m)^\\t(\\w+) = \\{\\s*(.+?)\\}");
+    public static final Pattern sComplex = Pattern.compile("(?m)^\\t(\\w+) = \\{(.+?)\\}");
 
     // Pattern matches specific for list values
     // i.e. weapon damage, windup, tags...
@@ -26,5 +26,8 @@ public class DataPattern {
 
     // Pattern matches for multi line "complex" key variable
     // i.e. immediate, trigger, mainly event related variables
-    public static final Pattern mComplex = Pattern.compile("(?s)(?m)^\\t?(\\w+)( ?= ?)\\{[\\r\\n](.+?)^\\t?\\}");
+    public static final Pattern mComplex = Pattern.compile("(?s)(?m)^\\t(\\w+)( ?= ?)\\{[\\r\\n](.+?)^\\t?\\}");
+
+
+    public static final Pattern mDSpec = Pattern.compile("(?s)(?m)^\\t?(\\w+)=\\{[\\r\\n](.+?)^\\}");
 }
