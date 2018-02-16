@@ -1,6 +1,6 @@
-package com.StellarisDK.Tools.GUI;
+package StellarisDK.GUI;
 
-import com.StellarisDK.Tools.FileClasses.ModDescriptor;
+import StellarisDK.FileClasses.ModDescriptor;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.ListCell;
@@ -19,7 +19,7 @@ public class ModDescUI extends AbstractUI {
 
     public ModDescUI() {
         md = new ModDescriptor();
-        init("./FXML/mdFX.fxml");
+        init("FXML/mdFX.fxml");
         window.setText("Mod Descriptor");
     }
 

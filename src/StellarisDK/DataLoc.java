@@ -1,4 +1,4 @@
-package com.StellarisDK;
+package StellarisDK;
 
 @Deprecated
 public class DataLoc {

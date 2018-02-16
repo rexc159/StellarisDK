@@ -1,8 +1,8 @@
-package com.StellarisDK.Tools.FileClasses.Component;
+package StellarisDK.FileClasses.Component;
 
-import com.StellarisDK.Tools.FileClasses.DataPattern;
-import com.StellarisDK.Tools.FileClasses.GenericData;
-import com.StellarisDK.Tools.FileClasses.Locale;
+import StellarisDK.FileClasses.DataPattern;
+import StellarisDK.FileClasses.GenericData;
+import StellarisDK.FileClasses.Locale;
 import javafx.util.Pair;
 
 import java.util.HashMap;

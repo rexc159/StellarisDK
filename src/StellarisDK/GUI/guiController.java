@@ -1,9 +1,9 @@
-package com.StellarisDK;
+package StellarisDK.GUI;
 
-import com.StellarisDK.Tools.FileClasses.Component.Component;
-import com.StellarisDK.Tools.FileClasses.DataParser;
-import com.StellarisDK.Tools.FileClasses.ModDescriptor;
-import com.StellarisDK.Tools.GUI.*;
+import StellarisDK.DataLoc;
+import StellarisDK.FileClasses.Component.Component;
+import StellarisDK.FileClasses.DataParser;
+import StellarisDK.FileClasses.ModDescriptor;
 import com.sun.javafx.scene.control.skin.LabeledText;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -20,6 +20,8 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+
+import static StellarisDK.FileClasses.DataParser.parseData;
 
 public class guiController extends AnchorPane {
     private Stage stage;
@@ -41,7 +43,7 @@ public class guiController extends AnchorPane {
     private AnchorPane mainWindow;
 
     public guiController() {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("guiFX.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("FXML/guiFX.fxml"));
         loader.setRoot(this);
         loader.setController(this);
 
@@ -55,7 +57,7 @@ public class guiController extends AnchorPane {
         }
     }
 
-    protected void setStage(Stage stage) {
+    public void setStage(Stage stage) {
         this.stage = stage;
     }
 
@@ -66,7 +68,11 @@ public class guiController extends AnchorPane {
         fc.setTitle("Open File");
         path = fc.showOpenDialog(stage);
         if (path != null) {
-            System.out.println(path.getPath());
+            try{
+                parseData(path.getPath());
+            }catch(IOException e){
+                System.out.println("Failed");
+            }
         }
     }
 
@@ -119,6 +125,17 @@ public class guiController extends AnchorPane {
     }
 
     protected void loadMod() {
+//        for(File folder: new File(mainLoadPath).listFiles()){
+//            try{
+//                for (File file : new File(folder.getPath()).listFiles()) {
+//                    itemView.getRoot().getChildren().addAll(DataParser.parse(file));
+//                }
+//            } catch (NullPointerException e) {
+//                System.out.println("Empty/Missing Folder.");
+//            } catch (IOException e){
+//                System.out.println("Malformed Input");
+//            }
+//        }
         try {
             for (File file : new File(mainLoadPath + "\\" + DataLoc.component_sets).listFiles()) {
                 itemView.getRoot().getChildren().addAll(DataParser.parseSet(file));

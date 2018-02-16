@@ -1,5 +1,6 @@
-package com.StellarisDK;
+package StellarisDK;
 
+import StellarisDK.GUI.guiController;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;

@@ -1,4 +1,4 @@
-package com.StellarisDK.Tools.GUI;
+package StellarisDK.GUI;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,8 +11,6 @@ import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
-
-import java.io.IOException;
 
 public abstract class AbstractUI extends Region {
 
@@ -30,11 +28,12 @@ public abstract class AbstractUI extends Region {
             main = FXMLLoader.load(getClass().getResource(fxml));
             ((Button) main.getChildren().get(1)).setOnAction(event -> save());
         } catch (Exception e) {
-            System.out.println("Editor FXML not found, using default.");
+            System.out.println("Editor .FXML not found, using default.");
             try {
-                main = FXMLLoader.load(getClass().getResource("./FXML/default.fxml"));
-            } catch (IOException x) {
+                main = FXMLLoader.load(getClass().getResource("FXML/default.fxml"));
+            } catch (Exception x) {
                 System.out.println("Something really went wrong.");
+                return;
             }
         }
 

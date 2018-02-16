@@ -1,4 +1,4 @@
-package com.StellarisDK.Tools.FileClasses.Component;
+package StellarisDK.FileClasses.Component;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

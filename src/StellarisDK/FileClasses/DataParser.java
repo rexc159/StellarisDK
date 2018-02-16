@@ -1,7 +1,7 @@
-package com.StellarisDK.Tools.FileClasses;
+package StellarisDK.FileClasses;
 
-import com.StellarisDK.Tools.FileClasses.Component.CompSet;
-import com.StellarisDK.Tools.FileClasses.Component.Component;
+import StellarisDK.FileClasses.Component.CompSet;
+import StellarisDK.FileClasses.Component.Component;
 import javafx.scene.control.TreeItem;
 
 import java.io.File;

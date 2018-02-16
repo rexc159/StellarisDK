@@ -1,13 +1,13 @@
-package com.StellarisDK.Tools.GUI;
+package StellarisDK.GUI;
 
-import com.StellarisDK.Tools.FileClasses.Component.CompSet;
+import StellarisDK.FileClasses.Component.CompSet;
 
 public class CompSetUI extends AbstractUI{
 
     private CompSet set;
 
     public CompSetUI() {
-        init("");
+        init("FXML/compSetUI.fxml");
         window.setText("Component Set Editor");
     }
 

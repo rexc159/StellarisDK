@@ -1,6 +1,6 @@
-package com.StellarisDK.Tools.GUI;
+package StellarisDK.GUI;
 
-import com.StellarisDK.Tools.FileClasses.Component.Component;
+import StellarisDK.FileClasses.Component.Component;
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
@@ -10,7 +10,7 @@ public class CompUI extends AbstractUI {
     private Component util;
 
     public CompUI() {
-        init("./FXML/compUI.fxml");
+        init("FXML/compUI.fxml");
         window.setText("Component Editor");
     }
 
