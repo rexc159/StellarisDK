@@ -15,14 +15,14 @@ public class DataPattern {
 
     // Pattern matches for single line "complex" key variable
     // i.e. modifier, preq...
-    public static final Pattern sComplex = Pattern.compile("(?m)^\\t(\\w+) = \\{(.+?)\\}");
+    public static final Pattern sComplex = Pattern.compile("(?m)^\\t(\\w+) = \\{(.+?)\\}[\\r\\n]");
 
     // Pattern matches specific for list values
     // i.e. weapon damage, windup, tags...
     // Group 1 : Key
     // Group 2 : Modifier specific for conditions
     // Group 3 : Value
-    public static final Pattern sComplex_sub = Pattern.compile("\\t?(\\w+)( . )?([\\w\\d.]+)?");
+    public static final Pattern sComplex_sub = Pattern.compile("\\t?(\\w+)( . )?([^\\s\\{\\}]+)?");
 
     // Pattern matches for multi line "complex" key variable
     // i.e. immediate, trigger, mainly event related variables

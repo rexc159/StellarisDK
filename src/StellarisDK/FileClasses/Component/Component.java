@@ -50,10 +50,19 @@ public class Component extends GenericData {
                         return out + " }";
                     }
                 };
-                do {
-                    sCsMap.put(sCs_match.group(1).trim(), new Pair<>(sCs_match.group(2).trim(), sCs_match.group(3).trim()));
-                } while (sCs_match.find());
-                data.put(sC_match.group(1).trim(), sCsMap);
+                if(sCs_match.group(3) != null){
+                    do {
+                        try{
+                            sCsMap.put(sCs_match.group(1).trim(), new Pair<>(sCs_match.group(2).trim(), sCs_match.group(3).trim()));
+                        }catch (Exception e){
+                            System.out.println("Parsing Failed\n Cause: " + sC_match.group(2));
+                            return null;
+                        }
+                    } while (sCs_match.find());
+                    data.put(sC_match.group(1).trim(), sCsMap);
+                }else {
+                    data.put(sC_match.group(1).trim(), load(sC_match.group(2).replaceFirst("^\\s", "\t").replaceFirst("\\s$","\n").trim()));
+                }
             } else {
                 LinkedList<String> sCsList = new LinkedList<String>() {
                     @Override
