@@ -36,10 +36,20 @@ public class Component extends GenericData {
         LinkedList<Object> temp;
 
         while (kv_match.find()) {
-            temp = new LinkedList<>();
-            temp.add(kv_match.group(3).replaceAll("\"", "").trim());
+            temp = new LinkedList<Object>(){
+                @Override
+                public String toString(){
+                    String out = "[";
+                    for (Object pair : this) {
+                        out += " "+((Pair)pair).getKey()+" "+((Pair)pair).getValue()+", ";
+                    }
+                    return out + "]";
+                }
+            };
+            Pair<String, String> dat = new Pair<>(kv_match.group(2).trim(),kv_match.group(3).replaceAll("\"", "").trim());
+            temp.add(dat);
             if(data.containsKey(kv_match.group(1).trim())){
-                data.get(kv_match.group(1).trim()).add(kv_match.group(3).replaceAll("\"", "").trim());
+                data.get(kv_match.group(1).trim()).add(dat);
             }else{
                 data.put(kv_match.group(1).trim(), temp);
             }
