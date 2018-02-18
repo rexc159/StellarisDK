@@ -26,7 +26,7 @@ public class DataPattern {
 
     // Pattern matches for multi line "complex" key variable
     // i.e. immediate, trigger, mainly event related variables
-    public static final Pattern mComplex = Pattern.compile("(?s)(?m)^\\t(\\w+)( ?= ?)\\{[\\r\\n](.+?)^\\t?\\}");
+    public static final Pattern mComplex = Pattern.compile("(?s)(?m)^\\t(\\w+)( ?= ?)\\{\\s*[\\r\\n](.+?)^\\t?\\}");
 
 
     public static final Pattern mDSpec = Pattern.compile("(?s)(?m)^\\t?(\\w+)=\\{[\\r\\n](.+?)^\\}");
