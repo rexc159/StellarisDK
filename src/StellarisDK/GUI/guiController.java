@@ -3,6 +3,7 @@ package StellarisDK.GUI;
 import StellarisDK.DataLoc;
 import StellarisDK.FileClasses.Component.Component;
 import StellarisDK.FileClasses.DataParser;
+import StellarisDK.FileClasses.GenericData;
 import StellarisDK.FileClasses.ModDescriptor;
 import com.sun.javafx.scene.control.skin.LabeledText;
 import javafx.fxml.FXML;
@@ -35,6 +36,8 @@ public class guiController extends AnchorPane {
     private ModDescUI modDescUI = new ModDescUI();
 
     private ModDescriptor mainMd;
+
+    private GenericData test;
 
     @FXML
     private TreeView itemView;
@@ -69,7 +72,7 @@ public class guiController extends AnchorPane {
         path = fc.showOpenDialog(stage);
         if (path != null) {
             try{
-                parseData(path.getPath());
+                test = parseData(path.getPath());
             }catch(IOException e){
                 System.out.println("Failed");
             }
@@ -165,6 +168,22 @@ public class guiController extends AnchorPane {
             try {
                 FileWriter fw = new FileWriter(mod);
                 fw.write(mainMd.export());
+                fw.close();
+            } catch (IOException e) {
+                System.out.println("Export Failed.");
+            }
+        }
+    }
+
+    @FXML
+    protected void exportTest() {
+        FileChooser fc = new FileChooser();
+        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text File (*.txt)", "*.txt"));
+        File temp = fc.showSaveDialog(stage);
+        if (temp != null) {
+            try {
+                FileWriter fw = new FileWriter(temp);
+                fw.write(test.export());
                 fw.close();
             } catch (IOException e) {
                 System.out.println("Export Failed.");
