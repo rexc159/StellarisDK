@@ -26,7 +26,22 @@ public class Component extends GenericData {
 
     @Override
     public Object load(String input) {
-        HashMap<String, LinkedList<Object>> data = new LinkedHashMap<>();
+        LinkedHashMap<String, LinkedList<Object>> data = new LinkedHashMap<String, LinkedList<Object>>() {
+            @Override
+            public String toString() {
+                String out = "";
+                tab++;
+                String tabs = "";
+                for (int k = 0; k < tab; k++) {
+                    tabs += "\t";
+                }
+                for (String i : keySet()) {
+                    out += get(i).toString().replaceAll("#key", "\n"+tabs+i);
+                }
+                tab--;
+                return out;
+            }
+        };
 
         Matcher kv_match = DataPattern.kv.matcher(input);
 
@@ -36,33 +51,49 @@ public class Component extends GenericData {
         LinkedList<Object> temp;
 
         while (kv_match.find()) {
-            temp = new LinkedList<Object>(){
+            temp = new LinkedList<Object>() {
                 @Override
-                public String toString(){
-                    String out = "[";
+                public String toString() {
+                    String out = "";
                     for (Object pair : this) {
-                        out += " "+((Pair)pair).getKey()+" "+((Pair)pair).getValue()+", ";
+                        if (this.size() == 1) {
+                            return "#key " + ((Pair) pair).getKey() + " " + ((Pair) pair).getValue();
+                        }
+                        out += "#key " + ((Pair) pair).getKey() + " " + ((Pair) pair).getValue();
                     }
-                    return out + "]";
+                    return out;
                 }
             };
-            Pair<String, String> dat = new Pair<>(kv_match.group(2).trim(),kv_match.group(3).replaceAll("\"", "").trim());
+            Pair<String, String> dat = new Pair<>(kv_match.group(2).trim(), kv_match.group(3).replaceAll("\"", "").trim());
             temp.add(dat);
-            if(data.containsKey(kv_match.group(1).trim())){
+            if (data.containsKey(kv_match.group(1).trim())) {
                 data.get(kv_match.group(1).trim()).add(dat);
-            }else{
+            } else {
                 data.put(kv_match.group(1).trim(), temp);
             }
         }
 
         while (sC_match.find()) {
-            temp = new LinkedList<>();
+            temp = new LinkedList<Object>() {
+                @Override
+                public String toString() {
+                    String out = "[";
+                    for (Object sub : this) {
+                        if (this.size() == 1) {
+                            return sub.toString();
+                        }
+                        out += sub;
+                    }
+                    return out + "]";
+                }
+            };
+
             Matcher sCs_match = DataPattern.sComplex_sub.matcher(sC_match.group(2));
             if (sCs_match.find() && sCs_match.group(2) != null) {
                 HashMap<String, Pair<String, String>> sCsMap = new HashMap<String, Pair<String, String>>() {
                     @Override
                     public String toString() {
-                        String out = "{";
+                        String out = "#key = {";
                         for (String key : keySet()) {
                             out += " " + key + " " + this.get(key).getKey() + " " + this.get(key).getValue();
                         }
@@ -72,25 +103,31 @@ public class Component extends GenericData {
                 if (sCs_match.group(3) != null) {
                     do {
                         try {
-                            sCsMap.put(sCs_match.group(1).trim(), new Pair<>(sCs_match.group(2).trim(), sCs_match.group(3).trim()));
+                            Pair<String, String> rec = new Pair<String, String>(sCs_match.group(2).trim(), sCs_match.group(3).trim()){
+                                @Override
+                                public String toString(){
+                                    return getKey() + " " + getValue();
+                                }
+                            };
+                            sCsMap.put(sCs_match.group(1).trim(), rec);
                         } catch (Exception e) {
                             System.out.println("Parsing Failed\n Cause: " + sC_match.group(2));
                             return null;
                         }
                     } while (sCs_match.find());
                     temp.add(sCsMap);
-                    if(data.containsKey(sC_match.group(1).trim())){
+                    if (data.containsKey(sC_match.group(1).trim())) {
                         data.get(sC_match.group(1).trim()).add(sCsMap);
-                    }else{
+                    } else {
                         data.put(sC_match.group(1).trim(), temp);
                     }
                 } else {
                     System.out.println(sC_match.group(2).replaceFirst("^\\s", "\t").replaceFirst("\\s$", "\n"));
                     Object dat = load(sC_match.group(2).replaceFirst("^\\s", "\t").replaceFirst("\\s$", "\n"));
                     temp.add(dat);
-                    if(data.containsKey(sC_match.group(1).trim())){
+                    if (data.containsKey(sC_match.group(1).trim())) {
                         data.get(sC_match.group(1).trim()).add(dat);
-                    }else{
+                    } else {
                         data.put(sC_match.group(1).trim(), temp);
                     }
                 }
@@ -102,28 +139,41 @@ public class Component extends GenericData {
                         for (Object i : this) {
                             out += " \"" + i + "\"";
                         }
-                        return out + " }";
+                        return out + "}";
                     }
                 };
                 do {
                     sCsList.add(sCs_match.group(1).trim());
                 } while (sCs_match.find());
                 temp.add(sCsList);
-                if(data.containsKey(sC_match.group(1).trim())){
+                if (data.containsKey(sC_match.group(1).trim())) {
                     data.get(sC_match.group(1).trim()).add(sCsList);
-                }else{
+                } else {
                     data.put(sC_match.group(1).trim(), temp);
                 }
             }
         }
 
         while (mC_match.find()) {
-            temp = new LinkedList<>();
+            temp = new LinkedList<Object>() {
+                @Override
+                public String toString() {
+                    // Fix repeated here
+                    String out = "#key = {";
+                    for (Object i : this) {
+                        out += i + "\n";
+                        for (int k = 0; k < tab; k++) {
+                            out += "\t";
+                        }
+                    }
+                    return out + "}";
+                }
+            };
             Object dat = load(mC_match.group(3).replaceAll("(?m)^\t", ""));
             temp.add(dat);
-            if(data.containsKey(mC_match.group(1).trim())){
+            if (data.containsKey(mC_match.group(1).trim())) {
                 data.get(mC_match.group(1).trim()).add(dat);
-            }else{
+            } else {
                 data.put(mC_match.group(1).trim(), temp);
             }
         }
@@ -132,16 +182,17 @@ public class Component extends GenericData {
 
     @Override
     public String export() {
-        String out = "";
+        String out = " = {\n";
         for (String key : data.keySet()) {
             if (data.get(key) != null) {
-                if (data.get(key) instanceof String)
-                    out += key + " = \"" + data.get(key).toString() + "\"\n";
-                else
-                    out += key + " = " + data.get(key).toString() + "\n";
+                String tabs = "";
+                for (int k = 0; k < tab; k++) {
+                    tabs += "\t";
+                }
+                out += data.get(key).toString().replaceAll("#key", tabs+key) + "\n";
             }
         }
-        return out;
+        return out + "}\n";
     }
 
     public String getGroup() {

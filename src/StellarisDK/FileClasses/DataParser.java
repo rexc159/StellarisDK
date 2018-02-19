@@ -15,8 +15,9 @@ public class DataParser {
     private final static Pattern pattern = Pattern.compile("(?s)(?m)(^\\w+)\\s=\\s\\{(.+?)\\n\\}\\n?");
     private final static Pattern constants = Pattern.compile("(\\@\\w+) = (.+)");
 
-    public static void parseData(String path) throws IOException {
+    public static GenericData parseData(String path) throws IOException {
         Scanner scan = new Scanner(new File(path));
+        Component data = null;
         String temp = "";
         while (temp != null) {
             temp = scan.findWithinHorizon(constants, 0);
@@ -27,7 +28,9 @@ public class DataParser {
 //            System.out.println("Original: "+test);
 //            new Component(test).export();
             System.out.println("New: " + new Component(test).export() + "\n\n");
+            data = new Component(test);
         }
+        return data;
     }
 
     public static LinkedList<TreeItem> parseSet(File file) throws IOException {

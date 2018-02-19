@@ -28,6 +28,6 @@ public class DataPattern {
     // i.e. immediate, trigger, mainly event related variables
     public static final Pattern mComplex = Pattern.compile("(?s)(?m)^\\t(\\w+)( ?= ?)\\{\\s*[\\r\\n](.+?)^\\t?\\}");
 
-
+    // Mod Descriptor Specific Pattern
     public static final Pattern mDSpec = Pattern.compile("(?s)(?m)^\\t?(\\w+)=\\{[\\r\\n](.+?)^\\}");
 }
