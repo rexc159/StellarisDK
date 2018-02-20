@@ -11,17 +11,11 @@ import java.util.regex.Matcher;
 
 public class ModDescriptor extends GenericData {
 
-// Pattern matches for single value variable
-// i.e. key, size, power
-//     protected Pattern kv = Pattern.compile("(\\w+)=([^{].*)");
+    public ModDescriptor() {
+        super();
+    }
 
-// Pattern matches for multi value variables
-// i.e. modifier, prerequisites
-//     protected Pattern cv = Pattern.compile("(?s)(?m)(\\w+)=\\{(.+?)\\}");
-
-    public ModDescriptor(){}
-
-    public ModDescriptor(String path){
+    public ModDescriptor(String path) {
         super(path);
     }
 
