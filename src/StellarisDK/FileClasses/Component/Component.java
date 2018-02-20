@@ -34,12 +34,12 @@ public class Component extends GenericData {
             public String toString() {
                 String out = "";
                 tab++;
-                String tabs = "";
+                String tabs = "\r\n";
                 for (int k = 0; k < tab; k++) {
                     tabs += "\t";
                 }
                 for (String i : keySet()) {
-                    out += get(i).toString().replaceAll("#key", "\n" + tabs + i);
+                    out += get(i).toString().replaceAll("#key", tabs + i);
                 }
                 tab--;
                 return out;
@@ -76,14 +76,11 @@ public class Component extends GenericData {
                 temp = new LinkedList<Object>() {
                     @Override
                     public String toString() {
-                        String out = "[";
+                        String out = "#key = {";
                         for (Object sub : this) {
-                            if (this.size() == 1) {
-                                return sub.toString();
-                            }
-                            out += sub;
+                            out += sub.toString().replaceAll("(?m)^[\r\n\\t]+"," ");
                         }
-                        return out + "]";
+                        return out + " }";
                     }
                 };
 
@@ -92,11 +89,11 @@ public class Component extends GenericData {
                     LinkedHashMap<String, Pair<String, String>> sCsMap = new LinkedHashMap<String, Pair<String, String>>() {
                         @Override
                         public String toString() {
-                            String out = "#key = {";
+                            String out = "";
                             for (String key : keySet()) {
                                 out += " " + key + " " + this.get(key).getKey() + " " + this.get(key).getValue();
                             }
-                            return out + " }";
+                            return out + "";
                         }
                     };
                     if (sCs_match.group(3) != null) {
@@ -121,7 +118,6 @@ public class Component extends GenericData {
                             data.put(single_match.group(5).trim(), temp);
                         }
                     } else {
-                        System.out.println(single_match.group(6).replaceFirst("^\\s", "\t").replaceFirst("\\s$", "\n"));
                         Object dat = load(single_match.group(6).replaceFirst("^\\s", "\t").replaceFirst("\\s$", "\n"));
                         temp.add(dat);
                         if (data.containsKey(single_match.group(5).trim())) {
@@ -156,14 +152,16 @@ public class Component extends GenericData {
                     @Override
                     public String toString() {
                         // Fix repeated here
-                        String out = "#key = {";
+                        String out = "";
                         for (Object i : this) {
-                            out += i + "\n";
+                            out += "#key = {";
+                            out += i + "\r\n";
                             for (int k = 0; k < tab; k++) {
                                 out += "\t";
                             }
+                            out += "}";
                         }
-                        return out + "}";
+                        return out;
                     }
                 };
                 Object dat = load(single_match.group(9).replaceAll("(?m)^\t", ""));
@@ -180,17 +178,17 @@ public class Component extends GenericData {
 
     @Override
     public String export() {
-        String out = " = {\n";
+        String out = " = {";
         for (String key : data.keySet()) {
             if (data.get(key) != null) {
-                String tabs = "";
+                String tabs = "\r\n";
                 for (int k = 0; k < tab; k++) {
                     tabs += "\t";
                 }
-                out += data.get(key).toString().replaceAll("#key", tabs + key) + "\n";
+                out += data.get(key).toString().replaceAll("#key", tabs + key);
             }
         }
-        return out + "}\n";
+        return out + "\r\n}\r\n";
     }
 
     public String getGroup() {
