@@ -25,7 +25,7 @@ public class CompUI extends AbstractUI {
         for (Node node : ((GridPane) main.getChildren().get(0)).getChildren()) {
             if (node.getId() != null) {
                 if(node instanceof TextField){
-                    ((TextField) node).setText((String) util.getValue(node.getId()));
+                    ((TextField) node).setText(util.getValue(node.getId()).toString());
                 }
             }
         }

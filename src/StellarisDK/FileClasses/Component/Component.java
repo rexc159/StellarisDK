@@ -16,7 +16,7 @@ enum CompType {
 }
 
 public class Component extends GenericData {
-    public static int tab = 1;
+    private static int tab = 1;
     private CompType type;
 
     public Component() {
@@ -65,20 +65,22 @@ public class Component extends GenericData {
                         return out;
                     }
                 };
-                Pair<String, String> dat = new Pair<>(single_match.group(2).trim(), single_match.group(3).replaceAll("\"", "").trim());
+
+                Pair<String, String> dat = new Pair<>(single_match.group(2).trim(), single_match.group(3).trim());
                 temp.add(dat);
                 if (data.containsKey(single_match.group(1).trim())) {
                     data.get(single_match.group(1).trim()).add(dat);
                 } else {
                     data.put(single_match.group(1).trim(), temp);
                 }
+
             } else if (single_match.group(5) != null) {
                 temp = new LinkedList<Object>() {
                     @Override
                     public String toString() {
                         String out = "#key = {";
                         for (Object sub : this) {
-                            out += sub.toString().replaceAll("(?m)^[\r\n\\t]+"," ");
+                            out += sub.toString().replaceAll("(?m)^[\r\n\\t]+", " ");
                         }
                         return out + " }";
                     }
@@ -96,6 +98,7 @@ public class Component extends GenericData {
                             return out + "";
                         }
                     };
+
                     if (sCs_match.group(3) != null) {
                         do {
                             try {
@@ -126,17 +129,19 @@ public class Component extends GenericData {
                             data.put(single_match.group(5).trim(), temp);
                         }
                     }
+
                 } else {
                     LinkedList<Object> sCsList = new LinkedList<Object>() {
                         @Override
                         public String toString() {
-                            String out = "{";
+                            String out = "";
                             for (Object i : this) {
-                                out += " \"" + i + "\"";
+                                out += " " + i + "";
                             }
-                            return out + "}";
+                            return out;
                         }
                     };
+
                     do {
                         sCsList.add(sCs_match.group(1).trim());
                     } while (sCs_match.find());
@@ -147,6 +152,7 @@ public class Component extends GenericData {
                         data.put(single_match.group(5).trim(), temp);
                     }
                 }
+
             } else if (single_match.group(7) != null) {
                 temp = new LinkedList<Object>() {
                     @Override
@@ -197,7 +203,7 @@ public class Component extends GenericData {
 
     @Override
     public String toString() {
-        String temp = Locale.getLocale((String) data.get("key"));
+        String temp = Locale.getLocale(data.get("key").toString());
         if (temp != null)
             return temp;
         else
