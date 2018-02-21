@@ -80,6 +80,6 @@ public class ModDescriptor extends GenericData {
 
     @Override
     public String toString() {
-        return data.get("name").toString();
+        return data.get("name") == null ? "New Mod" : data.get("name").toString();
     }
 }

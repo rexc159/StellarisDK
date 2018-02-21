@@ -82,6 +82,15 @@ public class guiController extends AnchorPane {
     }
 
     @FXML
+    protected void createNewMD(){
+        mainMd = new ModDescriptor();
+        itemView.setRoot(new TreeItem<>(mainMd));
+        itemView.getRoot().getChildren().add(new TreeItem<>(mainMd));
+        itemView.getRoot().setExpanded(true);
+        open(mainMd);
+    }
+
+    @FXML
     protected void openMod() {
         FileChooser fc = new FileChooser();
         fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Mod Descriptors (*.mod)", "*.mod"));
@@ -89,14 +98,17 @@ public class guiController extends AnchorPane {
         modPath = fc.showOpenDialog(stage);
         if (modPath != null) {
             mainMd = new ModDescriptor(modPath.getPath());
-            itemView.setRoot(new TreeItem<>(mainMd.getValue("name").toString()));
+            itemView.setRoot(new TreeItem<>(mainMd));
             itemView.getRoot().getChildren().add(new TreeItem(mainMd));
             itemView.getRoot().setExpanded(true);
+
+            // Can probably cut some RAM cost by using Cell Factories
             itemView.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
                 if (event.getClickCount() >= 2) {
-                    System.out.println("Starting Editor");
                     Node node = event.getPickResult().getIntersectedNode();
-                    if (node instanceof Text || (node instanceof TreeCell && ((TreeCell) node).getText() != null)) {
+                    if (node instanceof Text || (node instanceof TreeCell && ((TreeCell) node).getText() != null &&
+                            ((TreeCell) node).getChildrenUnmodifiable().size() == 1)) {
+                        System.out.println("Starting Editor");
                         Object temp;
                         if ((node instanceof LabeledText)) {
                             temp = ((TreeCell) node.getParent()).getTreeItem().getValue();
@@ -106,6 +118,7 @@ public class guiController extends AnchorPane {
                     }
                 }
             });
+
             if (mainMd.getValue("path") != null) {
                 mainLoadPath = modPath.getParentFile().getParent() + "\\" + (mainMd.getValue("path").toString().replaceAll("/", "\\\\"));
                 loadMod();
