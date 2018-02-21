@@ -49,6 +49,23 @@ public class guiController extends AnchorPane {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+        // Can probably cut some RAM cost by using Cell Factories
+        itemView.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            if (event.getClickCount() >= 2) {
+                Node node = event.getPickResult().getIntersectedNode();
+                if (node instanceof Text || (node instanceof TreeCell && ((TreeCell) node).getText() != null &&
+                        ((TreeCell) node).getChildrenUnmodifiable().size() == 1)) {
+                    System.out.println("Starting Editor");
+                    Object temp;
+                    if ((node instanceof LabeledText)) {
+                        temp = ((TreeCell) node.getParent()).getTreeItem().getValue();
+                    } else
+                        temp = ((TreeCell) node).getTreeItem().getValue();
+                    open((GenericData) temp);
+                }
+            }
+        });
     }
 
     public void setStage(Stage stage) {
@@ -101,23 +118,6 @@ public class guiController extends AnchorPane {
             itemView.setRoot(new TreeItem<>(mainMd));
             itemView.getRoot().getChildren().add(new TreeItem(mainMd));
             itemView.getRoot().setExpanded(true);
-
-            // Can probably cut some RAM cost by using Cell Factories
-            itemView.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-                if (event.getClickCount() >= 2) {
-                    Node node = event.getPickResult().getIntersectedNode();
-                    if (node instanceof Text || (node instanceof TreeCell && ((TreeCell) node).getText() != null &&
-                            ((TreeCell) node).getChildrenUnmodifiable().size() == 1)) {
-                        System.out.println("Starting Editor");
-                        Object temp;
-                        if ((node instanceof LabeledText)) {
-                            temp = ((TreeCell) node.getParent()).getTreeItem().getValue();
-                        } else
-                            temp = ((TreeCell) node).getTreeItem().getValue();
-                        open((GenericData) temp);
-                    }
-                }
-            });
 
             if (mainMd.getValue("path") != null) {
                 mainLoadPath = modPath.getParentFile().getParent() + "\\" + (mainMd.getValue("path").toString().replaceAll("/", "\\\\"));
