@@ -2,6 +2,7 @@ package StellarisDK.FileClasses.Component;
 
 import StellarisDK.FileClasses.DataPattern;
 import StellarisDK.FileClasses.GenericData;
+import StellarisDK.FileClasses.Helper.cPair;
 import StellarisDK.FileClasses.Locale;
 import javafx.util.Pair;
 
@@ -40,6 +41,7 @@ public class Component extends GenericData {
                 }
                 for (String i : keySet()) {
                     out += get(i).toString().replaceAll("#key", tabs + i);
+//                    out += tabs + i + get(i).toString();
                 }
                 tab--;
                 return out;
@@ -66,7 +68,7 @@ public class Component extends GenericData {
                     }
                 };
 
-                Pair<String, String> dat = new Pair<>(single_match.group(2).trim(), single_match.group(3).trim());
+                cPair dat = new cPair(single_match.group(2).trim(), single_match.group(3).trim());
                 temp.add(dat);
                 if (data.containsKey(single_match.group(1).trim())) {
                     data.get(single_match.group(1).trim()).add(dat);
@@ -88,7 +90,7 @@ public class Component extends GenericData {
 
                 Matcher sCs_match = DataPattern.sComplex_sub.matcher(single_match.group(6));
                 if (sCs_match.find() && sCs_match.group(2) != null) {
-                    LinkedHashMap<String, Pair<String, String>> sCsMap = new LinkedHashMap<String, Pair<String, String>>() {
+                    LinkedHashMap<String, cPair> sCsMap = new LinkedHashMap<String, cPair>() {
                         @Override
                         public String toString() {
                             String out = "";
@@ -102,7 +104,7 @@ public class Component extends GenericData {
                     if (sCs_match.group(3) != null) {
                         do {
                             try {
-                                Pair<String, String> rec = new Pair<String, String>(sCs_match.group(2).trim(), sCs_match.group(3).trim()) {
+                                cPair rec = new cPair(sCs_match.group(2).trim(), sCs_match.group(3).trim()) {
                                     @Override
                                     public String toString() {
                                         return getKey() + " " + getValue();
@@ -192,6 +194,7 @@ public class Component extends GenericData {
                     tabs += "\t";
                 }
                 out += data.get(key).toString().replaceAll("#key", tabs + key);
+//                out += tabs + key + data.get(key).toString();
             }
         }
         return out + "\r\n}\r\n";
@@ -203,10 +206,10 @@ public class Component extends GenericData {
 
     @Override
     public String toString() {
-        String temp = Locale.getLocale(data.get("key").toString());
+        String temp = Locale.getLocale(((LinkedList<Object>)data.get("key")).getFirst().toString().replaceAll("\"",""));
         if (temp != null)
             return temp;
         else
-            return data.get("key").toString();
+            return ((LinkedList<Object>)data.get("key")).getFirst().toString().replaceAll("\"","");
     }
 }

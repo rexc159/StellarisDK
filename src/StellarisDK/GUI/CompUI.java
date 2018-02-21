@@ -1,9 +1,12 @@
 package StellarisDK.GUI;
 
 import StellarisDK.FileClasses.Component.Component;
+import StellarisDK.FileClasses.Helper.cPair;
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+
+import java.util.LinkedList;
 
 public class CompUI extends AbstractUI {
 
@@ -25,7 +28,8 @@ public class CompUI extends AbstractUI {
         for (Node node : ((GridPane) main.getChildren().get(0)).getChildren()) {
             if (node.getId() != null) {
                 if(node instanceof TextField){
-                    ((TextField) node).setText(util.getValue(node.getId()).toString());
+                    ((TextField) node).setText(((LinkedList<Object>)util.getValue(node.getId())).getFirst().toString()
+                            .replaceAll("\"",""));
                 }
             }
         }
@@ -33,6 +37,19 @@ public class CompUI extends AbstractUI {
 
     @Override
     public Object save() {
+        for (Node node : ((GridPane) main.getChildren().get(0)).getChildren()) {
+            if (node.getId() != null) {
+                if(node instanceof TextField){
+                    LinkedList temp = ((LinkedList<Object>)util.getValue(node.getId()));
+                    String out = ((TextField) node).getText();
+                    if(temp.getFirst().toString().contains("\"")){
+                        out = "\"" + out +"\"";
+                    }
+                    temp.set(0,((cPair)temp.getFirst()).setValue(out));
+                }
+            }
+        }
+        System.out.println(util.export());
         return null;
     }
 }
