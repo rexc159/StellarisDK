@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<AnchorPane fx:id="main" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <GridPane fx:id="grid" layoutX="10.0" layoutY="10.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="110.0" />
+                <ColumnConstraints hgrow="SOMETIMES" />
+                <ColumnConstraints hgrow="SOMETIMES" />
+            </columnConstraints>
+            <padding>
+                <Insets bottom="40.0" />
+            </padding>
+            <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints vgrow="SOMETIMES" />
+            </rowConstraints>
+         <children>
+            <Label text="Key" />
+            <Label text="Icon" GridPane.rowIndex="1" />
+            <Label text="Icon Frame" GridPane.rowIndex="2" />
+            <TextField id="key" GridPane.columnIndex="2" />
+            <TextField id="icon" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            <TextField id="icon_frame" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+         </children>
+        </GridPane>
+        <Button id="btn_save" layoutX="346.0" layoutY="197.0" mnemonicParsing="false" text="Save" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+    </children>
+</AnchorPane>

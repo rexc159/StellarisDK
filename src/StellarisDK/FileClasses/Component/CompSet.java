@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 public class CompSet extends GenericData {
     private String key;
     private String icon;
-    private int icon_frame = 1;
+    private String icon_frame = "1";
     protected final Pattern kv = Pattern.compile("(?m)^\\t?(\\w+) . ([^\\{#\\n]+)(#.+)*");
 
     public CompSet() {
@@ -35,11 +35,37 @@ public class CompSet extends GenericData {
                     icon = kv_match.group(2).replaceAll("\"","").trim();
                     break;
                 case "icon_frame":
-                    icon_frame = Integer.parseInt(kv_match.group(2).trim());
+                    icon_frame = kv_match.group(2).trim();
                     break;
             }
         }
         return this;
+    }
+
+    @Override
+    public Object getValue(String key) {
+        switch (key) {
+            case "key":
+                return this.key;
+            case "icon":
+                return this.icon;
+            case "icon_frame":
+                return this.icon_frame;
+            default:
+                return null;
+        }
+    }
+
+    @Override
+    public void setValue(String key, Object value, boolean addIfAbsent) {
+        switch (key) {
+            case "key":
+                this.key = value.toString();
+            case "icon":
+                this.icon = value.toString();
+            case "icon_frame":
+                this.icon_frame = value.toString();
+        }
     }
 
     @Override

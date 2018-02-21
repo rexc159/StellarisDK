@@ -12,7 +12,7 @@ import java.util.LinkedList;
 public class CompUI extends AbstractUI {
 
     public CompUI() {
-        init("FXML/compUI.fxml");
+        init("FXML/compFX.fxml");
         window.setText("Component Editor");
     }
 

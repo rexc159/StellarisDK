@@ -75,10 +75,10 @@ public class ModDescUI extends AbstractUI {
                     };
                     if (((ListView) node).getItems().toArray().length != 0) {
                         Collections.addAll(temp, ((ListView) node).getItems().toArray());
-                        obj.setValue(node.getId(), temp);
+                        obj.setValue(node.getId(), temp, true);
                     }
                 } else {
-                    obj.setValue(node.getId(), ((TextField) node).getText());
+                    obj.setValue(node.getId(), ((TextField) node).getText(), true);
                 }
             }
         }

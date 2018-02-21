@@ -25,8 +25,12 @@ public abstract class GenericData {
         return data.get(key);
     }
 
-    public void setValue(String key, Object value) {
-        data.replace(key, value);
+    public void setValue(String key, Object value, boolean addIfAbsent) {
+        if(addIfAbsent){
+            data.put(key, value);
+        }else{
+            data.replace(key, value);
+        }
     }
 
     public abstract Object load(String input);
