@@ -1,5 +1,6 @@
 package StellarisDK.GUI;
 
+import StellarisDK.FileClasses.GenericData;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -20,6 +21,8 @@ public abstract class AbstractUI extends Region {
     TitledPane window = new TitledPane();
 
     public TreeView itemView;
+
+    public GenericData obj;
 
     void init(String fxml) {
         double mouse[] = new double[2];
@@ -66,7 +69,7 @@ public abstract class AbstractUI extends Region {
         getChildren().add(node);
     }
 
-    public void setTree(TreeView view){
+    public void setTree(TreeView view) {
         itemView = view;
     }
 
@@ -77,4 +80,9 @@ public abstract class AbstractUI extends Region {
     public abstract Object save();
 
     public abstract void load(Object object);
+
+    @Override
+    public String toString() {
+        return obj.toString();
+    }
 }

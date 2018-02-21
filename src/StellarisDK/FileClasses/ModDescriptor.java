@@ -1,5 +1,7 @@
 package StellarisDK.FileClasses;
 
+import StellarisDK.GUI.ModDescUI;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -13,19 +15,27 @@ public class ModDescriptor extends GenericData {
 
     public ModDescriptor() {
         super();
+        ui = new ModDescUI();
     }
 
     public ModDescriptor(String path) {
         super(path);
+        ui = new ModDescUI();
     }
 
     @Override
-    public Object load(String path) throws IOException {
+    public Object load(String path) {
         HashMap<String, Object> data = new LinkedHashMap<>();
         for (String key : data.keySet()) {
             data.replace(key, null);
         }
-        String input = new String(Files.readAllBytes(Paths.get(path)));
+        String input;
+        try{
+            input = new String(Files.readAllBytes(Paths.get(path)));
+        } catch (IOException e){
+            System.out.println("Error: Unable to load .mod");
+            return null;
+        }
 
         Matcher kv_match = DataPattern.kv.matcher(input);
         Matcher cv_match = DataPattern.mDSpec.matcher(input);

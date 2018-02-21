@@ -9,16 +9,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.layout.GridPane;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.LinkedList;
 
 public class ModDescUI extends AbstractUI {
 
-    public ModDescriptor md;
-
     public ModDescUI() {
-        md = new ModDescriptor();
         init("FXML/mdFX.fxml");
         window.setText("Mod Descriptor");
     }
@@ -26,14 +22,10 @@ public class ModDescUI extends AbstractUI {
     @Override
     public void load(Object object) {
         if (object instanceof String) {
-            try {
-                md.load((String) object);
-                System.out.println("Loaded");
-            } catch (IOException e) {
-                System.out.println("File Not Found");
-            }
+            obj.load((String) object);
+            System.out.println("Loaded");
         } else {
-            md = (ModDescriptor) object;
+            obj = (ModDescriptor) object;
         }
         for (Node node : ((GridPane) main.getChildren().get(0)).getChildren()) {
             if (node.getId() != null) {
@@ -57,10 +49,10 @@ public class ModDescUI extends AbstractUI {
                             }
                         }
                     });
-                    if (md.getValue(node.getId()) != null)
-                        ((ListView) node).getItems().setAll((LinkedList) md.getValue(node.getId()));
+                    if (obj.getValue(node.getId()) != null)
+                        ((ListView) node).getItems().setAll((LinkedList) obj.getValue(node.getId()));
                 } else {
-                    ((TextField) node).setText((String) md.getValue(node.getId()));
+                    ((TextField) node).setText((String) obj.getValue(node.getId()));
                 }
             }
         }
@@ -83,14 +75,14 @@ public class ModDescUI extends AbstractUI {
                     };
                     if (((ListView) node).getItems().toArray().length != 0) {
                         Collections.addAll(temp, ((ListView) node).getItems().toArray());
-                        md.setValue(node.getId(), temp);
+                        obj.setValue(node.getId(), temp);
                     }
                 } else {
-                    md.setValue(node.getId(), ((TextField) node).getText());
+                    obj.setValue(node.getId(), ((TextField) node).getText());
                 }
             }
         }
         itemView.refresh();
-        return md;
+        return obj;
     }
 }

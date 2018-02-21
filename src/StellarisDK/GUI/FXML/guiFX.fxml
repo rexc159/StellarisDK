@@ -6,7 +6,7 @@
     <children>
         <SplitPane dividerPositions="0.5" layoutY="32.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="32.0">
             <items>
-                <TreeView fx:id="itemView" maxWidth="600.0" minWidth="-Infinity" prefWidth="200.0" SplitPane.resizableWithParent="false" />
+                <TreeView id="itemView" fx:id="itemView" maxWidth="600.0" minWidth="-Infinity" prefWidth="200.0" SplitPane.resizableWithParent="false" />
                 <AnchorPane fx:id="mainWindow" minHeight="0.0" />
             </items>
         </SplitPane>

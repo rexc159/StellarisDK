@@ -2,9 +2,10 @@ package StellarisDK.FileClasses.Component;
 
 import StellarisDK.FileClasses.DataPattern;
 import StellarisDK.FileClasses.GenericData;
+import StellarisDK.FileClasses.Helper.PairLinkedList;
 import StellarisDK.FileClasses.Helper.cPair;
 import StellarisDK.FileClasses.Locale;
-import javafx.util.Pair;
+import StellarisDK.GUI.CompUI;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -22,10 +23,12 @@ public class Component extends GenericData {
 
     public Component() {
         super();
+        ui = new CompUI();
     }
 
-    public Component(String path) {
-        super(path);
+    public Component(String input) {
+        super(input);
+        ui = new CompUI();
     }
 
     @Override
@@ -54,19 +57,7 @@ public class Component extends GenericData {
 
         while (single_match.find()) {
             if (single_match.group(1) != null) {
-                temp = new LinkedList<Object>() {
-                    @Override
-                    public String toString() {
-                        String out = "";
-                        for (Object pair : this) {
-                            if (this.size() == 1) {
-                                return "#key " + ((Pair) pair).getKey() + " " + ((Pair) pair).getValue();
-                            }
-                            out += "#key " + ((Pair) pair).getKey() + " " + ((Pair) pair).getValue();
-                        }
-                        return out;
-                    }
-                };
+                temp = new PairLinkedList();
 
                 cPair dat = new cPair(single_match.group(2).trim(), single_match.group(3).trim());
                 temp.add(dat);

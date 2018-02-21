@@ -1,7 +1,6 @@
 package StellarisDK.GUI;
 
 import StellarisDK.DataLoc;
-import StellarisDK.FileClasses.Component.Component;
 import StellarisDK.FileClasses.DataParser;
 import StellarisDK.FileClasses.GenericData;
 import StellarisDK.FileClasses.ModDescriptor;
@@ -30,11 +29,6 @@ public class guiController extends AnchorPane {
     private String mainLoadPath;
     private File path;
 
-    private CompUI compUI = new CompUI();
-    private CompSetUI compSetUI = new CompSetUI();
-    private EventUI eventUI = new EventUI();
-    private ModDescUI modDescUI = new ModDescUI();
-
     private ModDescriptor mainMd;
 
     private GenericData test;
@@ -52,9 +46,6 @@ public class guiController extends AnchorPane {
 
         try {
             loader.load();
-            compUI.setTree(itemView);
-            eventUI.setTree(itemView);
-            modDescUI.setTree(itemView);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -71,9 +62,9 @@ public class guiController extends AnchorPane {
         fc.setTitle("Open File");
         path = fc.showOpenDialog(stage);
         if (path != null) {
-            try{
+            try {
                 test = parseData(path.getPath());
-            }catch(IOException e){
+            } catch (IOException e) {
                 System.out.println("Failed");
             }
         }
@@ -98,7 +89,8 @@ public class guiController extends AnchorPane {
         modPath = fc.showOpenDialog(stage);
         if (modPath != null) {
             mainMd = new ModDescriptor(modPath.getPath());
-            itemView.setRoot(new TreeItem(mainMd));
+            itemView.setRoot(new TreeItem<>(mainMd.getValue("name").toString()));
+            itemView.getRoot().getChildren().add(new TreeItem(mainMd));
             itemView.getRoot().setExpanded(true);
             itemView.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
                 if (event.getClickCount() >= 2) {
@@ -110,12 +102,7 @@ public class guiController extends AnchorPane {
                             temp = ((TreeCell) node.getParent()).getTreeItem().getValue();
                         } else
                             temp = ((TreeCell) node).getTreeItem().getValue();
-                        if (temp instanceof ModDescriptor) {
-                            open(temp, modDescUI);
-                        } else if(temp instanceof Component)
-                            open(temp, compUI);
-                        else
-                            open(temp, compSetUI);
+                        open((GenericData) temp);
                     }
                 }
             });
@@ -123,7 +110,6 @@ public class guiController extends AnchorPane {
                 mainLoadPath = modPath.getParentFile().getParent() + "\\" + (mainMd.getValue("path").toString().replaceAll("/", "\\\\"));
                 loadMod();
             }
-            modDescUI.load(modPath.getPath());
         }
     }
 
@@ -146,17 +132,18 @@ public class guiController extends AnchorPane {
             for (File file : new File(mainLoadPath + "\\" + DataLoc.component_templates).listFiles()) {
                 itemView.getRoot().getChildren().addAll(DataParser.parseCompUtil(file));
             }
-        } catch (NullPointerException e) {
+        } catch (IOException e) {
             System.out.println("Empty/Missing Folder.");
-        } catch (IOException e){
+        } catch (NullPointerException e) {
             System.out.println("Malformed Input");
         }
     }
 
-    protected void open(Object obj, AbstractUI ui){
-        if (!mainWindow.getChildren().contains(ui))
-            mainWindow.getChildren().add(ui);
-        ui.load(obj);
+    protected void open(GenericData obj) {
+        obj.ui.setTree(itemView);
+        if (!mainWindow.getChildren().contains(obj.ui))
+            mainWindow.getChildren().add(obj.ui);
+        obj.ui.load(obj);
     }
 
     @FXML

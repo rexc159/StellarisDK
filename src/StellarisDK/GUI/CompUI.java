@@ -1,6 +1,7 @@
 package StellarisDK.GUI;
 
 import StellarisDK.FileClasses.Component.Component;
+import StellarisDK.FileClasses.Helper.PairLinkedList;
 import StellarisDK.FileClasses.Helper.cPair;
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
@@ -10,8 +11,6 @@ import java.util.LinkedList;
 
 public class CompUI extends AbstractUI {
 
-    private Component util;
-
     public CompUI() {
         init("FXML/compUI.fxml");
         window.setText("Component Editor");
@@ -20,15 +19,15 @@ public class CompUI extends AbstractUI {
     @Override
     public void load(Object object) {
         if (object instanceof String) {
-            util.load((String) object);
+            obj.load((String) object);
             System.out.println("Loaded");
         } else {
-            util = (Component) object;
+            obj = (Component) object;
         }
         for (Node node : ((GridPane) main.getChildren().get(0)).getChildren()) {
             if (node.getId() != null) {
                 if(node instanceof TextField){
-                    ((TextField) node).setText(((LinkedList<Object>)util.getValue(node.getId())).getFirst().toString()
+                    ((TextField) node).setText(((LinkedList<Object>)obj.getValue(node.getId())).getFirst().toString()
                             .replaceAll("\"",""));
                 }
             }
@@ -40,16 +39,22 @@ public class CompUI extends AbstractUI {
         for (Node node : ((GridPane) main.getChildren().get(0)).getChildren()) {
             if (node.getId() != null) {
                 if(node instanceof TextField){
-                    LinkedList temp = ((LinkedList<Object>)util.getValue(node.getId()));
+                    LinkedList temp;
                     String out = ((TextField) node).getText();
-                    if(temp.getFirst().toString().contains("\"")){
-                        out = "\"" + out +"\"";
+                    if(obj.getValue(node.getId()) != null){
+                        temp = (PairLinkedList)obj.getValue(node.getId());
+                    }else{
+                        temp = new PairLinkedList();
                     }
-                    temp.set(0,((cPair)temp.getFirst()).setValue(out));
+                    try{
+                        temp.set(0,((cPair)temp.getFirst()).setValue(out));
+                    }catch (IndexOutOfBoundsException e){
+                        temp.add(new cPair(node.getId() , out));
+                    }
                 }
             }
         }
-        System.out.println(util.export());
+        System.out.println(obj.export());
         return null;
     }
 }

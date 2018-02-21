@@ -1,6 +1,7 @@
 package StellarisDK.FileClasses;
 
-import java.io.IOException;
+import StellarisDK.GUI.AbstractUI;
+
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
@@ -12,14 +13,12 @@ import java.util.LinkedHashMap;
 public abstract class GenericData {
     protected HashMap<String, Object> data = new LinkedHashMap<>();
 
+    public AbstractUI ui;
+
     public GenericData(){}
 
-    public GenericData(String path){
-        try{
-            data = (HashMap)load(path);
-        } catch(IOException e){
-            System.out.println("File not Found.");
-        }
+    public GenericData(String input){
+        data = (HashMap)load(input);
     }
 
     public Object getValue(String key) {
@@ -30,7 +29,7 @@ public abstract class GenericData {
         data.replace(key, value);
     }
 
-    public abstract Object load(String path) throws IOException;
+    public abstract Object load(String input);
 
     public abstract String export();
 }
