@@ -135,7 +135,8 @@ public class guiController extends AnchorPane {
         } catch (IOException e) {
             System.out.println("Empty/Missing Folder.");
         } catch (NullPointerException e) {
-            System.out.println("Malformed Input");
+            System.out.println("Error: Malformed Input");
+            e.printStackTrace();
         }
     }
 
