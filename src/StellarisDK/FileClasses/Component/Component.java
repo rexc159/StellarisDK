@@ -17,12 +17,12 @@ public class Component extends GenericData {
 
     public Component() {
         super();
-        ui = new CompUI();
+        ui = new CompUI(this);
     }
 
     public Component(String input) {
         super(input);
-        ui = new CompUI();
+        ui = new CompUI(this);
     }
 
     @Override

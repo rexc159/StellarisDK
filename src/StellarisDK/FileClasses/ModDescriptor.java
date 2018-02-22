@@ -15,12 +15,12 @@ public class ModDescriptor extends GenericData {
 
     public ModDescriptor() {
         super();
-        ui = new ModDescUI();
+        ui = new ModDescUI(this);
     }
 
     public ModDescriptor(String path) {
         super(path);
-        ui = new ModDescUI();
+        ui = new ModDescUI(this);
     }
 
     @Override

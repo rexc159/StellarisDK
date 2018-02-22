@@ -16,10 +16,11 @@ public class CompSetUI extends AbstractUI {
 
     private LinkedList<Component> compList = new LinkedList<>();
 
-    public CompSetUI() {
+    public CompSetUI(CompSet obj) {
         init("FXML/compSetFX.fxml");
         test = (TabPane) main.getChildren().get(2);
         window.setText("Component Set Editor");
+        load(obj);
     }
 
     public void addComp(Component comp){

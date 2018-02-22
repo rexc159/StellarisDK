@@ -15,12 +15,12 @@ public class CompSet extends GenericData {
 
     public CompSet() {
         super();
-        ui = new CompSetUI();
+        ui = new CompSetUI(this);
     }
 
     public CompSet(String input) {
         load(input);
-        ui = new CompSetUI();
+        ui = new CompSetUI(this);
     }
 
     @Override

@@ -66,7 +66,7 @@ public class guiController extends AnchorPane {
                         temp = ((TreeCell) node.getParent()).getTreeItem().getValue();
                     } else
                         temp = ((TreeCell) node).getTreeItem().getValue();
-                    ((GenericData) temp).ui.load(temp);
+//                    ((GenericData) temp).ui.load(temp);
                     open((GenericData) temp);
                 }
             }
@@ -152,7 +152,7 @@ public class guiController extends AnchorPane {
                 compList.addAll(DataParser.parseCompUtil(file));
             }
             for(Component comp: compList){
-                comp.ui.load(comp);
+//                comp.ui.load(comp);
                 for(Object set : itemView.getRoot().getChildren()){
                     if(((TreeItem)set).getValue().toString().equals(((PairLinkedList)comp.getValue("component_set")).getFirstString())){
                         ((CompSetUI)((CompSet)((TreeItem)set).getValue()).ui).addComp(comp);

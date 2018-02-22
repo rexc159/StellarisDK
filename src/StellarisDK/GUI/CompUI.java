@@ -11,9 +11,10 @@ import java.util.LinkedList;
 
 public class CompUI extends AbstractUI {
 
-    public CompUI() {
+    public CompUI(Component obj) {
         init("FXML/compFX.fxml");
         window.setText("Component Editor");
+        load(obj);
     }
 
     @Override

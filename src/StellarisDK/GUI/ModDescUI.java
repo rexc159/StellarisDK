@@ -14,9 +14,10 @@ import java.util.LinkedList;
 
 public class ModDescUI extends AbstractUI {
 
-    public ModDescUI() {
+    public ModDescUI(ModDescriptor obj) {
         init("FXML/mdFX.fxml");
         window.setText("Mod Descriptor");
+        load(obj);
     }
 
     @Override
