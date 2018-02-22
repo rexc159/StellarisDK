@@ -6,6 +6,18 @@ import java.util.LinkedList;
 
 public class PairLinkedList extends LinkedList {
 
+    public LinkedList<String> toStringList(){
+        LinkedList<String> list = new LinkedList<>();
+        for(Object pair : this){
+            list.add(((Pair) pair).getValue().toString());
+        }
+        return list;
+    }
+
+    public String getFirstString(){
+        return getFirst().toString().replaceAll("\"","");
+    }
+
     @Override
     public String toString() {
         String out = "";

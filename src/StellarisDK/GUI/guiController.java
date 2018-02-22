@@ -5,6 +5,7 @@ import StellarisDK.FileClasses.Component.CompSet;
 import StellarisDK.FileClasses.Component.Component;
 import StellarisDK.FileClasses.DataParser;
 import StellarisDK.FileClasses.GenericData;
+import StellarisDK.FileClasses.Helper.PairLinkedList;
 import StellarisDK.FileClasses.ModDescriptor;
 import com.sun.javafx.scene.control.skin.LabeledText;
 import javafx.fxml.FXML;
@@ -153,7 +154,7 @@ public class guiController extends AnchorPane {
             for(Component comp: compList){
                 comp.ui.load(comp);
                 for(Object set : itemView.getRoot().getChildren()){
-                    if(((TreeItem)set).getValue().toString().equals(((LinkedList<Object>)comp.getValue("component_set")).getFirst().toString().replaceAll("\"",""))){
+                    if(((TreeItem)set).getValue().toString().equals(((PairLinkedList)comp.getValue("component_set")).getFirstString())){
                         ((CompSetUI)((CompSet)((TreeItem)set).getValue()).ui).addComp(comp);
                     }
 
