@@ -9,3 +9,4 @@ This modding kit, or "Stellaris Development Kit (SDK)" is designed to:
 
 ## Current Features
 * Mod Descriptor Editor
+* Component Set Editor
