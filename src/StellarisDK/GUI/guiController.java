@@ -1,6 +1,8 @@
 package StellarisDK.GUI;
 
 import StellarisDK.DataLoc;
+import StellarisDK.FileClasses.Component.CompSet;
+import StellarisDK.FileClasses.Component.Component;
 import StellarisDK.FileClasses.DataParser;
 import StellarisDK.FileClasses.GenericData;
 import StellarisDK.FileClasses.ModDescriptor;
@@ -20,6 +22,7 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.LinkedList;
 
 import static StellarisDK.FileClasses.DataParser.parseData;
 
@@ -62,6 +65,7 @@ public class guiController extends AnchorPane {
                         temp = ((TreeCell) node.getParent()).getTreeItem().getValue();
                     } else
                         temp = ((TreeCell) node).getTreeItem().getValue();
+                    ((GenericData) temp).ui.load(temp);
                     open((GenericData) temp);
                 }
             }
@@ -138,12 +142,22 @@ public class guiController extends AnchorPane {
 //                System.out.println("Malformed Input");
 //            }
 //        }
+        LinkedList<Component> compList = new LinkedList<>();
         try {
             for (File file : new File(mainLoadPath + "\\" + DataLoc.component_sets).listFiles()) {
                 itemView.getRoot().getChildren().addAll(DataParser.parseSet(file));
             }
             for (File file : new File(mainLoadPath + "\\" + DataLoc.component_templates).listFiles()) {
-                itemView.getRoot().getChildren().addAll(DataParser.parseCompUtil(file));
+                compList.addAll(DataParser.parseCompUtil(file));
+            }
+            for(Component comp: compList){
+                comp.ui.load(comp);
+                for(Object set : itemView.getRoot().getChildren()){
+                    if(((TreeItem)set).getValue().toString().equals(((LinkedList<Object>)comp.getValue("component_set")).getFirst().toString().replaceAll("\"",""))){
+                        ((CompSetUI)((CompSet)((TreeItem)set).getValue()).ui).addComp(comp);
+                    }
+
+                }
             }
         } catch (IOException e) {
             System.out.println("Empty/Missing Folder.");
@@ -157,7 +171,6 @@ public class guiController extends AnchorPane {
         obj.ui.setTree(itemView);
         if (!mainWindow.getChildren().contains(obj.ui))
             mainWindow.getChildren().add(obj.ui);
-        obj.ui.load(obj);
     }
 
     @FXML

@@ -48,8 +48,8 @@ public class DataParser {
         return out;
     }
 
-    public static LinkedList<TreeItem> parseCompUtil(File file) throws IOException {
-        LinkedList<TreeItem> out = new LinkedList<>();
+    public static LinkedList<Component> parseCompUtil(File file) throws IOException {
+        LinkedList<Component> out = new LinkedList<>();
         Scanner scan = new Scanner(file);
         String temp = "";
         while (temp != null) {
@@ -58,7 +58,7 @@ public class DataParser {
         }
         while (scan.hasNext()) {
             String objectDat = scan.findWithinHorizon(pattern, 0);
-            out.add(new TreeItem<>(new Component(objectDat)));
+            out.add(new Component(objectDat));
         }
         return out;
     }

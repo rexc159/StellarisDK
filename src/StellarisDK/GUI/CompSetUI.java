@@ -1,15 +1,33 @@
 package StellarisDK.GUI;
 
 import StellarisDK.FileClasses.Component.CompSet;
+import StellarisDK.FileClasses.Component.Component;
 import javafx.scene.Node;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 
+import java.util.LinkedList;
+
 public class CompSetUI extends AbstractUI {
+
+    private TabPane test;
+
+    private LinkedList<Component> compList = new LinkedList<>();
 
     public CompSetUI() {
         init("FXML/compSetFX.fxml");
+        test = (TabPane) main.getChildren().get(2);
         window.setText("Component Set Editor");
+    }
+
+    public void addComp(Component comp){
+        compList.add(comp);
+        Tab tab = new Tab(comp.toString());
+        tab.setContent(comp.ui.main);
+        tab.getContent().setStyle("-fx-background-color: #FFFFFF;");
+        test.getTabs().add(tab);
     }
 
     @Override
