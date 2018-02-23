@@ -46,11 +46,15 @@ public class DataParser {
         */
         ArrayList<TreeItem> out = new ArrayList<>();
         Scanner scan = new Scanner(file);
-        String temp = "";
-        while (temp != null) {
+        String temp;
+        TreeItem<String> consts = new TreeItem<>("Constants");
+        do {
             temp = scan.findWithinHorizon(constants, 0);
-//            System.out.println(temp);
-        }
+            if(temp !=null)
+                consts.getChildren().add(new TreeItem<>(temp));
+        } while (temp != null);
+        if(!consts.getChildren().isEmpty())
+            out.add(consts);
         while (scan.hasNext()) {
             String objectDat = scan.findWithinHorizon(pattern, 0);
             if (objectDat != null) {
