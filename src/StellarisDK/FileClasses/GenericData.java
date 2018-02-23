@@ -8,10 +8,17 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.regex.Matcher;
 
-/*
-    This class may prove most data classes worthless as a common parser works
-    for all files within such format.
-    More details later.
+/**
+ * GenericData is the abstract base class for all other data type, as well as the data model of the
+ * entire project. Each "Data" class contains an UI element and data stored with a LinkedHashMap.
+ * Currently, this is not memory efficient as values within the HashMap are stored as ArrayLists and
+ * recursively defined HashMaps regardless of data size, this combined with Java's HashMap implementation
+ * led to huge memory overhead.
+ * Although such overhead maybe resolved with JSONObjects, such changes will result in delay of release
+ * therefore, performance related issues are pushed to after full Alpha release.
+ * @author      Rex
+ * @version     %I%, %G%
+ * @since       0.0.1
  */
 public abstract class GenericData {
 
@@ -20,6 +27,13 @@ public abstract class GenericData {
     protected LinkedHashMap<String, Object> data = new LinkedHashMap<>();
 
     public AbstractUI ui;
+
+    /*
+        Should be enum within extended classes
+        but since it needs to be referenced later on anyway,
+        it maybe better to just store it with a String object instead
+     */
+    private String type;
 
     public GenericData() {
     }

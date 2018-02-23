@@ -7,8 +7,8 @@ import javafx.scene.control.TreeItem;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.Scanner;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class DataParser {
@@ -34,23 +34,16 @@ public class DataParser {
         return data;
     }
 
-    public static LinkedList<TreeItem> parseSet(File file) throws IOException {
-        LinkedList<TreeItem> out = new LinkedList<>();
-        Scanner scan = new Scanner(file);
-        String temp = "";
-        while (temp != null) {
-            temp = scan.findWithinHorizon(constants, 0);
-//            System.out.println(temp);
-        }
-        while (scan.hasNext()) {
-            String objectDat = scan.findWithinHorizon(pattern, 0);
-            if(objectDat != null)
-                out.add(new TreeItem<>(new CompSet(objectDat)));
-        }
-        return out;
-    }
+    /*
+        Either follow the extremely long stack of elifs, or just use the folder name as reference
+        which is way easier anyway.
 
+        Different types of the same objects are identified within the data class itself
+     */
     public static ArrayList<TreeItem> parseAll(File file) throws IOException {
+        /*
+            Special Handler for attitudes, bombardment, required
+        */
         ArrayList<TreeItem> out = new ArrayList<>();
         Scanner scan = new Scanner(file);
         String temp = "";
@@ -60,27 +53,24 @@ public class DataParser {
         }
         while (scan.hasNext()) {
             String objectDat = scan.findWithinHorizon(pattern, 0);
-            if(objectDat != null){
-                Component test = new Component(objectDat);
-                out.add(new TreeItem<>(test));
-            }else{
+            if (objectDat != null) {
+                Matcher obj = pattern.matcher(objectDat);
+                obj.find();
+                GenericData gData;
+                switch (obj.group(1)) {
+                    case "component_set":
+                        gData = new CompSet(objectDat);
+                        break;
+                    case "ambient_object":
+                    case "anomaly":
+                    default:
+                        gData = new Component(objectDat);
+                }
+
+                out.add(new TreeItem<>(gData));
+            } else {
                 break;
             }
-        }
-        return out;
-    }
-
-    public static ArrayList<Component> parseCompUtil(File file) throws IOException {
-        ArrayList<Component> out = new ArrayList<>();
-        Scanner scan = new Scanner(file);
-        String temp = "";
-        while (temp != null) {
-            temp = scan.findWithinHorizon(constants, 0);
-//            System.out.println(temp);
-        }
-        while (scan.hasNext()) {
-            String objectDat = scan.findWithinHorizon(pattern, 0);
-            out.add(new Component(objectDat));
         }
         return out;
     }
