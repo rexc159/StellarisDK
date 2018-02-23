@@ -3,6 +3,7 @@ package StellarisDK.GUI;
 import StellarisDK.DataLoc;
 import StellarisDK.FileClasses.DataParser;
 import StellarisDK.FileClasses.GenericData;
+import StellarisDK.FileClasses.Locale;
 import StellarisDK.FileClasses.ModDescriptor;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -136,7 +137,7 @@ public class guiController extends AnchorPane {
                 }
             }
         } catch (NullPointerException e) {
-            System.out.println("Empty/Missing Folder: Ignore");
+            System.out.println("[ERROR] IGNORE: Empty/Missing Folder, FROM: " + files.getPath());
         }
     }
 
@@ -144,6 +145,23 @@ public class guiController extends AnchorPane {
         TreeItem<String> event = new TreeItem<>("events");
         itemView.getRoot().getChildren().add(event);
         loadFiles(new File(mainLoadPath + "\\events"), event);
+    }
+
+    protected void loadLocale(){
+        TreeItem<String> locale = new TreeItem<>("localisation");
+        itemView.getRoot().getChildren().add(locale);
+        try{
+            for (File file : new File(mainLoadPath + "\\localisation").listFiles()) {
+                TreeItem<String> temp = new TreeItem<>(file.getName());
+                locale.getChildren().add(temp);
+                try{
+                    temp.getChildren().add(new TreeItem(new Locale(file.getPath())));
+                }catch (IOException e){
+                }
+            }
+        }catch (NullPointerException e){
+            System.out.println("[ERROR] Locale Not Found");
+        }
     }
 
     protected void loadCommon() {
@@ -216,6 +234,7 @@ public class guiController extends AnchorPane {
 //        }
         loadCommon();
         loadEvents();
+        loadLocale();
     }
 
     protected void open(GenericData obj) {
