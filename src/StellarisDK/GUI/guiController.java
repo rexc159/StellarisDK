@@ -1,13 +1,9 @@
 package StellarisDK.GUI;
 
 import StellarisDK.DataLoc;
-import StellarisDK.FileClasses.Component.CompSet;
-import StellarisDK.FileClasses.Component.Component;
 import StellarisDK.FileClasses.DataParser;
 import StellarisDK.FileClasses.GenericData;
-import StellarisDK.FileClasses.Helper.PairLinkedList;
 import StellarisDK.FileClasses.ModDescriptor;
-import com.sun.javafx.scene.control.skin.LabeledText;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -16,14 +12,12 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.LinkedList;
 
 import static StellarisDK.FileClasses.DataParser.parseData;
 
@@ -58,16 +52,13 @@ public class guiController extends AnchorPane {
         itemView.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             if (event.getClickCount() >= 2) {
                 Node node = event.getPickResult().getIntersectedNode();
-                if (node instanceof Text || (node instanceof TreeCell && ((TreeCell) node).getText() != null &&
-                        ((TreeCell) node).getChildrenUnmodifiable().size() == 1)) {
-                    System.out.println("Starting Editor");
-                    Object temp;
-                    if ((node instanceof LabeledText)) {
-                        temp = ((TreeCell) node.getParent()).getTreeItem().getValue();
-                    } else
-                        temp = ((TreeCell) node).getTreeItem().getValue();
-//                    ((GenericData) temp).ui.load(temp);
-                    open((GenericData) temp);
+                if ((node instanceof TreeCell && ((TreeCell) node).getText() != null)) {
+                    if (((TreeCell) node).getTreeItem().isLeaf()) {
+                        if (((TreeCell) node).getTreeItem().getValue() instanceof GenericData) {
+                            System.out.println("Starting Editor");
+                            open((GenericData) ((TreeCell) node).getTreeItem().getValue());
+                        }
+                    }
                 }
             }
         });
@@ -104,7 +95,7 @@ public class guiController extends AnchorPane {
     }
 
     @FXML
-    protected void createNewMD(){
+    protected void createNewMD() {
         mainMd = new ModDescriptor();
         itemView.setRoot(new TreeItem<>(mainMd));
         itemView.getRoot().getChildren().add(new TreeItem<>(mainMd));
@@ -131,41 +122,100 @@ public class guiController extends AnchorPane {
         }
     }
 
-    protected void loadMod() {
-//        for(File folder: new File(mainLoadPath).listFiles()){
-//            try{
-//                for (File file : new File(folder.getPath()).listFiles()) {
-//                    itemView.getRoot().getChildren().addAll(DataParser.parse(file));
-//                }
-//            } catch (NullPointerException e) {
-//                System.out.println("Empty/Missing Folder.");
-//            } catch (IOException e){
-//                System.out.println("Malformed Input");
-//            }
-//        }
-        LinkedList<Component> compList = new LinkedList<>();
+    protected void loadFiles(File files, TreeItem item) {
         try {
-            for (File file : new File(mainLoadPath + "\\" + DataLoc.component_sets).listFiles()) {
-                itemView.getRoot().getChildren().addAll(DataParser.parseSet(file));
-            }
-            for (File file : new File(mainLoadPath + "\\" + DataLoc.component_templates).listFiles()) {
-                compList.addAll(DataParser.parseCompUtil(file));
-            }
-            for(Component comp: compList){
-//                comp.ui.load(comp);
-                for(Object set : itemView.getRoot().getChildren()){
-                    if(((TreeItem)set).getValue().toString().equals(((PairLinkedList)comp.getValue("component_set")).getFirstString())){
-                        ((CompSetUI)((CompSet)((TreeItem)set).getValue()).ui).addComp(comp);
+            for (File file : files.listFiles()) {
+                System.out.println("Loading: " + file.getPath());
+                TreeItem temp = new TreeItem<>(file.getName());
+                if (!file.isDirectory()) {
+                    item.getChildren().add(temp);
+                    try{
+                        temp.getChildren().addAll(DataParser.parseAll(file));
+                    }catch (IOException e){
                     }
-
                 }
             }
-        } catch (IOException e) {
-            System.out.println("Empty/Missing Folder.");
         } catch (NullPointerException e) {
-            System.out.println("Error: Malformed Input");
-            e.printStackTrace();
+            System.out.println("Empty/Missing Folder: Ignore");
         }
+    }
+
+    protected void loadEvents(){
+        TreeItem<String> event = new TreeItem<>("events");
+        itemView.getRoot().getChildren().add(event);
+        loadFiles(new File(mainLoadPath + "\\events"), event);
+    }
+
+    protected void loadCommon() {
+        TreeItem<String> common = new TreeItem<>("common");
+        itemView.getRoot().getChildren().add(common);
+        for (String folder : DataLoc.common) {
+            TreeItem<String> temp = new TreeItem<>(folder);
+            TreeItem<String> subfolder;
+            String sF_name;
+            switch (folder) {
+                case "governments":
+                    sF_name = "authorities";
+                    subfolder = new TreeItem<>(sF_name);
+                    temp.getChildren().add(subfolder);
+                    loadFiles(new File(mainLoadPath + "\\common\\" + folder + "\\" + sF_name), subfolder);
+
+                    sF_name = "civics";
+                    subfolder = new TreeItem<>(sF_name);
+                    temp.getChildren().add(subfolder);
+                    loadFiles(new File(mainLoadPath + "\\common\\" + folder + "\\" + sF_name), subfolder);
+                    break;
+
+                case "random_names":
+                    sF_name = "base";
+                    subfolder = new TreeItem<>(sF_name);
+                    temp.getChildren().add(subfolder);
+                    loadFiles(new File(mainLoadPath + "\\common\\" + folder + "\\" + sF_name), subfolder);
+                    break;
+
+                case "technology":
+                    sF_name = "category";
+                    subfolder = new TreeItem<>(sF_name);
+                    temp.getChildren().add(subfolder);
+                    loadFiles(new File(mainLoadPath + "\\common\\" + folder + "\\" + sF_name), subfolder);
+
+                    sF_name = "tier";
+                    subfolder = new TreeItem<>(sF_name);
+                    temp.getChildren().add(subfolder);
+                    loadFiles(new File(mainLoadPath + "\\common\\" + folder + "\\" + sF_name), subfolder);
+                    break;
+            }
+
+            common.getChildren().add(temp);
+            loadFiles(new File(mainLoadPath + "\\common\\" + folder), temp);
+        }
+    }
+
+    protected void loadMod() {
+//        LinkedList<Component> compList = new LinkedList<>();
+//        try {
+//            for (File file : new File(mainLoadPath + "\\" + DataLoc.component_sets).listFiles()) {
+//                itemView.getRoot().getChildren().addAll(DataParser.parseSet(file));
+//            }
+//            for (File file : new File(mainLoadPath + "\\" + DataLoc.component_templates).listFiles()) {
+//                compList.addAll(DataParser.parseCompUtil(file));
+//            }
+//            for (Component comp : compList) {
+//                for (Object set : itemView.getRoot().getChildren()) {
+//                    if (((TreeItem) set).getValue().toString().equals(((PairLinkedList) comp.getValue("component_set")).getFirstString())) {
+//                        ((CompSetUI) ((CompSet) ((TreeItem) set).getValue()).ui).addComp(comp);
+//                    }
+//
+//                }
+//            }
+//        } catch (IOException e) {
+//            System.out.println("Empty/Missing Folder.");
+//        } catch (NullPointerException e) {
+//            System.out.println("Error: Malformed Input");
+//            e.printStackTrace();
+//        }
+        loadCommon();
+        loadEvents();
     }
 
     protected void open(GenericData obj) {

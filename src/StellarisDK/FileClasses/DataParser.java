@@ -6,13 +6,14 @@ import javafx.scene.control.TreeItem;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
 public class DataParser {
 
-    private final static Pattern pattern = Pattern.compile("(?s)(?m)(^\\w+)\\s=\\s\\{(.+?)\\n\\}\\n?");
+    private final static Pattern pattern = Pattern.compile("(?s)(?m)(^\\w+)\\s=\\s\\{(.+?)[\\r\\n]\\}[\\r\\n]?");
     private final static Pattern constants = Pattern.compile("(\\@\\w+) = (.+)");
 
     public static GenericData parseData(String path) throws IOException {
@@ -43,13 +44,34 @@ public class DataParser {
         }
         while (scan.hasNext()) {
             String objectDat = scan.findWithinHorizon(pattern, 0);
-            out.add(new TreeItem<>(new CompSet(objectDat)));
+            if(objectDat != null)
+                out.add(new TreeItem<>(new CompSet(objectDat)));
         }
         return out;
     }
 
-    public static LinkedList<Component> parseCompUtil(File file) throws IOException {
-        LinkedList<Component> out = new LinkedList<>();
+    public static ArrayList<TreeItem> parseAll(File file) throws IOException {
+        ArrayList<TreeItem> out = new ArrayList<>();
+        Scanner scan = new Scanner(file);
+        String temp = "";
+        while (temp != null) {
+            temp = scan.findWithinHorizon(constants, 0);
+//            System.out.println(temp);
+        }
+        while (scan.hasNext()) {
+            String objectDat = scan.findWithinHorizon(pattern, 0);
+            if(objectDat != null){
+                Component test = new Component(objectDat);
+                out.add(new TreeItem<>(test));
+            }else{
+                break;
+            }
+        }
+        return out;
+    }
+
+    public static ArrayList<Component> parseCompUtil(File file) throws IOException {
+        ArrayList<Component> out = new ArrayList<>();
         Scanner scan = new Scanner(file);
         String temp = "";
         while (temp != null) {

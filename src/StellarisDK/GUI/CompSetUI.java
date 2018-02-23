@@ -8,27 +8,25 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 
-import java.util.LinkedList;
-
 public class CompSetUI extends AbstractUI {
 
-    private TabPane test;
+    private TabPane tabPane;
 
-    private LinkedList<Component> compList = new LinkedList<>();
+//    private LinkedList<Component> compList = new LinkedList<>();
 
     public CompSetUI(CompSet obj) {
         init("FXML/compSetFX.fxml");
-        test = (TabPane) main.getChildren().get(2);
+        tabPane = (TabPane) main.getChildren().get(2);
         window.setText("Component Set Editor");
         load(obj);
     }
 
     public void addComp(Component comp){
-        compList.add(comp);
+//        compList.add(comp);
         Tab tab = new Tab(comp.toString());
         tab.setContent(comp.ui.main);
         tab.getContent().setStyle("-fx-background-color: #FFFFFF;");
-        test.getTabs().add(tab);
+        tabPane.getTabs().add(tab);
     }
 
     @Override

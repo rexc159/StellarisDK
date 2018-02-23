@@ -1,13 +1,13 @@
 package StellarisDK.GUI;
 
 import StellarisDK.FileClasses.Component.Component;
-import StellarisDK.FileClasses.Helper.PairLinkedList;
+import StellarisDK.FileClasses.Helper.PairArrayList;
 import StellarisDK.FileClasses.Helper.cPair;
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 
 public class CompUI extends AbstractUI {
 
@@ -28,8 +28,12 @@ public class CompUI extends AbstractUI {
         for (Node node : ((GridPane) main.getChildren().get(0)).getChildren()) {
             if (node.getId() != null) {
                 if(node instanceof TextField){
-                    ((TextField) node).setText(((LinkedList<Object>)obj.getValue(node.getId())).getFirst().toString()
-                            .replaceAll("\"",""));
+                    try{
+                        ((TextField) node).setText(((ArrayList<Object>)obj.getValue(node.getId())).get(0).toString()
+                                .replaceAll("\"",""));
+                    }catch(NullPointerException e){
+//                        System.out.println("Empty Key, Ignore");
+                    }
                 }
             }
         }
@@ -40,15 +44,15 @@ public class CompUI extends AbstractUI {
         for (Node node : ((GridPane) main.getChildren().get(0)).getChildren()) {
             if (node.getId() != null) {
                 if(node instanceof TextField){
-                    LinkedList temp;
+                    ArrayList temp;
                     String out = ((TextField) node).getText();
                     if(obj.getValue(node.getId()) != null){
-                        temp = (PairLinkedList)obj.getValue(node.getId());
+                        temp = (PairArrayList)obj.getValue(node.getId());
                     }else{
-                        temp = new PairLinkedList();
+                        temp = new PairArrayList();
                     }
                     try{
-                        temp.set(0,((cPair)temp.getFirst()).setValue(out));
+                        temp.set(0,((cPair)temp.get(0)).setValue(out));
                     }catch (IndexOutOfBoundsException e){
                         temp.add(new cPair(node.getId() , out));
                     }

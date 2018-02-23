@@ -1,12 +1,11 @@
 package StellarisDK.FileClasses;
 
-import StellarisDK.FileClasses.Helper.PairLinkedList;
+import StellarisDK.FileClasses.Helper.PairArrayList;
 import StellarisDK.FileClasses.Helper.cPair;
 import StellarisDK.GUI.AbstractUI;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.regex.Matcher;
 
 /*
@@ -18,7 +17,7 @@ public abstract class GenericData {
 
     private static int tab = 1;
 
-    protected HashMap<String, Object> data = new LinkedHashMap<>();
+    protected LinkedHashMap<String, Object> data = new LinkedHashMap<>();
 
     public AbstractUI ui;
 
@@ -26,7 +25,7 @@ public abstract class GenericData {
     }
 
     public GenericData(String input) {
-        data = (HashMap) load(input);
+        data = (LinkedHashMap) load(input);
     }
 
     public Object getValue(String key) {
@@ -42,7 +41,7 @@ public abstract class GenericData {
     }
 
     public Object load(String input) {
-        LinkedHashMap<String, LinkedList<Object>> data = new LinkedHashMap<String, LinkedList<Object>>() {
+        LinkedHashMap<String, ArrayList<Object>> data = new LinkedHashMap<String, ArrayList<Object>>() {
             @Override
             public String toString() {
                 String out = "";
@@ -58,14 +57,20 @@ public abstract class GenericData {
                 return out;
             }
         };
+        Matcher single_match;
+        try{
+            single_match = DataPattern.C_MATCH.matcher(input);
+        }catch (NullPointerException e){
+            System.out.println("Cause: "+input + "\n END INPUT");
+            return null;
+        }
 
-        Matcher single_match = DataPattern.C_MATCH.matcher(input);
-
-        LinkedList<Object> temp;
+        ArrayList<Object> temp;
 
         while (single_match.find()) {
             if (single_match.group(1) != null) {
-                temp = new PairLinkedList();
+
+                temp = new PairArrayList();
 
                 cPair dat = new cPair(single_match.group(2).trim(), single_match.group(3).trim());
                 temp.add(dat);
@@ -75,8 +80,22 @@ public abstract class GenericData {
                     data.put(single_match.group(1).trim(), temp);
                 }
 
-            } else if (single_match.group(5) != null) {
-                temp = new LinkedList<Object>() {
+            }
+            else if (single_match.group(11) !=null){
+
+                temp = new PairArrayList();
+
+                cPair dat = new cPair(single_match.group(12).trim(), single_match.group(13).trim());
+                temp.add(dat);
+                if (data.containsKey(single_match.group(11).trim())) {
+                    data.get(single_match.group(11).trim()).add(dat);
+                } else {
+                    data.put(single_match.group(11).trim(), temp);
+                }
+            }
+            else if (single_match.group(5) != null) {
+
+                temp = new ArrayList<Object>() {
                     @Override
                     public String toString() {
                         String out = "#key = {";
@@ -88,74 +107,77 @@ public abstract class GenericData {
                 };
 
                 Matcher sCs_match = DataPattern.sComplex_sub.matcher(single_match.group(6));
-                if (sCs_match.find() && sCs_match.group(2) != null) {
-                    LinkedHashMap<String, cPair> sCsMap = new LinkedHashMap<String, cPair>() {
-                        @Override
-                        public String toString() {
-                            String out = "";
-                            for (String key : keySet()) {
-                                out += " " + key + " " + this.get(key).getKey() + " " + this.get(key).getValue();
+                if (sCs_match.find()) {
+                    if (sCs_match.group(2) != null) {
+                        LinkedHashMap<String, cPair> sCsMap = new LinkedHashMap<String, cPair>() {
+                            @Override
+                            public String toString() {
+                                String out = "";
+                                for (String key : keySet()) {
+                                    out += " " + key + " " + this.get(key).getKey() + " " + this.get(key).getValue();
+                                }
+                                return out + "";
                             }
-                            return out + "";
-                        }
-                    };
+                        };
 
-                    if (sCs_match.group(3) != null) {
+                        if (sCs_match.group(3) != null) {
+                            do {
+                                try {
+                                    cPair rec = new cPair(sCs_match.group(2).trim(), sCs_match.group(3).trim()) {
+                                        @Override
+                                        public String toString() {
+                                            return getKey() + " " + getValue();
+                                        }
+                                    };
+                                    sCsMap.put(sCs_match.group(1).trim(), rec);
+                                } catch (Exception e) {
+                                    System.out.println("Parsing Failed\n Cause: " + single_match.group(6));
+                                    return null;
+                                }
+                            } while (sCs_match.find());
+                            temp.add(sCsMap);
+                            if (data.containsKey(single_match.group(5).trim())) {
+                                data.get(single_match.group(5).trim()).add(sCsMap);
+                            } else {
+                                data.put(single_match.group(5).trim(), temp);
+                            }
+                        } else {
+                            Object dat = load(single_match.group(6).replaceFirst("^\\s", "\t").replaceFirst("\\s$", "\n"));
+                            temp.add(dat);
+                            if (data.containsKey(single_match.group(5).trim())) {
+                                data.get(single_match.group(5).trim()).add(dat);
+                            } else {
+                                data.put(single_match.group(5).trim(), temp);
+                            }
+                        }
+
+                    } else {
+                        ArrayList<Object> sCsList = new ArrayList<Object>() {
+                            @Override
+                            public String toString() {
+                                String out = "";
+                                for (Object i : this) {
+                                    out += " " + i + "";
+                                }
+                                return out;
+                            }
+                        };
+
                         do {
-                            try {
-                                cPair rec = new cPair(sCs_match.group(2).trim(), sCs_match.group(3).trim()) {
-                                    @Override
-                                    public String toString() {
-                                        return getKey() + " " + getValue();
-                                    }
-                                };
-                                sCsMap.put(sCs_match.group(1).trim(), rec);
-                            } catch (Exception e) {
-                                System.out.println("Parsing Failed\n Cause: " + single_match.group(6));
-                                return null;
-                            }
+                            sCsList.add(sCs_match.group(1).trim());
                         } while (sCs_match.find());
-                        temp.add(sCsMap);
+                        temp.add(sCsList);
                         if (data.containsKey(single_match.group(5).trim())) {
-                            data.get(single_match.group(5).trim()).add(sCsMap);
+                            data.get(single_match.group(5).trim()).add(sCsList);
                         } else {
                             data.put(single_match.group(5).trim(), temp);
                         }
-                    } else {
-                        Object dat = load(single_match.group(6).replaceFirst("^\\s", "\t").replaceFirst("\\s$", "\n"));
-                        temp.add(dat);
-                        if (data.containsKey(single_match.group(5).trim())) {
-                            data.get(single_match.group(5).trim()).add(dat);
-                        } else {
-                            data.put(single_match.group(5).trim(), temp);
-                        }
-                    }
-
-                } else {
-                    LinkedList<Object> sCsList = new LinkedList<Object>() {
-                        @Override
-                        public String toString() {
-                            String out = "";
-                            for (Object i : this) {
-                                out += " " + i + "";
-                            }
-                            return out;
-                        }
-                    };
-
-                    do {
-                        sCsList.add(sCs_match.group(1).trim());
-                    } while (sCs_match.find());
-                    temp.add(sCsList);
-                    if (data.containsKey(single_match.group(5).trim())) {
-                        data.get(single_match.group(5).trim()).add(sCsList);
-                    } else {
-                        data.put(single_match.group(5).trim(), temp);
                     }
                 }
+            }
+            else if (single_match.group(8) != null) {
 
-            } else if (single_match.group(7) != null) {
-                temp = new LinkedList<Object>() {
+                temp = new ArrayList<Object>() {
                     @Override
                     public String toString() {
                         // Fix repeated here
@@ -171,12 +193,12 @@ public abstract class GenericData {
                         return out;
                     }
                 };
-                Object dat = load(single_match.group(9).replaceAll("(?m)^\t", ""));
+                Object dat = load(single_match.group(10).replaceAll("(?m)^\t", ""));
                 temp.add(dat);
-                if (data.containsKey(single_match.group(7).trim())) {
-                    data.get(single_match.group(7).trim()).add(dat);
+                if (data.containsKey(single_match.group(8).trim())) {
+                    data.get(single_match.group(8).trim()).add(dat);
                 } else {
-                    data.put(single_match.group(7).trim(), temp);
+                    data.put(single_match.group(8).trim(), temp);
                 }
             }
         }

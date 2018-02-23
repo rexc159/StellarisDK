@@ -2,9 +2,10 @@ package StellarisDK.FileClasses.Helper;
 
 import javafx.util.Pair;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
-public class PairLinkedList extends LinkedList {
+public class PairArrayList extends ArrayList {
 
     public LinkedList<String> toStringList(){
         LinkedList<String> list = new LinkedList<>();
@@ -15,7 +16,7 @@ public class PairLinkedList extends LinkedList {
     }
 
     public String getFirstString(){
-        return getFirst().toString().replaceAll("\"","");
+        return this.get(0).toString().replaceAll("\"","");
     }
 
     @Override

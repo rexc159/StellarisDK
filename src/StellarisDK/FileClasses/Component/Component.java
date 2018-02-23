@@ -1,7 +1,7 @@
 package StellarisDK.FileClasses.Component;
 
 import StellarisDK.FileClasses.GenericData;
-import StellarisDK.FileClasses.Helper.PairLinkedList;
+import StellarisDK.FileClasses.Helper.PairArrayList;
 import StellarisDK.FileClasses.Locale;
 import StellarisDK.GUI.CompUI;
 
@@ -47,10 +47,13 @@ public class Component extends GenericData {
 
     @Override
     public String toString() {
-        String temp = Locale.getLocale(((PairLinkedList)data.get("key")).getFirstString());
+        if(!data.containsKey("key")){
+            return "Empty Name";
+        }
+        String temp = Locale.getLocale(((PairArrayList)data.get("key")).getFirstString());
         if (temp != null)
             return temp;
         else
-            return ((PairLinkedList)data.get("key")).getFirstString();
+            return ((PairArrayList)data.get("key")).getFirstString();
     }
 }
