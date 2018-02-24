@@ -30,9 +30,9 @@ public class ModDescriptor extends GenericData {
             data.replace(key, null);
         }
         String input;
-        try{
+        try {
             input = new String(Files.readAllBytes(Paths.get(path)));
-        } catch (IOException e){
+        } catch (IOException e) {
             System.out.println("Error: Unable to load .mod");
             return null;
         }
@@ -80,6 +80,6 @@ public class ModDescriptor extends GenericData {
 
     @Override
     public String toString() {
-        return data.get("name") == null ? "New Mod" : data.get("name").toString();
+        return name.equals("Empty") ? "New Mod" : name;
     }
 }

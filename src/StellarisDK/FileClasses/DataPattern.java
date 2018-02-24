@@ -12,7 +12,7 @@ public class DataPattern {
     // Group 2 : Modifier specific for conditions
     // Group 3 : Value
     // Group 4 : Comments, currently voided.
-    public static final Pattern kv = Pattern.compile("(?m)^\\t?(\\w+)(\\s?[=<>]\\s?)([^\\s\\{#\\n]+)(#.+)*");
+    public static final Pattern kv = Pattern.compile("(?m)^\\t?(\\w+)(\\s?[=<>]+?\\s?)([^\\s\\{#\\n]+)(#.+)*");
 
     // Pattern matches for single line "complex" key variable
     // i.e. modifier, preq...
@@ -23,7 +23,7 @@ public class DataPattern {
     // Group 1 : Key
     // Group 2 : Modifier specific for conditions
     // Group 3 : Value
-    public static final Pattern sComplex_sub = Pattern.compile("\\t?(\\w+)( .{1,2} )?([^\\s\\{\\}]+)?");
+    public static final Pattern sComplex_sub = Pattern.compile("\\t?([-\\w\\d.\"]+)( .{1,2} )?([^\\s\\{\\}]+)?");
 
     // Pattern matches for multi line "complex" key variable
     // i.e. immediate, trigger, mainly event related variables
@@ -44,11 +44,9 @@ public class DataPattern {
     // Group 9 : Modifier specific for conditions
     // Group 10 : Recursion Pattern to C_MATCH
 
-    // Group 11-14 : Fallback for Group 1-4
-    public static final Pattern C_MATCH = Pattern.compile("(?m)^\\t?(\\w+)(\\s?[=<>]\\s?)([^\\s\\{#\\n]+)(#.+)*|" +
-            "^\\t(\\w+) = \\{(.+?)\\}( #.+?)?[\\r\\n]|" +
-            "^\\t(\\w+)( ?= ?)\\{\\s*[\\r\\n]([\\W\\D\\S]+?)^\\t?\\}|" +
-            "^\\t?(\\w+)(\\s?[=<>]\\s?)\"([^\\{#\\n]+?)\"(#.+)*");
+    public static final Pattern C_MATCH = Pattern.compile("(?m)^\\s?(\\w+)(\\s*[=<>]+?\\s*)([^\\s\\{#\\n]+)(#.+)*|" +
+            "^\\s(\\w+)\\s*=\\s*\\{(.+?)\\}(\\s*#.+?)?[\\r\\n]|" +
+            "^\\s(\\w+)(\\s*=\\s*)\\{\\s*[\\r\\n]([\\W\\D\\S]+?)^\\t?\\}");
 
     // Mod Descriptor Specific Pattern
     public static final Pattern mDSpec = Pattern.compile("(?s)(?m)^\\t?(\\w+)=\\{[\\r\\n](.+?)^\\}");

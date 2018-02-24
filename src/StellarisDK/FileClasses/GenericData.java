@@ -16,6 +16,8 @@ import java.util.regex.Matcher;
  * led to huge memory overhead.
  * Although such overhead maybe resolved with JSONObjects, such changes will result in delay of release
  * therefore, performance related issues are pushed to after full Alpha release.
+ * Alternatively, since all objects are reasonably sized Strings, storing the data as String objects,
+ * and parsing it each time maybe an even better solution.
  * @author      Rex
  * @version     %I%, %G%
  * @since       0.0.1
@@ -26,6 +28,8 @@ public abstract class GenericData {
 
     protected LinkedHashMap<String, Object> data = new LinkedHashMap<>();
 
+    protected String name = "Empty";
+
     public AbstractUI ui;
 
     /*
@@ -33,13 +37,36 @@ public abstract class GenericData {
         but since it needs to be referenced later on anyway,
         it maybe better to just store it with a String object instead
      */
-    private String type;
+    protected String type;
 
     public GenericData() {
     }
 
     public GenericData(String input) {
+//        raw = input;
         data = (LinkedHashMap) load(input);
+        setName();
+//        data.clear();
+    }
+
+    public GenericData(String input, String type) {
+        this(input);
+        this.type = type;
+        setName();
+    }
+
+    private void setName() {
+        if (data.containsKey("key")) {
+            name = data.get("key").toString();
+        } else if (data.containsKey("name")) {
+            name = data.get("name").toString();
+        } else if (data.containsKey("id")) {
+            name = data.get("id").toString();
+        } else if (data.containsKey("event")) {
+            name = data.get("event").toString();
+        } else {
+            name = type;
+        }
     }
 
     public Object getValue(String key) {
@@ -54,6 +81,7 @@ public abstract class GenericData {
         }
     }
 
+    // Deprecated entries are currently not removed
     public Object load(String input) {
         LinkedHashMap<String, ArrayList<Object>> data = new LinkedHashMap<String, ArrayList<Object>>() {
             @Override
@@ -72,10 +100,10 @@ public abstract class GenericData {
             }
         };
         Matcher single_match;
-        try{
+        try {
             single_match = DataPattern.C_MATCH.matcher(input);
-        }catch (NullPointerException e){
-            System.out.println("Cause: "+input + "\n END INPUT");
+        } catch (NullPointerException e) {
+            System.out.println("Cause: " + input + "\n END INPUT");
             return null;
         }
 
@@ -93,21 +121,7 @@ public abstract class GenericData {
                 } else {
                     data.put(single_match.group(1).trim(), temp);
                 }
-
-            }
-            else if (single_match.group(11) !=null){
-
-                temp = new PairArrayList();
-
-                cPair dat = new cPair(single_match.group(12).trim(), single_match.group(13).trim());
-                temp.add(dat);
-                if (data.containsKey(single_match.group(11).trim())) {
-                    data.get(single_match.group(11).trim()).add(dat);
-                } else {
-                    data.put(single_match.group(11).trim(), temp);
-                }
-            }
-            else if (single_match.group(5) != null) {
+            } else if (single_match.group(5) != null) {
 
                 temp = new ArrayList<Object>() {
                     @Override
@@ -188,8 +202,7 @@ public abstract class GenericData {
                         }
                     }
                 }
-            }
-            else if (single_match.group(8) != null) {
+            } else if (single_match.group(8) != null) {
 
                 temp = new ArrayList<Object>() {
                     @Override
@@ -220,4 +233,9 @@ public abstract class GenericData {
     }
 
     public abstract String export();
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

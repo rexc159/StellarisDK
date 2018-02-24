@@ -7,16 +7,16 @@ import java.util.LinkedList;
 
 public class PairArrayList extends ArrayList {
 
-    public LinkedList<String> toStringList(){
+    public LinkedList<String> toStringList() {
         LinkedList<String> list = new LinkedList<>();
-        for(Object pair : this){
+        for (Object pair : this) {
             list.add(((Pair) pair).getValue().toString());
         }
         return list;
     }
 
-    public String getFirstString(){
-        return this.get(0).toString().replaceAll("\"","");
+    public String getFirstString() {
+        return this.get(0).toString().replaceAll("\"", "");
     }
 
     @Override

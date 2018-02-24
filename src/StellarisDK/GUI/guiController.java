@@ -8,9 +8,8 @@ import StellarisDK.FileClasses.ModDescriptor;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.control.TreeCell;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
+import javafx.scene.control.*;
+import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
@@ -62,6 +61,16 @@ public class guiController extends AnchorPane {
                     }
                 }
             }
+        });
+        ContextMenu contextMenu = new ContextMenu();
+        MenuItem refresh = new MenuItem("Refresh");
+        refresh.setOnAction(event -> {
+            itemView.refresh();
+        });
+        contextMenu.getItems().add(refresh);
+        itemView.setContextMenu(contextMenu);
+        itemView.addEventHandler(ContextMenuEvent.CONTEXT_MENU_REQUESTED, event -> {
+            itemView.getContextMenu().show(itemView, event.getScreenX(), event.getScreenY());
         });
     }
 
@@ -130,36 +139,37 @@ public class guiController extends AnchorPane {
                 TreeItem temp = new TreeItem<>(file.getName());
                 if (!file.isDirectory()) {
                     item.getChildren().add(temp);
-                    try{
+                    try {
                         temp.getChildren().addAll(DataParser.parseAll(file));
-                    }catch (IOException e){
+                    } catch (IOException e) {
                     }
                 }
+                System.gc();
             }
         } catch (NullPointerException e) {
             System.out.println("[ERROR] IGNORE: Empty/Missing Folder, FROM: " + files.getPath());
         }
     }
 
-    protected void loadEvents(){
+    protected void loadEvents() {
         TreeItem<String> event = new TreeItem<>("events");
         itemView.getRoot().getChildren().add(event);
         loadFiles(new File(mainLoadPath + "\\events"), event);
     }
 
-    protected void loadLocale(){
+    protected void loadLocale() {
         TreeItem<String> locale = new TreeItem<>("localisation");
         itemView.getRoot().getChildren().add(locale);
-        try{
+        try {
             for (File file : new File(mainLoadPath + "\\localisation").listFiles()) {
                 TreeItem<String> temp = new TreeItem<>(file.getName());
                 locale.getChildren().add(temp);
-                try{
+                try {
                     temp.getChildren().add(new TreeItem(new Locale(file.getPath())));
-                }catch (IOException e){
+                } catch (IOException e) {
                 }
             }
-        }catch (NullPointerException e){
+        } catch (NullPointerException e) {
             System.out.println("[ERROR] Locale Not Found");
         }
     }

@@ -19,17 +19,25 @@ public class DataParser {
     public static GenericData parseData(String path) throws IOException {
         Scanner scan = new Scanner(new File(path));
         Component data = null;
-        String temp = "";
-        while (temp != null) {
+        String temp;
+        do {
             temp = scan.findWithinHorizon(constants, 0);
-            System.out.println(temp);
-        }
+            if(temp !=null)
+                System.out.println(temp);
+        } while (temp != null);
         while (scan.hasNext()) {
-            String test = scan.findWithinHorizon(pattern, 0);
+            String objectDat = scan.findWithinHorizon(pattern, 0);
 //            System.out.println("Original: "+test);
 //            new Component(test).export();
-            System.out.println("New: " + new Component(test).export() + "\n\n");
-            data = new Component(test);
+            if (objectDat != null) {
+                Matcher obj = pattern.matcher(objectDat);
+                obj.find();
+                GenericData gData;
+                data = new Component(objectDat, obj.group(1));
+                System.out.println(data.export());
+            } else {
+                break;
+            }
         }
         return data;
     }
@@ -65,10 +73,11 @@ public class DataParser {
                     case "component_set":
                         gData = new CompSet(objectDat);
                         break;
+                    case "component":
                     case "ambient_object":
                     case "anomaly":
                     default:
-                        gData = new Component(objectDat);
+                        gData = new Component(objectDat, obj.group(1));
                 }
 
                 out.add(new TreeItem<>(gData));
