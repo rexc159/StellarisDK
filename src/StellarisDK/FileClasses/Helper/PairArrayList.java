@@ -23,10 +23,15 @@ public class PairArrayList extends ArrayList {
     public String toString() {
         String out = "";
         for (Object pair : this) {
-            if (this.size() == 1) {
-                return "#key " + ((Pair) pair).getKey() + " " + ((Pair) pair).getValue();
+            try {
+                if (this.size() == 1) {
+                    return "#key " + ((Pair) pair).getKey() + " " + ((Pair) pair).getValue();
+                }
+                out += "#key " + ((Pair) pair).getKey() + " " + ((Pair) pair).getValue();
+            } catch (ClassCastException e) {
+                System.out.println("[ERROR] toString Failed, CLASS:"+pair.getClass());
+                System.out.println("[ERROR] toString Failed, CAUSE:"+pair.toString());
             }
-            out += "#key " + ((Pair) pair).getKey() + " " + ((Pair) pair).getValue();
         }
         return out;
     }

@@ -22,7 +22,6 @@ import static StellarisDK.FileClasses.DataParser.parseData;
 
 public class guiController extends AnchorPane {
     private Stage stage;
-    private File modPath;
     private String mainLoadPath;
     private File path;
 
@@ -141,7 +140,7 @@ public class guiController extends AnchorPane {
         FileChooser fc = new FileChooser();
         fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Mod Descriptors (*.mod)", "*.mod"));
         fc.setTitle("Select Mod Descriptor");
-        modPath = fc.showOpenDialog(stage);
+        File modPath = fc.showOpenDialog(stage);
         if (modPath != null) {
             mainMd = new ModDescriptor(modPath.getPath());
             itemView.setRoot(new TreeItem<>(mainMd));
@@ -154,7 +153,7 @@ public class guiController extends AnchorPane {
         }
     }
 
-    protected void loadFiles(File files, TreeItem item) {
+    private void loadFiles(File files, TreeItem item) {
         try {
             for (File file : files.listFiles()) {
                 System.out.println("Loading: " + file.getPath());
@@ -173,13 +172,13 @@ public class guiController extends AnchorPane {
         }
     }
 
-    protected void loadEvents() {
+    private void loadEvents() {
         TreeItem<String> event = new TreeItem<>("events");
         itemView.getRoot().getChildren().add(event);
         loadFiles(new File(mainLoadPath + "\\events"), event);
     }
 
-    protected void loadLocale() {
+    private void loadLocale() {
         TreeItem<String> locale = new TreeItem<>("localisation");
         itemView.getRoot().getChildren().add(locale);
         try {
@@ -196,7 +195,7 @@ public class guiController extends AnchorPane {
         }
     }
 
-    protected void loadCommon() {
+    private void loadCommon() {
         TreeItem<String> common = new TreeItem<>("common");
         itemView.getRoot().getChildren().add(common);
         for (String folder : DataLoc.common) {
@@ -240,19 +239,17 @@ public class guiController extends AnchorPane {
         }
     }
 
-    protected void loadMod() {
+    private void loadMod() {
         loadCommon();
         loadEvents();
         loadLocale();
     }
 
-    protected void open(GenericData obj) {
+    private void open(GenericData obj) {
         obj.ui.setTree(itemView);
         if (!mainWindow.getChildren().contains(obj.ui))
             mainWindow.getChildren().add(obj.ui);
     }
-
-    private static int tabby = 1;
 
     private void saveFiles(File saveLoc, TreeItem current) {
         boolean output = false;
