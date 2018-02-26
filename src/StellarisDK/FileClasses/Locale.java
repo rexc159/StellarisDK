@@ -54,7 +54,7 @@ public class Locale {
     }
 
     public String export(){
-        String out = lang+"\r\n";
+        String out = lang+":\r\n";
         for (String key : data.keySet()) {
             out += key+":"+data.get(key).toString()+"\r\n";
         }

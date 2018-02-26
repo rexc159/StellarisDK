@@ -57,13 +57,16 @@ public abstract class GenericData {
 
     private void setName() {
         if (data.containsKey("key")) {
-            name = data.get("key").toString();
+            name = ((PairArrayList)data.get("key")).getFirstString();
         } else if (data.containsKey("name")) {
-            name = data.get("name").toString();
+            if(this instanceof ModDescriptor)
+                name = data.get("name").toString();
+            else
+                name = ((PairArrayList)data.get("name")).getFirstString();
         } else if (data.containsKey("id")) {
-            name = data.get("id").toString();
+            name = ((PairArrayList)data.get("id")).getFirstString();
         } else if (data.containsKey("event")) {
-            name = data.get("event").toString();
+            name = ((PairArrayList)data.get("event")).getFirstString();
         } else {
             name = type;
         }

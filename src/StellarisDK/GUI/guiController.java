@@ -7,13 +7,12 @@ import StellarisDK.FileClasses.Locale;
 import StellarisDK.FileClasses.ModDescriptor;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.input.ContextMenuEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -48,30 +47,54 @@ public class guiController extends AnchorPane {
             throw new RuntimeException(e);
         }
 
-        // Can probably cut some RAM cost by using Cell Factories
-        itemView.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-            if (event.getClickCount() >= 2) {
-                Node node = event.getPickResult().getIntersectedNode();
-                if ((node instanceof TreeCell && ((TreeCell) node).getText() != null)) {
-                    if (((TreeCell) node).getTreeItem().isLeaf()) {
-                        if (((TreeCell) node).getTreeItem().getValue() instanceof GenericData) {
+        itemView.setEditable(true);
+        itemView.setCellFactory(new Callback<TreeView, TreeCell>() {
+            @Override
+            public TreeCell call(TreeView param) {
+                TreeCell<Object> cell = new TreeCell<Object>(){
+                    @Override
+                    public void startEdit(){
+                        if(this.getTreeItem().getValue() instanceof GenericData){
                             System.out.println("Starting Editor");
-                            open((GenericData) ((TreeCell) node).getTreeItem().getValue());
+                            super.startEdit();
+                            open((GenericData) this.getTreeItem().getValue());
+                            super.cancelEdit();
                         }
                     }
+
+                    @Override
+                    protected void updateItem(Object item, boolean empty){
+                        super.updateItem(item, empty);
+                        if(empty){
+                            setText(null);
+                        }else{
+                            setText(item.toString());
+                        }
+                    }
+                };
+                ContextMenu contextMenu = createCM(cell);
+                cell.setContextMenu(contextMenu);
+                return cell;
+            }
+        });
+    }
+
+    private ContextMenu createCM(TreeCell cell) {
+        ContextMenu contextMenu = new ContextMenu();
+        MenuItem createNew = new MenuItem("New..");
+        createNew.setOnAction(event -> {
+            if (cell.getTreeItem().getValue() instanceof GenericData) {
+                cell.getTreeItem().getParent().getChildren().add(new TreeItem<>("Test"));
+            } else if (cell.getTreeItem().getValue().toString().contains(".txt")) {
+                cell.getTreeItem().getChildren().add(new TreeItem<>("Item"));
+            } else if (cell.getTreeItem().getParent() != null) {
+                if (cell.getTreeItem().getParent().getValue().equals("common")) {
+                    cell.getTreeItem().getChildren().add(new TreeItem<>("Test.txt"));
                 }
             }
         });
-        ContextMenu contextMenu = new ContextMenu();
-        MenuItem refresh = new MenuItem("Refresh");
-        refresh.setOnAction(event -> {
-            itemView.refresh();
-        });
-        contextMenu.getItems().add(refresh);
-        itemView.setContextMenu(contextMenu);
-        itemView.addEventHandler(ContextMenuEvent.CONTEXT_MENU_REQUESTED, event -> {
-            itemView.getContextMenu().show(itemView, event.getScreenX(), event.getScreenY());
-        });
+        contextMenu.getItems().add(createNew);
+        return contextMenu;
     }
 
     public void setStage(Stage stage) {
@@ -124,7 +147,6 @@ public class guiController extends AnchorPane {
             itemView.setRoot(new TreeItem<>(mainMd));
             itemView.getRoot().getChildren().add(new TreeItem(mainMd));
             itemView.getRoot().setExpanded(true);
-
             if (mainMd.getValue("path") != null) {
                 mainLoadPath = modPath.getParentFile().getParent() + "\\" + (mainMd.getValue("path").toString().replaceAll("/", "\\\\"));
                 loadMod();
@@ -213,35 +235,12 @@ public class guiController extends AnchorPane {
                     loadFiles(new File(mainLoadPath + "\\common\\" + folder + "\\" + sF_name), subfolder);
                     break;
             }
-
             common.getChildren().add(temp);
             loadFiles(new File(mainLoadPath + "\\common\\" + folder), temp);
         }
     }
 
     protected void loadMod() {
-//        LinkedList<Component> compList = new LinkedList<>();
-//        try {
-//            for (File file : new File(mainLoadPath + "\\" + DataLoc.component_sets).listFiles()) {
-//                itemView.getRoot().getChildren().addAll(DataParser.parseSet(file));
-//            }
-//            for (File file : new File(mainLoadPath + "\\" + DataLoc.component_templates).listFiles()) {
-//                compList.addAll(DataParser.parseCompUtil(file));
-//            }
-//            for (Component comp : compList) {
-//                for (Object set : itemView.getRoot().getChildren()) {
-//                    if (((TreeItem) set).getValue().toString().equals(((PairLinkedList) comp.getValue("component_set")).getFirstString())) {
-//                        ((CompSetUI) ((CompSet) ((TreeItem) set).getValue()).ui).addComp(comp);
-//                    }
-//
-//                }
-//            }
-//        } catch (IOException e) {
-//            System.out.println("Empty/Missing Folder.");
-//        } catch (NullPointerException e) {
-//            System.out.println("Error: Malformed Input");
-//            e.printStackTrace();
-//        }
         loadCommon();
         loadEvents();
         loadLocale();
@@ -251,6 +250,69 @@ public class guiController extends AnchorPane {
         obj.ui.setTree(itemView);
         if (!mainWindow.getChildren().contains(obj.ui))
             mainWindow.getChildren().add(obj.ui);
+    }
+
+    private static int tabby = 1;
+
+    private void saveFiles(File saveLoc, TreeItem current) {
+        boolean output = false;
+        String temp = "";
+        for (Object item : current.getChildren()) {
+            if (((TreeItem) item).getValue() instanceof GenericData || ((TreeItem) item).getValue().equals("Constants")) {
+                if (((TreeItem) item).getChildren().size() != 0) {
+                    for (Object constant : ((TreeItem) item).getChildren()) {
+                        output = true;
+                        temp += ((TreeItem) constant).getValue() + "\r\n";
+                    }
+                    temp += "\r\n";
+                } else {
+                    output = true;
+                    temp += ((GenericData) ((TreeItem) item).getValue()).export() + "\r\n";
+                }
+            } else if (((TreeItem) item).getValue() instanceof Locale) {
+                output = true;
+                temp = ((Locale) ((TreeItem) item).getValue()).export();
+            } else if (((TreeItem) item).getChildren().size() != 0) {
+                if (((TreeItem) item).getValue().equals("Constants")) {
+                    saveFiles(saveLoc, (TreeItem) item);
+                } else {
+                    saveLoc.mkdir();
+                    File test = new File(saveLoc.getPath() + "\\" + ((TreeItem) item).getValue());
+                    saveFiles(test, (TreeItem) item);
+                }
+            }
+        }
+        if(output){
+            System.out.println("Exporting to:" + saveLoc.getPath());
+            File out = new File(saveLoc.getPath());
+            try{
+                if(out.isDirectory()){
+                    FileWriter fw = new FileWriter(new File(out.getParent()+"\\"+itemView.getRoot().getValue()+".mod"));
+                    fw.write(mainMd.export());
+                    fw.close();
+                }else{
+                    if(!out.exists()){
+                        out.createNewFile();
+                    }
+                    FileWriter fw = new FileWriter(out);
+                    fw.write(temp);
+                    fw.close();
+                }
+            }catch (IOException e){
+                System.out.println("[ERROR] Export Failed, FROM: "+saveLoc.getPath());
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @FXML
+    protected void saveAll(){
+        DirectoryChooser fc = new DirectoryChooser();
+        File main = fc.showDialog(stage);
+        if(main != null){
+            main = new File(main.getPath()+ "\\"+ ((ModDescriptor)itemView.getRoot().getValue()).getDir());
+            saveFiles(main, itemView.getRoot());
+        }
     }
 
     @FXML

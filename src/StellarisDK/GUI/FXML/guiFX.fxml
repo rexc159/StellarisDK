@@ -20,7 +20,7 @@
                         <MenuItem mnemonicParsing="false" onAction="#openLocale" text="Open Locale" />
                         <MenuItem mnemonicParsing="false" onAction="#openMod" text="Open Mod" />
                         <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="false" text="Save" />
+                        <MenuItem mnemonicParsing="false" onAction="#saveAll" text="Save All" />
                         <MenuItem mnemonicParsing="false" onAction="#export" text="Export..." />
                         <MenuItem mnemonicParsing="false" text="Close" />
                         <SeparatorMenuItem mnemonicParsing="false" />
