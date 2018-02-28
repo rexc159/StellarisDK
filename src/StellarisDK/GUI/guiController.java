@@ -26,10 +26,13 @@ import java.io.IOException;
 
 import static StellarisDK.FileClasses.DataParser.parseToConsole;
 
+
 public class guiController extends AnchorPane {
     private Stage stage;
     private String mainLoadPath;
     private File path;
+
+    public static TreeItem compSet;
 
     private ModDescriptor mainMd;
 
@@ -319,6 +322,8 @@ public class guiController extends AnchorPane {
         itemView.getRoot().getChildren().add(common);
         for (String folder : DataLoc.common) {
             TreeItem<String> temp = new TreeItem<>(folder);
+            if(folder.equals("component_sets"))
+                compSet = temp;
             TreeItem<String> subfolder;
             String sF_name;
             switch (folder) {

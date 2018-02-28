@@ -4,7 +4,9 @@ import StellarisDK.FileClasses.Component.Component;
 import StellarisDK.FileClasses.Helper.PairArrayList;
 import StellarisDK.FileClasses.Helper.ValueTriplet;
 import javafx.scene.Node;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TreeItem;
 import javafx.scene.layout.GridPane;
 
 import java.util.ArrayList;
@@ -34,6 +36,15 @@ public class CompUI extends AbstractUI {
                     } catch (NullPointerException e) {
 //                        System.out.println("Empty Key, Ignore");
                     }
+                }else if (node instanceof ChoiceBox && node.getId().equals("component_set")){
+                    for(Object item: guiController.compSet.getChildren()){
+                        if(((TreeItem) item).getValue().toString().contains(".txt")){
+                            for(Object compSet : ((TreeItem) item).getChildren())
+                                ((ChoiceBox) node).getItems().add(((TreeItem)compSet).getValue().toString());
+                        }
+                    }
+                    System.out.println(obj.getValue("component_set").toString());
+                    ((ChoiceBox) node).getSelectionModel().select(((PairArrayList)obj.getValue("component_set")).getFirstString());
                 }
             }
         }
@@ -57,6 +68,8 @@ public class CompUI extends AbstractUI {
                     } catch (IndexOutOfBoundsException e) {
                         temp.add(new ValueTriplet<>("=", out, obj.incSize()));
                     }
+                }else if (node instanceof ChoiceBox && node.getId().equals("component_set")){
+                    ((ChoiceBox) node).getSelectionModel().getSelectedItem();
                 }
             }
         }

@@ -20,9 +20,9 @@ public abstract class AbstractUI extends Region {
 
     TitledPane window = new TitledPane();
 
-    public TreeView itemView;
+    TreeView itemView;
 
-    public GenericData obj;
+    GenericData obj;
 
     void init(String fxml) {
         double mouse[] = new double[2];
