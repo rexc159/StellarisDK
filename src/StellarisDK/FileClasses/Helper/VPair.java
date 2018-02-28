@@ -16,11 +16,11 @@ public class VPair extends Pair {
     }
 
     public String toExport(){
-        return getKey() + " " + getValue();
+        return " " + getKey() + " " + getValue();
     }
 
     @Override
     public String toString(){
-        return getValue().toString();
+        return getKey() + " " + getValue();
     }
 }
