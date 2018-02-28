@@ -18,7 +18,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import static StellarisDK.FileClasses.DataParser.parseData;
+import static StellarisDK.FileClasses.DataParser.parseToConsole;
 
 public class guiController extends AnchorPane {
     private Stage stage;
@@ -50,10 +50,10 @@ public class guiController extends AnchorPane {
         itemView.setCellFactory(new Callback<TreeView, TreeCell>() {
             @Override
             public TreeCell call(TreeView param) {
-                TreeCell<Object> cell = new TreeCell<Object>(){
+                TreeCell<Object> cell = new TreeCell<Object>() {
                     @Override
-                    public void startEdit(){
-                        if(this.getTreeItem().getValue() instanceof GenericData){
+                    public void startEdit() {
+                        if (this.getTreeItem().getValue() instanceof GenericData) {
                             System.out.println("Starting Editor");
                             super.startEdit();
                             open((GenericData) this.getTreeItem().getValue());
@@ -62,11 +62,11 @@ public class guiController extends AnchorPane {
                     }
 
                     @Override
-                    protected void updateItem(Object item, boolean empty){
+                    protected void updateItem(Object item, boolean empty) {
                         super.updateItem(item, empty);
-                        if(empty){
+                        if (empty) {
                             setText(null);
-                        }else{
+                        } else {
                             setText(item.toString());
                         }
                     }
@@ -108,7 +108,7 @@ public class guiController extends AnchorPane {
         path = fc.showOpenDialog(stage);
         if (path != null) {
             try {
-                test = parseData(path.getPath());
+                parseToConsole(path);
             } catch (IOException e) {
                 System.out.println("Failed");
             }
@@ -279,35 +279,35 @@ public class guiController extends AnchorPane {
                 }
             }
         }
-        if(output){
+        if (output) {
             System.out.println("Exporting to:" + saveLoc.getPath());
             File out = new File(saveLoc.getPath());
-            try{
-                if(out.isDirectory()){
-                    FileWriter fw = new FileWriter(new File(out.getParent()+"\\"+itemView.getRoot().getValue()+".mod"));
+            try {
+                if (out.isDirectory()) {
+                    FileWriter fw = new FileWriter(new File(out.getParent() + "\\" + itemView.getRoot().getValue() + ".mod"));
                     fw.write(mainMd.export());
                     fw.close();
-                }else{
-                    if(!out.exists()){
+                } else {
+                    if (!out.exists()) {
                         out.createNewFile();
                     }
                     FileWriter fw = new FileWriter(out);
                     fw.write(temp);
                     fw.close();
                 }
-            }catch (IOException e){
-                System.out.println("[ERROR] Export Failed, FROM: "+saveLoc.getPath());
+            } catch (IOException e) {
+                System.out.println("[ERROR] Export Failed, FROM: " + saveLoc.getPath());
                 e.printStackTrace();
             }
         }
     }
 
     @FXML
-    protected void saveAll(){
+    protected void saveAll() {
         DirectoryChooser fc = new DirectoryChooser();
         File main = fc.showDialog(stage);
-        if(main != null){
-            main = new File(main.getPath()+ "\\"+ ((ModDescriptor)itemView.getRoot().getValue()).getDir());
+        if (main != null) {
+            main = new File(main.getPath() + "\\" + ((ModDescriptor) itemView.getRoot().getValue()).getDir());
             saveFiles(main, itemView.getRoot());
         }
     }

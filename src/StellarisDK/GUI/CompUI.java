@@ -2,7 +2,7 @@ package StellarisDK.GUI;
 
 import StellarisDK.FileClasses.Component.Component;
 import StellarisDK.FileClasses.Helper.PairArrayList;
-import StellarisDK.FileClasses.Helper.cPair;
+import StellarisDK.FileClasses.Helper.VPair;
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
@@ -52,9 +52,9 @@ public class CompUI extends AbstractUI {
                         temp = new PairArrayList();
                     }
                     try{
-                        temp.set(0,((cPair)temp.get(0)).setValue(out));
+                        temp.set(0,((VPair)temp.get(0)).setValue(out));
                     }catch (IndexOutOfBoundsException e){
-                        temp.add(new cPair(node.getId() , out));
+                        temp.add(new VPair(node.getId() , out));
                     }
                 }
             }

@@ -23,7 +23,7 @@ public class Locale {
         String input = new String(Files.readAllBytes(Paths.get(path)));
 
         Matcher temp = Pattern.compile("(\\w+):[\r\n]").matcher(input);
-        if(temp.find())
+        if (temp.find())
             lang = temp.group(1);
 
         Matcher kv_match = kv.matcher(input);
@@ -38,14 +38,14 @@ public class Locale {
         }
     }
 
-    public static String getLocale(String key){
-        if(data.get(key) != null)
+    public static String getLocale(String key) {
+        if (data.get(key) != null)
             return data.get(key).getValue();
         else
             return null;
     }
 
-    public ArrayList<TreeItem> toTree(){
+    public ArrayList<TreeItem> toTree() {
         ArrayList<TreeItem> out = new ArrayList<>();
         for (String key : data.keySet()) {
             out.add(new TreeItem<>(data.get(key)));
@@ -53,10 +53,10 @@ public class Locale {
         return out;
     }
 
-    public String export(){
-        String out = lang+":\r\n";
+    public String export() {
+        String out = lang + ":\r\n";
         for (String key : data.keySet()) {
-            out += key+":"+data.get(key).toString()+"\r\n";
+            out += key + ":" + data.get(key).toString() + "\r\n";
         }
         return out;
     }

@@ -62,8 +62,8 @@ public class ModDescriptor extends GenericData {
         return data;
     }
 
-    public String getDir(){
-        return data.get("path").toString().split("/")[1].replaceAll("\"","").trim();
+    public String getDir() {
+        return data.get("path").toString().split("/")[1].replaceAll("\"", "").trim();
     }
 
     @Override

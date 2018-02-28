@@ -16,13 +16,39 @@ public class DataParser {
     private final static Pattern pattern = Pattern.compile("(?s)(?m)(^\\w+)\\s=\\s\\{(.+?)[\\r\\n]\\}[\\r\\n]?");
     private final static Pattern constants = Pattern.compile("(\\@\\w+) = (.+)");
 
+    public static void parseToConsole(File file) throws IOException{
+        Scanner scan = new Scanner(file);
+        Component data;
+        String temp;
+        do {
+            temp = scan.findWithinHorizon(constants, 0);
+            if (temp != null)
+                System.out.println(temp);
+        } while (temp != null);
+        while (scan.hasNext()) {
+            String objectDat = scan.findWithinHorizon(pattern, 0);
+//            System.out.println("Original: "+test);
+//            new Component(test).export();
+            if (objectDat != null) {
+                Matcher obj = pattern.matcher(objectDat);
+                obj.find();
+                GenericData gData;
+                data = new Component();
+                data.setTestData(data.verLoad(obj.group(2)));
+                data.exportVer();
+            } else {
+                break;
+            }
+        }
+    }
+
     public static GenericData parseData(String path) throws IOException {
         Scanner scan = new Scanner(new File(path));
         Component data = null;
         String temp;
         do {
             temp = scan.findWithinHorizon(constants, 0);
-            if(temp !=null)
+            if (temp != null)
                 System.out.println(temp);
         } while (temp != null);
         while (scan.hasNext()) {
@@ -39,6 +65,7 @@ public class DataParser {
                 break;
             }
         }
+        scan.close();
         return data;
     }
 
@@ -58,10 +85,10 @@ public class DataParser {
         TreeItem<String> consts = new TreeItem<>("Constants");
         do {
             temp = scan.findWithinHorizon(constants, 0);
-            if(temp !=null)
+            if (temp != null)
                 consts.getChildren().add(new TreeItem<>(temp));
         } while (temp != null);
-        if(!consts.getChildren().isEmpty())
+        if (!consts.getChildren().isEmpty())
             out.add(consts);
         while (scan.hasNext()) {
             String objectDat = scan.findWithinHorizon(pattern, 0);
@@ -85,6 +112,7 @@ public class DataParser {
                 break;
             }
         }
+        scan.close();
         return out;
     }
 }
