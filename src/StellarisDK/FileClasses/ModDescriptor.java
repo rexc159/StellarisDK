@@ -1,13 +1,12 @@
 package StellarisDK.FileClasses;
 
+import StellarisDK.FileClasses.Helper.DataMap;
 import StellarisDK.GUI.ModDescUI;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.regex.Matcher;
 
@@ -24,8 +23,8 @@ public class ModDescriptor extends GenericData {
     }
 
     @Override
-    public Object load(String path) {
-        HashMap<String, Object> data = new LinkedHashMap<>();
+    public DataMap load(String path) {
+        DataMap<String, Object> data = new DataMap<>();
         for (String key : data.keySet()) {
             data.replace(key, null);
         }
@@ -69,7 +68,7 @@ public class ModDescriptor extends GenericData {
     @Override
     public String export() {
         String out = "";
-        for (String key : data.keySet()) {
+        for (Object key : data.keySet()) {
             if (data.get(key) != null) {
                 if (data.get(key) instanceof String) {
                     if (((String) data.get(key)).length() != 0)

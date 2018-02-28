@@ -2,6 +2,7 @@ package StellarisDK.FileClasses;
 
 import StellarisDK.FileClasses.Component.CompSet;
 import StellarisDK.FileClasses.Component.Component;
+import StellarisDK.FileClasses.Helper.DataMap;
 import javafx.scene.control.TreeItem;
 
 import java.io.File;
@@ -34,8 +35,8 @@ public class DataParser {
                 obj.find();
                 GenericData gData;
                 data = new Component();
-                data.setTestData(data.verLoad(obj.group(2)));
-                data.exportVer();
+                data.setData((DataMap)data.load(obj.group(2)));
+                System.out.println(data.export());
             } else {
                 break;
             }
@@ -98,13 +99,13 @@ public class DataParser {
                 GenericData gData;
                 switch (obj.group(1)) {
                     case "component_set":
-                        gData = new CompSet(objectDat);
+                        gData = new CompSet(obj.group(2));
                         break;
                     case "component":
                     case "ambient_object":
                     case "anomaly":
                     default:
-                        gData = new Component(objectDat, obj.group(1));
+                        gData = new Component(obj.group(2), obj.group(1));
                 }
 
                 out.add(new TreeItem<>(gData));

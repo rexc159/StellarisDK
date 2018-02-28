@@ -21,22 +21,6 @@ public class Component extends GenericData {
         ui = new CompUI(this);
     }
 
-    @Override
-    public String export() {
-        String out = type + " = {";
-        for (String key : data.keySet()) {
-            if (data.get(key) != null) {
-                String tabs = "\r\n";
-                for (int k = 0; k < tab; k++) {
-                    tabs += "\t";
-                }
-                out += data.get(key).toString().replaceAll("#key", tabs + key);
-//                out += tabs + key + data.get(key).toString();
-            }
-        }
-        return out + "\r\n}\r\n";
-    }
-
     public String getGroup() {
         return data.get("component_set").toString();
     }

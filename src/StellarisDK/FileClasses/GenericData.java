@@ -7,8 +7,6 @@ import StellarisDK.FileClasses.Helper.ValueTriplet;
 import StellarisDK.GUI.AbstractUI;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.regex.Matcher;
 
 /**
@@ -31,9 +29,7 @@ public abstract class GenericData {
 
     private int size = 0;
 
-    protected HashMap<String, Object> data = new HashMap<>();
-
-    protected DataMap testData = new DataMap();
+    protected DataMap data = new DataMap();
 
     protected String name = "Empty";
 
@@ -51,7 +47,7 @@ public abstract class GenericData {
 
     public GenericData(String input) {
 //        raw = input;
-        data = (LinkedHashMap) load(input);
+        data = (DataMap) load(input);
         setName();
 //        data.clear();
     }
@@ -91,48 +87,44 @@ public abstract class GenericData {
         }
     }
 
-    public void setData(HashMap data){
+    public void setData(DataMap data) {
         this.data = data;
     }
 
-    public void setTestData(DataMap data){
-        this.testData = data;
+    public String export() {
+        return type + " = " + data;
     }
 
-    public String exportVer(){
-        return type + " = " + testData;
-    }
-
-    private ArrayList sLrecursion(String input){
-        ArrayList data = new ArrayList(){
+    private ArrayList sLrecursion(String input) {
+        ArrayList data = new ArrayList() {
             @Override
-            public String toString(){
-                String out = "{";
-                for(Object item :this){
-                    out += ((VPair) item).toExport();
+            public String toString() {
+                String out = "{ ";
+                for (Object item : this) {
+                    out += item + " ";
                 }
-                return out + " }";
+                return out + "}";
             }
         };
         Matcher matcher = DataPattern.sLre.matcher(input);
-        while(matcher.find()){
-            if(matcher.group(1) != null){
+        while (matcher.find()) {
+            if (matcher.group(1) != null) {
                 data.add(new VPair(matcher.group(1).trim(), new VPair(matcher.group(2).trim(), matcher.group(3).trim())));
-            }else if (matcher.group(4) != null){
+            } else if (matcher.group(4) != null) {
                 data.add(new VPair(matcher.group(4).trim(), new VPair(matcher.group(5).trim(), sLrecursion(matcher.group(6)))));
-            }else if (matcher.group(7) != null){
+            } else if (matcher.group(7) != null) {
                 data.add(new VPair(matcher.group(7).trim(), new VPair(matcher.group(8).trim(), matcher.group(9).trim())));
-            }else if (matcher.group(10) != null){
+            } else if (matcher.group(10) != null) {
                 data.add(new VPair(matcher.group(10).trim(), new VPair(matcher.group(11).trim(), matcher.group(12).trim())));
-            }else if(matcher.group(13) != null){
+            } else if (matcher.group(13) != null) {
                 data.add(matcher.group(13).trim());
             }
         }
         return data;
     }
 
-    public DataMap verLoad(String input) {
-        DataMap data = new DataMap() {
+    public Object load(String input) {
+        DataMap<String, ArrayList<Object>> data = new DataMap<String, ArrayList<Object>>() {
             @Override
             public String toString() {
                 tab++;
@@ -142,8 +134,8 @@ public abstract class GenericData {
                 }
                 String out = "{";
                 Object[] temp = compressToPairArray(size);
-                for(int i=0;i<size;i++)
-                    if(temp[i] != null)
+                for (int i = 0; i < size; i++)
+                    if (temp[i] != null)
                         out += temp[i].toString().replaceAll("#tabs", tabs);
                 tab--;
                 return out + tabs.replaceFirst("\t", "") + "}";
@@ -158,7 +150,7 @@ public abstract class GenericData {
             if (matcher.group(5) != null) {
                 if (matcher.group(7).contains("{")) {
                     ValueTriplet dat = new ValueTriplet<>(matcher.group(6).trim(), sLrecursion(matcher.group(7)), size++);
-                    if(data.containsKey(matcher.group(5))){
+                    if (data.containsKey(matcher.group(5))) {
                         data.get(matcher.group(5).trim()).add(dat);
                     } else {
                         temp = new PairArrayList();
@@ -176,9 +168,9 @@ public abstract class GenericData {
                     }
                 }
             } else if (matcher.group(1) != null) {
-                temp = new ArrayList<>();
+                temp = new PairArrayList();
                 int order = size++;
-                DataMap secMap = verLoad(matcher.group(4).replaceAll("(?m)^\t", ""));
+                DataMap secMap = (DataMap) load(matcher.group(4).replaceAll("(?m)^\t", ""));
                 ValueTriplet dat = new ValueTriplet<>(matcher.group(2).trim(), secMap, order);
                 temp.add(dat);
                 if (data.containsKey(matcher.group(1).trim())) {
@@ -190,159 +182,6 @@ public abstract class GenericData {
         }
         return data;
     }
-
-    // Deprecated entries are currently not removed
-    public Object load(String input) {
-        LinkedHashMap<String, ArrayList<Object>> data = new LinkedHashMap<String, ArrayList<Object>>() {
-            @Override
-            public String toString() {
-                String out = "";
-                tab++;
-                String tabs = "\r\n";
-                for (int k = 0; k < tab; k++) {
-                    tabs += "\t";
-                }
-                for (String i : keySet()) {
-                    out += get(i).toString().replaceAll("#key", tabs + i);
-                }
-                tab--;
-                return out;
-            }
-        };
-        Matcher single_match;
-        try {
-            single_match = DataPattern.C_MATCH.matcher(input);
-        } catch (NullPointerException e) {
-            System.out.println("Cause: " + input + "\nEND INPUT");
-            return null;
-        }
-
-        ArrayList<Object> temp;
-
-        while (single_match.find()) {
-            if (single_match.group(1) != null) {
-
-                temp = new PairArrayList();
-
-                VPair dat = new VPair(single_match.group(2).trim(), single_match.group(3).trim());
-                temp.add(dat);
-                if (data.containsKey(single_match.group(1).trim())) {
-                    data.get(single_match.group(1).trim()).add(dat);
-                } else {
-                    data.put(single_match.group(1).trim(), temp);
-                }
-            } else if (single_match.group(5) != null) {
-
-                temp = new ArrayList<Object>() {
-                    @Override
-                    public String toString() {
-                        String out = "#key = {";
-                        for (Object sub : this) {
-                            out += sub.toString().replaceAll("(?m)^[\r\n\\t]+", " ");
-                        }
-                        return out + " }";
-                    }
-                };
-
-                Matcher sCs_match = DataPattern.sComplex_sub.matcher(single_match.group(6));
-                if (sCs_match.find()) {
-                    if (sCs_match.group(2) != null) {
-                        LinkedHashMap<String, VPair> sCsMap = new LinkedHashMap<String, VPair>() {
-                            @Override
-                            public String toString() {
-                                String out = "";
-                                for (String key : keySet()) {
-                                    out += " " + key + " " + this.get(key).getKey() + " " + this.get(key).getValue();
-                                }
-                                return out + "";
-                            }
-                        };
-
-                        if (sCs_match.group(3) != null) {
-                            do {
-                                try {
-                                    VPair rec = new VPair(sCs_match.group(2).trim(), sCs_match.group(3).trim()) {
-                                        @Override
-                                        public String toString() {
-                                            return getKey() + " " + getValue();
-                                        }
-                                    };
-                                    sCsMap.put(sCs_match.group(1).trim(), rec);
-                                } catch (Exception e) {
-                                    System.out.println("Parsing Failed\n Cause: " + single_match.group(6));
-                                    return null;
-                                }
-                            } while (sCs_match.find());
-                            temp.add(sCsMap);
-                            if (data.containsKey(single_match.group(5).trim())) {
-                                data.get(single_match.group(5).trim()).add(sCsMap);
-                            } else {
-                                data.put(single_match.group(5).trim(), temp);
-                            }
-                        } else {
-                            Object dat = load(single_match.group(6).replaceFirst("^\\s", "\t").replaceFirst("\\s$", "\n"));
-                            temp.add(dat);
-                            if (data.containsKey(single_match.group(5).trim())) {
-                                data.get(single_match.group(5).trim()).add(dat);
-                            } else {
-                                data.put(single_match.group(5).trim(), temp);
-                            }
-                        }
-
-                    } else {
-                        ArrayList<Object> sCsList = new ArrayList<Object>() {
-                            @Override
-                            public String toString() {
-                                String out = "";
-                                for (Object i : this) {
-                                    out += " " + i + "";
-                                }
-                                return out;
-                            }
-                        };
-
-                        do {
-                            sCsList.add(sCs_match.group(1).trim());
-                        } while (sCs_match.find());
-                        temp.add(sCsList);
-                        if (data.containsKey(single_match.group(5).trim())) {
-                            data.get(single_match.group(5).trim()).add(sCsList);
-                        } else {
-                            data.put(single_match.group(5).trim(), temp);
-                        }
-                    }
-                }
-            } else if (single_match.group(8) != null) {
-
-                temp = new ArrayList<Object>() {
-                    @Override
-                    public String toString() {
-                        // Fix repeated here
-                        String out = "";
-                        for (Object i : this) {
-                            out += "#key = {";
-                            out += i + "\r\n";
-                            for (int k = 0; k < tab; k++) {
-                                out += "\t";
-                            }
-                            out += "}";
-                        }
-                        return out;
-                    }
-                };
-                Object dat = load(single_match.group(10).replaceAll("(?m)^\t", ""));
-                temp.add(dat);
-                if (data.containsKey(single_match.group(8).trim())) {
-                    data.get(single_match.group(8).trim()).add(dat);
-                } else {
-                    data.put(single_match.group(8).trim(), temp);
-                }
-            }
-        }
-        return data;
-    }
-
-    public abstract String export();
 
     @Override
     public String toString() {

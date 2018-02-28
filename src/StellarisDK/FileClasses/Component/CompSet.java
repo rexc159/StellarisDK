@@ -26,13 +26,13 @@ public class CompSet extends GenericData {
     @Override
     public Object load(String input) {
         Matcher kv_match = kv.matcher(input);
-        while(kv_match.find()){
-            switch (kv_match.group(1).trim()){
+        while (kv_match.find()) {
+            switch (kv_match.group(1).trim()) {
                 case "key":
-                    key = kv_match.group(2).replaceAll("\"","").trim();
+                    key = kv_match.group(2).replaceAll("\"", "").trim();
                     break;
                 case "icon":
-                    icon = kv_match.group(2).replaceAll("\"","").trim();
+                    icon = kv_match.group(2).replaceAll("\"", "").trim();
                     break;
                 case "icon_frame":
                     icon_frame = kv_match.group(2).trim();
@@ -70,11 +70,11 @@ public class CompSet extends GenericData {
 
     @Override
     public String export() {
-        return  "component_set = {\n" +
-                "\tkey = \""+key+"\"\n" +
+        return "component_set = {\n" +
+                "\tkey = \"" + key + "\"\n" +
                 "\t\n" +
-                "\ticon = \""+icon+"\"\n" +
-                "\ticon_frame = "+icon_frame+"\n" +
+                "\ticon = \"" + icon + "\"\n" +
+                "\ticon_frame = " + icon_frame + "\n" +
                 "}\n";
     }
 
