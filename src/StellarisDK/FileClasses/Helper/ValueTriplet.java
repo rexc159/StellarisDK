@@ -27,8 +27,9 @@ public class ValueTriplet<K,V> {
         return value;
     }
 
-    public void setValue(V value) {
+    public ValueTriplet setValue(V value) {
         this.value = value;
+        return this;
     }
 
     public int getOrder() {

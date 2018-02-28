@@ -19,7 +19,7 @@
             <ChoiceBox id="size" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <TextField id="power" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <Label text="Component Set" />
-            <TextField id="component_set" GridPane.columnIndex="1" />
+            <ChoiceBox id="component_set" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" />
          </children>
          <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" minWidth="110.0" />

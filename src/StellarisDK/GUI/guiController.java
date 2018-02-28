@@ -1,16 +1,22 @@
 package StellarisDK.GUI;
 
 import StellarisDK.DataLoc;
+import StellarisDK.FileClasses.Component.CompSet;
+import StellarisDK.FileClasses.Component.Component;
 import StellarisDK.FileClasses.DataParser;
 import StellarisDK.FileClasses.GenericData;
 import StellarisDK.FileClasses.Locale;
 import StellarisDK.FileClasses.ModDescriptor;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
@@ -83,17 +89,126 @@ public class guiController extends AnchorPane {
         MenuItem createNew = new MenuItem("New..");
         createNew.setOnAction(event -> {
             if (cell.getTreeItem().getValue() instanceof GenericData) {
-                cell.getTreeItem().getParent().getChildren().add(new TreeItem<>("Test"));
+                TreeItem newCell = new TreeItem<>(((GenericData) cell.getTreeItem().getValue()).createNew());
+                cell.getTreeItem().getParent().getChildren().add(newCell);
             } else if (cell.getTreeItem().getValue().toString().contains(".txt")) {
-                cell.getTreeItem().getChildren().add(new TreeItem<>("Item"));
+                cell.getTreeItem().getChildren().add(createNew(cell.getTreeItem().getParent().getValue().toString()));
             } else if (cell.getTreeItem().getParent() != null) {
                 if (cell.getTreeItem().getParent().getValue().equals("common")) {
                     cell.getTreeItem().getChildren().add(new TreeItem<>("Test.txt"));
+                }else if (cell.getTreeItem().getValue().equals("events")) {
+                    cell.getTreeItem().getChildren().add(new TreeItem<>("Test.txt"));
+                }else if (cell.getTreeItem().getValue().equals("localisation")) {
+                    cell.getTreeItem().getChildren().add(new TreeItem<>("Test.yml"));
                 }
             }
         });
-        contextMenu.getItems().add(createNew);
+        MenuItem delete = new MenuItem("Delete");
+        delete.setOnAction(event -> {
+            if (cell.getTreeItem().getValue() instanceof GenericData) {
+                cell.getTreeItem().getParent().getChildren().remove(cell.getTreeItem());
+            } else if (cell.getTreeItem().getValue().toString().contains(".txt")) {
+                cell.getTreeItem().getParent().getChildren().remove(cell.getTreeItem());
+            }
+        });
+        contextMenu.getItems().addAll(createNew, delete);
         return contextMenu;
+    }
+
+    private TreeItem createNew(String type) {
+        switch (type) {
+            case "agendas":
+                break;
+            case "ambient_objects":
+                break;
+            case "anomalies":
+                break;
+            case "armies":
+                break;
+            case "ascension_perks":
+                break;
+            case "attitudes":
+                break;
+            case "bombardment_stances":
+                break;
+            case "buildable_pops":
+                break;
+            case "building tags":
+                break;
+            case "buildings":
+                break;
+            case "colors":
+                break;
+            case "component_sets":
+                return new TreeItem<>(new CompSet());
+            case "component_templates":
+                return new TreeItem<>(new Component(0));
+            case "country_types":
+            case "defines":
+            case "deposits":
+            case "diplo_phrases":
+            case "edicts":
+            case "event_chains":
+            case "fallen_empires":
+            case "game_rules":
+            case "global_ship_designs":
+            case "governments":
+            case "authorities":
+            case "civics":
+            case "graphical_culture":
+            case "mandates":
+            case "map_modes":
+            case "megastructures":
+            case "name_lists":
+            case "notification_modifiers":
+            case "observation_station_missions":
+            case "on_actions":
+            case "opinion_modifiers":
+            case "personalities":
+            case "planet_classes":
+            case "planet_modifiers":
+            case "policies":
+            case "pop_faction_types":
+            case "precursor_civilizations":
+            case "random_names":
+            case "base":
+            case "scripted_effects":
+            case "scripted_loc":
+            case "scripted_triggers":
+            case "scripted_variables":
+            case "section_templates":
+            case "sector_settings":
+            case "sector_types":
+            case "ship_behaviors":
+            case "ship_sizes":
+            case "solar_system_initializers":
+            case "special_projects":
+            case "species_archetypes":
+            case "species_classes":
+            case "species_names":
+            case "species_rights":
+            case "star_classes":
+            case "starbase_buildings":
+            case "starbase_levels":
+            case "starbase_modules":
+            case "starbase_types":
+            case "start_screen_messages":
+            case "static_modifiers":
+            case "strategic_resources":
+            case "subjects":
+            case "system_types":
+            case "technology":
+            case "category":
+            case "tier":
+            case "terraform":
+            case "tile_blockers":
+            case "tradition_categories":
+            case "traditions":
+            case "traits":
+            case "events":
+            case "localisation":
+        }
+        return new TreeItem<>("Not Implemented");
     }
 
     public void setStage(Stage stage) {
@@ -132,6 +247,7 @@ public class guiController extends AnchorPane {
         itemView.setRoot(new TreeItem<>(mainMd));
         itemView.getRoot().getChildren().add(new TreeItem<>(mainMd));
         itemView.getRoot().setExpanded(true);
+        loadMod(false);
         open(mainMd);
     }
 
@@ -148,7 +264,7 @@ public class guiController extends AnchorPane {
             itemView.getRoot().setExpanded(true);
             if (mainMd.getValue("path") != null) {
                 mainLoadPath = modPath.getParentFile().getParent() + "\\" + (mainMd.getValue("path").toString().replaceAll("/", "\\\\"));
-                loadMod();
+                loadMod(true);
             }
         }
     }
@@ -172,30 +288,33 @@ public class guiController extends AnchorPane {
         }
     }
 
-    private void loadEvents() {
+    private void loadEvents(boolean load) {
         TreeItem<String> event = new TreeItem<>("events");
         itemView.getRoot().getChildren().add(event);
-        loadFiles(new File(mainLoadPath + "\\events"), event);
+        if (load)
+            loadFiles(new File(mainLoadPath + "\\events"), event);
     }
 
-    private void loadLocale() {
+    private void loadLocale(boolean load) {
         TreeItem<String> locale = new TreeItem<>("localisation");
         itemView.getRoot().getChildren().add(locale);
-        try {
-            for (File file : new File(mainLoadPath + "\\localisation").listFiles()) {
-                TreeItem<String> temp = new TreeItem<>(file.getName());
-                locale.getChildren().add(temp);
-                try {
-                    temp.getChildren().add(new TreeItem(new Locale(file.getPath())));
-                } catch (IOException e) {
+        if (load) {
+            try {
+                for (File file : new File(mainLoadPath + "\\localisation").listFiles()) {
+                    TreeItem<String> temp = new TreeItem<>(file.getName());
+                    locale.getChildren().add(temp);
+                    try {
+                        temp.getChildren().add(new TreeItem(new Locale(file.getPath())));
+                    } catch (IOException e) {
+                    }
                 }
+            } catch (NullPointerException e) {
+                System.out.println("[ERROR] Locale Not Found");
             }
-        } catch (NullPointerException e) {
-            System.out.println("[ERROR] Locale Not Found");
         }
     }
 
-    private void loadCommon() {
+    private void loadCommon(boolean load) {
         TreeItem<String> common = new TreeItem<>("common");
         itemView.getRoot().getChildren().add(common);
         for (String folder : DataLoc.common) {
@@ -235,14 +354,15 @@ public class guiController extends AnchorPane {
                     break;
             }
             common.getChildren().add(temp);
-            loadFiles(new File(mainLoadPath + "\\common\\" + folder), temp);
+            if (load)
+                loadFiles(new File(mainLoadPath + "\\common\\" + folder), temp);
         }
     }
 
-    private void loadMod() {
-        loadCommon();
-        loadEvents();
-        loadLocale();
+    private void loadMod(boolean load) {
+        loadCommon(load);
+        loadEvents(load);
+        loadLocale(load);
     }
 
     private void open(GenericData obj) {
@@ -310,6 +430,15 @@ public class guiController extends AnchorPane {
             main = new File(main.getPath() + "\\" + ((ModDescriptor) itemView.getRoot().getValue()).getDir());
             saveFiles(main, itemView.getRoot());
         }
+
+        // Temp Code
+        Stage dialog = new Stage();
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.initOwner(this.stage);
+        HBox box = new HBox();
+        box.getChildren().add(new Text("Saving Complete"));
+        dialog.setScene(new Scene(box));
+        dialog.show();
     }
 
     @FXML

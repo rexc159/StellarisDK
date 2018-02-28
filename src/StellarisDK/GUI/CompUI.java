@@ -2,7 +2,7 @@ package StellarisDK.GUI;
 
 import StellarisDK.FileClasses.Component.Component;
 import StellarisDK.FileClasses.Helper.PairArrayList;
-import StellarisDK.FileClasses.Helper.VPair;
+import StellarisDK.FileClasses.Helper.ValueTriplet;
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
@@ -27,11 +27,11 @@ public class CompUI extends AbstractUI {
         }
         for (Node node : ((GridPane) main.getChildren().get(0)).getChildren()) {
             if (node.getId() != null) {
-                if(node instanceof TextField){
-                    try{
-                        ((TextField) node).setText(((ArrayList<Object>)obj.getValue(node.getId())).get(0).toString()
-                                .replaceAll("\"",""));
-                    }catch(NullPointerException e){
+                if (node instanceof TextField) {
+                    try {
+                        ((TextField) node).setText(((ArrayList<Object>) obj.getValue(node.getId())).get(0).toString()
+                                .replaceAll("\"", ""));
+                    } catch (NullPointerException e) {
 //                        System.out.println("Empty Key, Ignore");
                     }
                 }
@@ -43,18 +43,19 @@ public class CompUI extends AbstractUI {
     public Object save() {
         for (Node node : ((GridPane) main.getChildren().get(0)).getChildren()) {
             if (node.getId() != null) {
-                if(node instanceof TextField){
-                    ArrayList temp;
+                if (node instanceof TextField) {
+                    PairArrayList temp;
                     String out = ((TextField) node).getText();
-                    if(obj.getValue(node.getId()) != null){
-                        temp = (PairArrayList)obj.getValue(node.getId());
-                    }else{
+                    if (obj.getValue(node.getId()) != null) {
+                        temp = (PairArrayList) obj.getValue(node.getId());
+                    } else {
                         temp = new PairArrayList();
+                        obj.setValue(node.getId(), temp, true);
                     }
-                    try{
-                        temp.set(0,((VPair)temp.get(0)).setValue(out));
-                    }catch (IndexOutOfBoundsException e){
-                        temp.add(new VPair(node.getId() , out));
+                    try {
+                        temp.set(0, ((ValueTriplet) temp.get(0)).setValue(out));
+                    } catch (IndexOutOfBoundsException e) {
+                        temp.add(new ValueTriplet<>("=", out, obj.incSize()));
                     }
                 }
             }

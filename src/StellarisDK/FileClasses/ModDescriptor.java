@@ -22,6 +22,16 @@ public class ModDescriptor extends GenericData {
         ui = new ModDescUI(this);
     }
 
+    public ModDescriptor(String type, int x) {
+        this();
+        this.type = type;
+    }
+
+    @Override
+    public ModDescriptor createNew(){
+        return new ModDescriptor(type, 0);
+    }
+
     @Override
     public DataMap load(String path) {
         DataMap<String, Object> data = new DataMap<>();
@@ -81,8 +91,4 @@ public class ModDescriptor extends GenericData {
         return out.replaceAll("\\\\", "\\\\\\\\");
     }
 
-    @Override
-    public String toString() {
-        return name.equals("Empty") ? "New Mod" : name;
-    }
 }

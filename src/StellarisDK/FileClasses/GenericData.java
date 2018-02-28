@@ -29,7 +29,23 @@ public abstract class GenericData {
 
     private int size = 0;
 
-    protected DataMap data = new DataMap();
+    protected DataMap data = new DataMap<String, ArrayList<Object>>() {
+        @Override
+        public String toString() {
+            tab++;
+            String tabs = "\r\n";
+            for (int k = 0; k < tab; k++) {
+                tabs += "\t";
+            }
+            String out = "{";
+            Object[] temp = compressToPairArray(size);
+            for (int i = 0; i < size; i++)
+                if (temp[i] != null)
+                    out += temp[i].toString().replaceAll("#tabs", tabs);
+            tab--;
+            return out + tabs.replaceFirst("\t", "") + "}";
+        }
+    };
 
     protected String name = "Empty";
 
@@ -43,6 +59,7 @@ public abstract class GenericData {
     protected String type;
 
     public GenericData() {
+        name = "New Item (Click to Edit)";
     }
 
     public GenericData(String input) {
@@ -87,12 +104,20 @@ public abstract class GenericData {
         }
     }
 
+    public int getSize() {
+        return size;
+    }
+
+    public int incSize() {
+        return size++;
+    }
+
     public void setData(DataMap data) {
         this.data = data;
     }
 
     public String export() {
-        return type + " = " + data;
+        return "\r\n" + type + " = " + data;
     }
 
     private ArrayList sLrecursion(String input) {
@@ -122,6 +147,8 @@ public abstract class GenericData {
         }
         return data;
     }
+
+    public abstract GenericData createNew();
 
     public Object load(String input) {
         DataMap<String, ArrayList<Object>> data = new DataMap<String, ArrayList<Object>>() {

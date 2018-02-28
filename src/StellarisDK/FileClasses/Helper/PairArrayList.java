@@ -13,9 +13,9 @@ public class PairArrayList extends ArrayList {
         String out = "";
         for (Object pair : this) {
                 if (this.size() == 1) {
-                    return "#key " + ((ValueTriplet) pair).getKey() + " " + ((ValueTriplet) pair).getValue();
+                    return "#tabs" + ((ValueTriplet) pair).getKey() + " " + ((ValueTriplet) pair).getValue();
                 }
-                out += "#key " + ((ValueTriplet) pair).getKey() + " " + ((ValueTriplet) pair).getValue();
+                out += "#tabs" + ((ValueTriplet) pair).getKey() + " " + ((ValueTriplet) pair).getValue();
         }
         return out;
     }
