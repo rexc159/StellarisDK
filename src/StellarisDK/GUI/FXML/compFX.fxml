@@ -16,7 +16,7 @@
             <Label text="Power" GridPane.rowIndex="4" />
             <Label text="Cost" GridPane.rowIndex="5" />
             <CheckBox id="hidden" alignment="CENTER" mnemonicParsing="false" text="Is Hidden" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-            <ChoiceBox id="size" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <ChoiceBox id="size" fx:id="compSize" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <TextField id="power" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <Label text="Component Set" />
             <ChoiceBox id="component_set" fx:id="compGroup" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" />

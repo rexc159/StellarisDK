@@ -17,10 +17,24 @@ public class CompUI extends AbstractUI {
     @FXML
     ChoiceBox compGroup;
 
+    @FXML
+    ChoiceBox compSize;
+
     public CompUI(Component obj) {
         init("FXML/compFX.fxml");
         window.setText("Component Editor");
+        loadCompSize();
         load(obj);
+    }
+
+    public void loadCompSize(){
+        compSize.getItems().add("SMALL");
+        compSize.getItems().add("MEDIUM");
+        compSize.getItems().add("LARGE");
+        compSize.getItems().add("EXTRA_LARGE");
+        compSize.getItems().add("TORPEDO");
+        compSize.getItems().add("PLANET_KILLER");
+        compSize.getItems().add("POINT_DEFENCE");
     }
 
     public void loadCompSet() {
@@ -54,6 +68,7 @@ public class CompUI extends AbstractUI {
                 }
             }
         }
+        compSize.getSelectionModel().select(((PairArrayList)obj.getValue("size")).getFirstString().toUpperCase());
         loadCompSet();
     }
 

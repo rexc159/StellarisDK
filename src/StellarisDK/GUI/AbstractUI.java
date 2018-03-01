@@ -31,7 +31,7 @@ public abstract class AbstractUI extends Region {
 
     GenericData obj;
 
-    public void reload(){
+    public void reload() {
         load(obj);
     }
 
@@ -44,14 +44,14 @@ public abstract class AbstractUI extends Region {
             loader.load();
         } catch (IOException e) {
             loader = new FXMLLoader(getClass().getResource("FXML/default.fxml"));
-            try{
+            try {
                 loader.load();
-            }catch (IOException x){
+            } catch (IOException x) {
             }
         }
-        try{
+        try {
             btn_save.setOnAction(event -> save());
-        }catch (NullPointerException e){
+        } catch (NullPointerException e) {
             System.out.println("[ERROR] FXML Error: Missing Save Button (def: btn_save)");
         }
         Button close = new Button("\u2715");
@@ -78,7 +78,7 @@ public abstract class AbstractUI extends Region {
 
         this.setOnMouseClicked(event -> toFront());
     }
-    
+
     void setRoot(Node node) {
         getChildren().add(node);
     }
