@@ -26,7 +26,7 @@ public class DataPattern {
     // Pattern matches for main data structure
     // Group 1-4:   Multi line recursion
     // Group 5-8:   Single line
-    public static final Pattern newCombine = Pattern.compile("(?m)^\\s?(\\w+)(\\s*[=<>]+\\s*)\\{(\\s*#.*)?[\\r\\n]([\\W\\D\\S]+?)^\\s?\\}|^\\s?(\\w+)(\\s*[=<>]+\\s*)([^#\\r\\n]+)(#.+)?");
+    public static final Pattern newCombine = Pattern.compile("(?m)^\\s?([\\w:]+)(\\s*[=<>]+\\s*)\\{\\s*(#.*)?[\\r\\n]([\\W\\D\\S]+?)^\\s?\\}|^\\s?(\\w+)(\\s*[=<>]+\\s*)([^#\\r\\n]+)(#.+)?");
 
     // Mod Descriptor Specific Pattern
     public static final Pattern mDSpec = Pattern.compile("(?s)(?m)^\\t?(\\w+)=\\{[\\r\\n](.+?)^\\}");
