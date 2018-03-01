@@ -78,48 +78,7 @@ public abstract class AbstractUI extends Region {
 
         this.setOnMouseClicked(event -> toFront());
     }
-
-    void test(String fxml) {
-        double mouse[] = new double[2];
-
-        try {
-            main = FXMLLoader.load(getClass().getResource(fxml));
-            ((Button) main.getChildren().get(1)).setOnAction(event -> save());
-        } catch (Exception e) {
-            System.out.println("Editor .FXML not found, using default.");
-            try {
-                main = FXMLLoader.load(getClass().getResource("FXML/default.fxml"));
-            } catch (Exception x) {
-                System.out.println("Something really went wrong.");
-                return;
-            }
-        }
-
-        Button close = new Button("\u2715");
-        window.setContent(main);
-        window.setCollapsible(false);
-        window.setGraphic(close);
-        window.setAlignment(Pos.BASELINE_RIGHT);
-        window.setContentDisplay(ContentDisplay.RIGHT);
-        this.setCloseButton(close);
-        this.setRoot(window);
-
-        // Draggable Window Block
-        window.setOnMousePressed(event -> {
-            mouse[0] = getLayoutX() - event.getScreenX();
-            mouse[1] = getLayoutY() - event.getScreenY();
-            toFront();
-        });
-
-        window.setOnMouseDragged(event -> {
-            setLayoutX(Math.max(event.getScreenX() + mouse[0], 0));
-            setLayoutY(Math.max(event.getScreenY() + mouse[1], 0));
-        });
-        // End Block
-
-        this.setOnMouseClicked(event -> toFront());
-    }
-
+    
     void setRoot(Node node) {
         getChildren().add(node);
     }
