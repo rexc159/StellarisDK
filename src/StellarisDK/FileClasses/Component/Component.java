@@ -1,6 +1,8 @@
 package StellarisDK.FileClasses.Component;
 
 import StellarisDK.FileClasses.GenericData;
+import StellarisDK.FileClasses.Helper.PairArrayList;
+import StellarisDK.FileClasses.Helper.ValueTriplet;
 import StellarisDK.GUI.CompUI;
 
 public class Component extends GenericData {
@@ -43,6 +45,17 @@ public class Component extends GenericData {
     }
 
     @Override
+    public void setValue(String key, Object value, boolean addIfAbsent) {
+        if (addIfAbsent && !data.containsKey(key)) {
+            PairArrayList temp = new PairArrayList();
+            temp.add(new ValueTriplet<>("=", value, data.size()));
+            data.putIfAbsent(key, temp);
+        } else {
+            ((ValueTriplet)((PairArrayList)data.get(key)).get(0)).setValue(value);
+        }
+    }
+
+    @Override
     public Component createNew() {
         return new Component(type, 0);
     }
@@ -50,16 +63,4 @@ public class Component extends GenericData {
     public String getGroup() {
         return data.get("component_set").toString();
     }
-
-//    @Override
-//    public String toString() {
-//        if (!data.containsKey("key")) {
-//            return name;
-//        }
-//        String temp = Locale.getLocale(((PairArrayList) data.get("key")).getFirstString());
-//        if (temp != null)
-//            return temp;
-//        else
-//            return ((PairArrayList) data.get("key")).getFirstString();
-//    }
 }

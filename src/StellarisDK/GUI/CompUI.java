@@ -2,7 +2,6 @@ package StellarisDK.GUI;
 
 import StellarisDK.FileClasses.Component.Component;
 import StellarisDK.FileClasses.Helper.PairArrayList;
-import StellarisDK.FileClasses.Helper.ValueTriplet;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.ChoiceBox;
@@ -27,7 +26,7 @@ public class CompUI extends AbstractUI {
         load(obj);
     }
 
-    public void loadCompSize(){
+    public void loadCompSize() {
         compSize.getItems().add("SMALL");
         compSize.getItems().add("MEDIUM");
         compSize.getItems().add("LARGE");
@@ -45,7 +44,7 @@ public class CompUI extends AbstractUI {
                     compGroup.getItems().add(((TreeItem) compSet).getValue().toString());
             }
         }
-        if(obj.getKey("component_set"))
+        if (obj.getKey("component_set"))
             compGroup.getSelectionModel().select(((PairArrayList) obj.getValue("component_set")).getFirstString());
     }
 
@@ -68,7 +67,7 @@ public class CompUI extends AbstractUI {
                 }
             }
         }
-        compSize.getSelectionModel().select(((PairArrayList)obj.getValue("size")).getFirstString().toUpperCase());
+        compSize.getSelectionModel().select(((PairArrayList) obj.getValue("size")).getFirstString().toUpperCase());
         loadCompSet();
     }
 
@@ -77,24 +76,12 @@ public class CompUI extends AbstractUI {
         for (Node node : ((GridPane) main.getChildren().get(0)).getChildren()) {
             if (node.getId() != null) {
                 if (node instanceof TextField) {
-                    PairArrayList temp;
-                    String out = ((TextField) node).getText();
-                    if (obj.getValue(node.getId()) != null) {
-                        temp = (PairArrayList) obj.getValue(node.getId());
-                    } else {
-                        temp = new PairArrayList();
-                        obj.setValue(node.getId(), temp, true);
-                    }
-                    try {
-                        temp.set(0, ((ValueTriplet) temp.get(0)).setValue(out));
-                    } catch (IndexOutOfBoundsException e) {
-                        temp.add(new ValueTriplet<>("=", out, obj.incSize()));
-                    }
-                }else if (node instanceof ChoiceBox && node.getId().equals("component_set")){
-                    ((ChoiceBox) node).getSelectionModel().getSelectedItem();
+                    obj.setValue(node.getId(),((TextField) node).getText(),true);
                 }
             }
         }
+        obj.setValue("component_set", compGroup.getSelectionModel().getSelectedItem(), true);
+        obj.setValue("size", compSize.getSelectionModel().getSelectedItem(), true);
         System.out.println(obj.export());
         itemView.refresh();
         return null;
