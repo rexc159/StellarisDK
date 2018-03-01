@@ -4,7 +4,6 @@ import StellarisDK.FileClasses.GenericData;
 import StellarisDK.GUI.CompUI;
 
 public class Component extends GenericData {
-    private static int tab = 1;
 
     public Component() {
         super();
@@ -13,7 +12,7 @@ public class Component extends GenericData {
 
     public Component(int type) {
         super();
-        switch(type){
+        switch (type) {
             default:
             case 0:
                 this.type = "utility_component_template";
@@ -44,7 +43,7 @@ public class Component extends GenericData {
     }
 
     @Override
-    public Component createNew(){
+    public Component createNew() {
         return new Component(type, 0);
     }
 
@@ -54,13 +53,13 @@ public class Component extends GenericData {
 
 //    @Override
 //    public String toString() {
-//        if(!data.containsKey("key")){
-//            return "Empty Name";
+//        if (!data.containsKey("key")) {
+//            return name;
 //        }
-//        String temp = Locale.getLocale(((PairArrayList)data.get("key")).getFirstString());
+//        String temp = Locale.getLocale(((PairArrayList) data.get("key")).getFirstString());
 //        if (temp != null)
 //            return temp;
 //        else
-//            return ((PairArrayList)data.get("key")).getFirstString();
+//            return ((PairArrayList) data.get("key")).getFirstString();
 //    }
 }

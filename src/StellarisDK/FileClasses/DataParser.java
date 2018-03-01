@@ -107,7 +107,6 @@ public class DataParser {
                     default:
                         gData = new Component(obj.group(2), obj.group(1));
                 }
-
                 out.add(new TreeItem<>(gData));
             } else {
                 break;

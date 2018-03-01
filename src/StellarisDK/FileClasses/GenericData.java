@@ -75,7 +75,7 @@ public abstract class GenericData {
         setName();
     }
 
-    private void setName() {
+    String setName() {
         if (data.containsKey("key")) {
             name = ((PairArrayList) data.get("key")).getFirstString();
         } else if (data.containsKey("name")) {
@@ -90,10 +90,18 @@ public abstract class GenericData {
         } else {
             name = type;
         }
+        return name;
     }
 
     public Object getValue(String key) {
-        return data.get(key);
+        if(getKey(key))
+            return data.get(key);
+        else
+            return null;
+    }
+
+    public boolean getKey(String key){
+        return data.containsKey(key);
     }
 
     public void setValue(String key, Object value, boolean addIfAbsent) {
@@ -212,6 +220,6 @@ public abstract class GenericData {
 
     @Override
     public String toString() {
-        return name;
+        return setName();
     }
 }

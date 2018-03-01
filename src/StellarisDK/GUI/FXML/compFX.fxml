@@ -19,7 +19,7 @@
             <ChoiceBox id="size" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <TextField id="power" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <Label text="Component Set" />
-            <ChoiceBox id="component_set" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" />
+            <ChoiceBox id="component_set" fx:id="compGroup" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" />
          </children>
          <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" minWidth="110.0" />
@@ -39,6 +39,6 @@
             <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
          </rowConstraints>
       </GridPane>
-      <Button id="btn_save" layoutX="346.0" layoutY="197.0" mnemonicParsing="false" text="Save" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+      <Button id="btn_save" fx:id="btn_save" layoutX="346.0" layoutY="197.0" mnemonicParsing="false" text="Save" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
    </children>
 </AnchorPane>

@@ -3,6 +3,7 @@ package StellarisDK.GUI;
 import StellarisDK.FileClasses.Component.Component;
 import StellarisDK.FileClasses.Helper.PairArrayList;
 import StellarisDK.FileClasses.Helper.ValueTriplet;
+import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
@@ -13,17 +14,31 @@ import java.util.ArrayList;
 
 public class CompUI extends AbstractUI {
 
+    @FXML
+    ChoiceBox compGroup;
+
     public CompUI(Component obj) {
         init("FXML/compFX.fxml");
         window.setText("Component Editor");
         load(obj);
     }
 
+    public void loadCompSet() {
+        compGroup.getItems().removeAll();
+        for (Object item : guiController.compSet.getChildren()) {
+            if (((TreeItem) item).getValue().toString().contains(".txt")) {
+                for (Object compSet : ((TreeItem) item).getChildren())
+                    compGroup.getItems().add(((TreeItem) compSet).getValue().toString());
+            }
+        }
+        if(obj.getKey("component_set"))
+            compGroup.getSelectionModel().select(((PairArrayList) obj.getValue("component_set")).getFirstString());
+    }
+
     @Override
     public void load(Object object) {
         if (object instanceof String) {
             obj.load((String) object);
-            System.out.println("Loaded");
         } else {
             obj = (Component) object;
         }
@@ -36,18 +51,10 @@ public class CompUI extends AbstractUI {
                     } catch (NullPointerException e) {
 //                        System.out.println("Empty Key, Ignore");
                     }
-                }else if (node instanceof ChoiceBox && node.getId().equals("component_set")){
-                    for(Object item: guiController.compSet.getChildren()){
-                        if(((TreeItem) item).getValue().toString().contains(".txt")){
-                            for(Object compSet : ((TreeItem) item).getChildren())
-                                ((ChoiceBox) node).getItems().add(((TreeItem)compSet).getValue().toString());
-                        }
-                    }
-                    System.out.println(obj.getValue("component_set").toString());
-                    ((ChoiceBox) node).getSelectionModel().select(((PairArrayList)obj.getValue("component_set")).getFirstString());
                 }
             }
         }
+        loadCompSet();
     }
 
     @Override
@@ -74,6 +81,7 @@ public class CompUI extends AbstractUI {
             }
         }
         System.out.println(obj.export());
+        itemView.refresh();
         return null;
     }
 }
