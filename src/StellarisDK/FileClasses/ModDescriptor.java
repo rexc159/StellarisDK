@@ -33,6 +33,15 @@ public class ModDescriptor extends GenericData {
     }
 
     @Override
+    public void setValue(String key, Object value, boolean addIfAbsent) {
+        if (addIfAbsent) {
+            data.put(key, value);
+        } else {
+            data.replace(key, value);
+        }
+    }
+
+    @Override
     public DataMap load(String path) {
         DataMap<String, Object> data = new DataMap<>();
         for (String key : data.keySet()) {

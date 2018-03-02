@@ -27,23 +27,7 @@ public abstract class GenericData {
 
     private static int tab = 0;
 
-    protected DataMap data = new DataMap<String, ArrayList<Object>>() {
-        @Override
-        public String toString() {
-            tab++;
-            String tabs = "\r\n";
-            for (int k = 0; k < tab; k++) {
-                tabs += "\t";
-            }
-            String out = "{";
-            Object[] temp = compressToPairArray();
-            for (int i = 0; i < getFullSize(); i++)
-                if (temp[i] != null)
-                    out += temp[i].toString().replaceAll("#tabs", tabs);
-            tab--;
-            return out + tabs.replaceFirst("\t", "") + "}";
-        }
-    };
+    protected DataMap data;
 
     protected String name = "Empty";
 
@@ -58,13 +42,28 @@ public abstract class GenericData {
 
     public GenericData() {
         name = "New Item (Click to Edit)";
+        data = new DataMap<String, ArrayList<Object>>() {
+            @Override
+            public String toString() {
+                tab++;
+                String tabs = "\r\n";
+                for (int k = 0; k < tab; k++) {
+                    tabs += "\t";
+                }
+                String out = "{";
+                Object[] temp = compressToPairArray();
+                for (int i = 0; i < getFullSize(); i++)
+                    if (temp[i] != null)
+                        out += temp[i].toString().replaceAll("#tabs", tabs);
+                tab--;
+                return out + tabs.replaceFirst("\t", "") + "}";
+            }
+        };
     }
 
     public GenericData(String input) {
-//        raw = input;
         data = (DataMap) load(input);
         setName();
-//        data.clear();
     }
 
     public GenericData(String input, String type) {
@@ -91,6 +90,13 @@ public abstract class GenericData {
         return name;
     }
 
+    public String getFirstValue(String key) {
+        if(getKey(key))
+            return ((PairArrayList)data.get(key)).getFirstString();
+        else
+            return null;
+    }
+
     public Object getValue(String key) {
         if(getKey(key))
             return data.get(key);
@@ -103,10 +109,12 @@ public abstract class GenericData {
     }
 
     public void setValue(String key, Object value, boolean addIfAbsent) {
-        if (addIfAbsent) {
-            data.put(key, value);
+        if (addIfAbsent && !data.containsKey(key)) {
+            PairArrayList temp = new PairArrayList();
+            temp.add(new ValueTriplet<>("=", value, data.size()));
+            data.put(key, temp);
         } else {
-            data.replace(key, value);
+            ((ValueTriplet) ((PairArrayList) data.get(key)).get(0)).setValue(value);
         }
     }
 

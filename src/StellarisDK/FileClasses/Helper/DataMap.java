@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class DataMap<K, V> extends HashMap<K, V> {
-    public int getFullSize(){
+    public int getFullSize() {
         int count = 0;
-        for(Object key : keySet()){
+        for (Object key : keySet()) {
             count += ((ArrayList) get(key)).size();
         }
         return count;
@@ -17,7 +17,8 @@ public class DataMap<K, V> extends HashMap<K, V> {
         for (Object key : keySet()) {
             for (Object data : ((ArrayList) get(key))) {
                 try {
-                    objs[((ValueTriplet) data).getOrder()] = new ValueTriplet<>(key, ((ValueTriplet) data).toPair(), ((ValueTriplet) data).getOrder());
+                    if (((ValueTriplet) data).getValue() != null)
+                        objs[((ValueTriplet) data).getOrder()] = new ValueTriplet<>(key, ((ValueTriplet) data).toPair(), ((ValueTriplet) data).getOrder());
                 } catch (StackOverflowError e) {
                     System.out.println("[ERROR] StackOverFlow, FROM: DataMap");
                     System.out.println("[ERROR] CAUSE: Tried " + ((ValueTriplet) data).getOrder());

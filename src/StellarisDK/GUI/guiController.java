@@ -1,12 +1,9 @@
 package StellarisDK.GUI;
 
 import StellarisDK.DataLoc;
+import StellarisDK.FileClasses.*;
 import StellarisDK.FileClasses.Component.CompSet;
 import StellarisDK.FileClasses.Component.Component;
-import StellarisDK.FileClasses.DataParser;
-import StellarisDK.FileClasses.GenericData;
-import StellarisDK.FileClasses.Locale;
-import StellarisDK.FileClasses.ModDescriptor;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -123,7 +120,7 @@ public class guiController extends AnchorPane {
             case "agendas":
                 break;
             case "ambient_objects":
-                break;
+                return new TreeItem<>(new AmbientObject());
             case "anomalies":
                 break;
             case "armies":
@@ -281,7 +278,8 @@ public class guiController extends AnchorPane {
                     item.getChildren().add(temp);
                     try {
                         temp.getChildren().addAll(DataParser.parseAll(file));
-                    } catch (IOException e) {
+                    } catch (IOException | NullPointerException e) {
+                        e.printStackTrace();
                     }
                 }
                 System.gc();

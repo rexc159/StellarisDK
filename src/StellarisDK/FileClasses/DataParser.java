@@ -98,11 +98,13 @@ public class DataParser {
                 obj.find();
                 GenericData gData;
                 switch (obj.group(1)) {
+                    case "ambient_object":
+                        gData = new AmbientObject(obj.group(2));
+                        break;
                     case "component_set":
                         gData = new CompSet(obj.group(2));
                         break;
                     case "component":
-                    case "ambient_object":
                     case "anomaly":
                     default:
                         gData = new Component(obj.group(2), obj.group(1));

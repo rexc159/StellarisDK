@@ -15,7 +15,6 @@ public class CompSet extends GenericData {
 
     public CompSet() {
         super();
-        this.type = "component_set";
         ui = new CompSetUI(this);
     }
 
