@@ -67,7 +67,8 @@ public class CompUI extends AbstractUI {
                 }
             }
         }
-        compSize.getSelectionModel().select(((PairArrayList) obj.getValue("size")).getFirstString().toUpperCase());
+        if(obj.getKey("size"))
+            compSize.getSelectionModel().select(((PairArrayList) obj.getValue("size")).getFirstString().toUpperCase());
         loadCompSet();
     }
 

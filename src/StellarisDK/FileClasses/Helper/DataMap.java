@@ -4,8 +4,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class DataMap<K, V> extends HashMap<K, V> {
-    public Object[] compressToPairArray(int size) {
-        Object[] objs = new Object[size];
+    public int getFullSize(){
+        int count = 0;
+        for(Object key : keySet()){
+            count += ((ArrayList) get(key)).size();
+        }
+        return count;
+    }
+
+    public Object[] compressToPairArray() {
+        Object[] objs = new Object[getFullSize()];
         for (Object key : keySet()) {
             for (Object data : ((ArrayList) get(key))) {
                 try {
@@ -13,7 +21,7 @@ public class DataMap<K, V> extends HashMap<K, V> {
                 } catch (StackOverflowError e) {
                     System.out.println("[ERROR] StackOverFlow, FROM: DataMap");
                     System.out.println("[ERROR] CAUSE: Tried " + ((ValueTriplet) data).getOrder());
-                    System.out.println("[ERROR] SIZE: " + size);
+                    System.out.println("[ERROR] SIZE: " + getFullSize());
                 }
             }
         }

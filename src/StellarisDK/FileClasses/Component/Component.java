@@ -49,9 +49,9 @@ public class Component extends GenericData {
         if (addIfAbsent && !data.containsKey(key)) {
             PairArrayList temp = new PairArrayList();
             temp.add(new ValueTriplet<>("=", value, data.size()));
-            data.putIfAbsent(key, temp);
+            data.put(key, temp);
         } else {
-            ((ValueTriplet)((PairArrayList)data.get(key)).get(0)).setValue(value);
+            ((ValueTriplet) ((PairArrayList) data.get(key)).get(0)).setValue(value);
         }
     }
 

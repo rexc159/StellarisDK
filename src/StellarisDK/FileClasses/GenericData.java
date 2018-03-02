@@ -27,8 +27,6 @@ public abstract class GenericData {
 
     private static int tab = 0;
 
-    private int size = 0;
-
     protected DataMap data = new DataMap<String, ArrayList<Object>>() {
         @Override
         public String toString() {
@@ -38,8 +36,8 @@ public abstract class GenericData {
                 tabs += "\t";
             }
             String out = "{";
-            Object[] temp = compressToPairArray(size);
-            for (int i = 0; i < size; i++)
+            Object[] temp = compressToPairArray();
+            for (int i = 0; i < getFullSize(); i++)
                 if (temp[i] != null)
                     out += temp[i].toString().replaceAll("#tabs", tabs);
             tab--;
@@ -112,14 +110,6 @@ public abstract class GenericData {
         }
     }
 
-    public int getSize() {
-        return size;
-    }
-
-    public int incSize() {
-        return size++;
-    }
-
     public void setData(DataMap data) {
         this.data = data;
     }
@@ -159,6 +149,7 @@ public abstract class GenericData {
     public abstract GenericData createNew();
 
     public Object load(String input) {
+        int size = 0;
         DataMap<String, ArrayList<Object>> data = new DataMap<String, ArrayList<Object>>() {
             @Override
             public String toString() {
@@ -168,8 +159,8 @@ public abstract class GenericData {
                     tabs += "\t";
                 }
                 String out = "{";
-                Object[] temp = compressToPairArray(size);
-                for (int i = 0; i < size; i++)
+                Object[] temp = compressToPairArray();
+                for (int i = 0; i < getFullSize(); i++)
                     if (temp[i] != null)
                         out += temp[i].toString().replaceAll("#tabs", tabs);
                 tab--;
