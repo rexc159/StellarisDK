@@ -42,6 +42,6 @@
             <Insets bottom="40.0" />
          </padding>
       </GridPane>
-      <Button id="btn_save" layoutX="249.0" layoutY="250.0" mnemonicParsing="false" text="Save" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+      <Button id="btn_save" fx:id="btn_save" layoutX="249.0" layoutY="250.0" mnemonicParsing="false" text="Save" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
    </children>
 </AnchorPane>

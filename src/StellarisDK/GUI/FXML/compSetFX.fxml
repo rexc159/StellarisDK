@@ -29,7 +29,7 @@
             <TextField id="icon_frame" GridPane.columnIndex="2" GridPane.rowIndex="2" />
          </children>
         </GridPane>
-        <Button id="btn_save" layoutX="346.0" layoutY="197.0" mnemonicParsing="false" text="Save" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="99.0" />
+        <Button id="btn_save" fx:id="btn_save" layoutX="346.0" layoutY="197.0" mnemonicParsing="false" text="Save" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="99.0" />
       <TabPane id="test" layoutY="130.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="139.0" />
     </children>
 </AnchorPane>

@@ -31,13 +31,18 @@ public class CompUI extends AbstractUI {
         compSize.getItems().add("MEDIUM");
         compSize.getItems().add("LARGE");
         compSize.getItems().add("EXTRA_LARGE");
+        compSize.getItems().add("AUX");
         compSize.getItems().add("TORPEDO");
-        compSize.getItems().add("PLANET_KILLER");
         compSize.getItems().add("POINT_DEFENCE");
+        compSize.getItems().add("PLANET_KILLER");
     }
 
     public void loadCompSet() {
         compGroup.getItems().removeAll();
+        compGroup.getItems().add("COMBAT_COMPUTERS");
+        compGroup.getItems().add("FTL_COMPONENTS");
+        compGroup.getItems().add("SHIP_SENSOR_COMPONENTS");
+        compGroup.getItems().add("THRUSTER_COMPONENTS");
         for (Object item : guiController.compSet.getChildren()) {
             if (((TreeItem) item).getValue().toString().contains(".txt")) {
                 for (Object compSet : ((TreeItem) item).getChildren())
@@ -45,7 +50,7 @@ public class CompUI extends AbstractUI {
             }
         }
         if (obj.getKey("component_set"))
-            compGroup.getSelectionModel().select(((PairArrayList) obj.getValue("component_set")).getFirstString());
+            compGroup.getSelectionModel().select(((PairArrayList) obj.getValue("component_set")).getFirstString().toUpperCase());
     }
 
     @Override
