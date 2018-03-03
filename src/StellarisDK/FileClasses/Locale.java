@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 public class Locale {
     private String lang;
     private final Pattern kv = Pattern.compile("(\\w+):(\\d) (.+)");
-    private static HashMap<String, Pair<Integer, String>> data = new HashMap<>();
+    private HashMap<String, Pair<Integer, String>> data = new HashMap<>();
 
     public Locale(String path) throws IOException {
         String input = new String(Files.readAllBytes(Paths.get(path)));
@@ -38,7 +38,7 @@ public class Locale {
         }
     }
 
-    public static String getLocale(String key) {
+    public String getLocale(String key) {
         if (data.get(key) != null)
             return data.get(key).getValue();
         else

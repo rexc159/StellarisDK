@@ -1,9 +1,6 @@
 package StellarisDK.FileClasses;
 
-import StellarisDK.FileClasses.Helper.DataMap;
-import StellarisDK.FileClasses.Helper.PairArrayList;
-import StellarisDK.FileClasses.Helper.VPair;
-import StellarisDK.FileClasses.Helper.ValueTriplet;
+import StellarisDK.FileClasses.Helper.*;
 import StellarisDK.GUI.AbstractUI;
 
 import java.util.ArrayList;
@@ -42,23 +39,7 @@ public abstract class GenericData {
 
     public GenericData() {
         name = "New Item (Click to Edit)";
-        data = new DataMap<String, ArrayList<Object>>() {
-            @Override
-            public String toString() {
-                tab++;
-                String tabs = "\r\n";
-                for (int k = 0; k < tab; k++) {
-                    tabs += "\t";
-                }
-                String out = "{";
-                Object[] temp = compressToPairArray();
-                for (int i = 0; i < getFullSize(); i++)
-                    if (temp[i] != null)
-                        out += temp[i].toString().replaceAll("#tabs", tabs);
-                tab--;
-                return out + tabs.replaceFirst("\t", "") + "}";
-            }
-        };
+        data = new DataMap<String, ArrayList<Object>>();
     }
 
     public GenericData(String input) {
@@ -74,7 +55,7 @@ public abstract class GenericData {
 
     protected String setName() {
         if (this instanceof ModDescriptor) {
-            if(data.containsKey("name"))
+            if (data.containsKey("name"))
                 name = data.get("name").toString();
         } else if (data.containsKey("key")) {
             name = ((PairArrayList) data.get("key")).getFirstString();
@@ -91,20 +72,20 @@ public abstract class GenericData {
     }
 
     public String getFirstValue(String key) {
-        if(getKey(key))
-            return ((PairArrayList)data.get(key)).getFirstString();
+        if (getKey(key))
+            return ((PairArrayList) data.get(key)).getFirstString();
         else
             return null;
     }
 
     public Object getValue(String key) {
-        if(getKey(key))
+        if (getKey(key))
             return data.get(key);
         else
             return null;
     }
 
-    public boolean getKey(String key){
+    public boolean getKey(String key) {
         return data.containsKey(key);
     }
 
@@ -122,25 +103,57 @@ public abstract class GenericData {
         this.data = data;
     }
 
+    public static int getTab() {
+        return tab;
+    }
+
+    public static void changeTab(boolean inc) {
+        if (inc) {
+            tab++;
+        } else {
+            tab--;
+        }
+    }
+
     public String export() {
         return "\r\n" + type + " = " + data;
     }
 
     private ArrayList sLrecursion(String input) {
+//        ArrayList data = new ArrayList(){
+//            @Override
+//            public String toString() {
+//                String out = "{ ";
+//                for (Object item : this) {
+//                    out += item + " ";
+//                }
+//                return out + "}";
+//            }
+//        };
         ArrayList data = new ArrayList() {
             @Override
             public String toString() {
-                String out = "{ ";
-                for (Object item : this) {
-                    out += item + " ";
+                GenericData.changeTab(true);
+                String tabs = "\r\n";
+                for (int k = 0; k < GenericData.getTab(); k++) {
+                    tabs += "\t";
                 }
-                return out + "}";
+                String out = "{";
+                for (Object item : this) {
+                    out += tabs+item;
+                }
+                GenericData.changeTab(false);
+                return out + tabs.replaceFirst("\t", "") + "}";
             }
         };
         Matcher matcher = DataPattern.sLre.matcher(input);
         while (matcher.find()) {
             if (matcher.group(1) != null) {
-                data.add(new VPair(matcher.group(1).trim(), new VPair(matcher.group(2).trim(), matcher.group(3).trim())));
+                Matcher color = DataPattern.color.matcher(matcher.group(7));
+                if(color.find()){
+                    data.add(new VPair(matcher.group(1).trim(), new VPair(matcher.group(2).trim(), new StellarisColor(color.group(1).trim(),color.group(2).trim(),color.group(3).trim(),color.group(4).trim()))));
+                }
+//                data.add(new VPair(matcher.group(1).trim(), new VPair(matcher.group(2).trim(), matcher.group(3).trim())));
             } else if (matcher.group(4) != null) {
                 data.add(new VPair(matcher.group(4).trim(), new VPair(matcher.group(5).trim(), sLrecursion(matcher.group(6)))));
             } else if (matcher.group(7) != null) {
@@ -158,23 +171,7 @@ public abstract class GenericData {
 
     public Object load(String input) {
         int size = 0;
-        DataMap<String, ArrayList<Object>> data = new DataMap<String, ArrayList<Object>>() {
-            @Override
-            public String toString() {
-                tab++;
-                String tabs = "\r\n";
-                for (int k = 0; k < tab; k++) {
-                    tabs += "\t";
-                }
-                String out = "{";
-                Object[] temp = compressToPairArray();
-                for (int i = 0; i < getFullSize(); i++)
-                    if (temp[i] != null)
-                        out += temp[i].toString().replaceAll("#tabs", tabs);
-                tab--;
-                return out + tabs.replaceFirst("\t", "") + "}";
-            }
-        };
+        DataMap<String, ArrayList<Object>> data = new DataMap<>();
         Matcher matcher;
 
         matcher = DataPattern.newCombine.matcher(input);
@@ -183,7 +180,13 @@ public abstract class GenericData {
             ArrayList temp;
             if (matcher.group(5) != null) {
                 if (matcher.group(7).contains("{")) {
-                    ValueTriplet dat = new ValueTriplet<>(matcher.group(6).trim(), sLrecursion(matcher.group(7)), size++);
+                    ValueTriplet dat;
+                    Matcher color = DataPattern.color.matcher(matcher.group(7));
+                    if(color.find()){
+                        dat = new ValueTriplet<>(matcher.group(6).trim(), new StellarisColor(color.group(1).trim(),color.group(2).trim(),color.group(3).trim(),color.group(4).trim()), size++);
+                    }else{
+                        dat = new ValueTriplet<>(matcher.group(6).trim(), sLrecursion(matcher.group(7)), size++);
+                    }
                     if (data.containsKey(matcher.group(5))) {
                         data.get(matcher.group(5).trim()).add(dat);
                     } else {

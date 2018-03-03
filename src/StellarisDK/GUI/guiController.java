@@ -392,7 +392,7 @@ public class guiController extends AnchorPane {
                     temp += ((GenericData) ((TreeItem) item).getValue()).export() + "\r\n";
                 }
             } else if (((TreeItem) item).getValue() instanceof Locale) {
-                output = true;
+                output = false;
                 temp = ((Locale) ((TreeItem) item).getValue()).export();
             } else if (((TreeItem) item).getChildren().size() != 0) {
                 if (((TreeItem) item).getValue().equals("Constants")) {

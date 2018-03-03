@@ -16,17 +16,20 @@ public class DataPattern {
     public static final Pattern kv = Pattern.compile("(?m)^\\t?(\\w+)(\\s?[=<>]+\\s?)([^\\s\\{#\\n]+)(#.+)*");
 
     // Pattern matches for single lines objects
-    // Group 1-3:   Special match for hsv
+    // Group 1-3:   Special match for color
     // Group 4-6:   Recursion Pattern
     // Group 7-9:   Standard key value pair
     // Group 10-12: String literal pair
     // Group 13: Special match for tags
     public static final Pattern sLre = Pattern.compile("([\\w:]+)(\\s*[=><]+\\s*)(hsv\\s*\\{.+?\\})|([\\w:]+)(\\s*[=><]+\\s*)\\{(.+?\\})|([\\w:]+)(\\s*[=><]+\\s*)([^\"]+?)\\s|([\\w:]+)(\\s*[=><]+\\s*)(.+?\")\\s*|(\\w+)");
 
+    public static final Pattern color = Pattern.compile("(hsv|rgb)\\s*\\{\\s*([\\d.]+)\\s*([\\d.]+)\\s*([\\d.]+)\\s*\\}\\s?");
+
     // Pattern matches for main data structure
     // Group 1-4:   Multi line recursion
     // Group 5-8:   Single line
-    public static final Pattern newCombine = Pattern.compile("(?m)^\\s?([\\w:]+)(\\s*[=<>]+\\s*)\\{\\s*(#.*)?[\\r\\n]([\\W\\D\\S]+?)^\\s?\\}|^\\s?(\\w+)(\\s*[=<>]+\\s*)([^#\\r\\n]+)(#.+)?");
+    // Group 9-10:  Tags
+    public static final Pattern newCombine = Pattern.compile("(?m)^\\s?([\\w:]+)(\\s*[=<>]+\\s*)\\{\\s*(#.*)?[\\r\\n]([\\W\\D\\S]+?)^\\s?\\}|^\\s?(\\w+)(\\s*[=<>]+\\s*)([^#\\r\\n]+)(#.+)?|^\\s?([\\w:\"]+)\\s?");
 
     // Mod Descriptor Specific Pattern
     public static final Pattern mDSpec = Pattern.compile("(?s)(?m)^\\t?(\\w+)=\\{[\\r\\n](.+?)^\\}");

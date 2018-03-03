@@ -70,6 +70,9 @@ public class DataParser {
                 obj.find();
                 GenericData gData;
                 switch (obj.group(1)) {
+                    case "country_event":
+                        gData = new Event(obj.group(2));
+                        break;
                     case "ambient_object":
                         gData = new AmbientObject(obj.group(2));
                         break;

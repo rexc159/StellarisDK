@@ -1,5 +1,8 @@
 package StellarisDK.FileClasses.Helper;
 
+import StellarisDK.FileClasses.GenericData;
+import javafx.scene.control.TreeItem;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -10,6 +13,19 @@ public class DataMap<K, V> extends HashMap<K, V> {
             count += ((ArrayList) get(key)).size();
         }
         return count;
+    }
+
+    public TreeItem toTreeItem(String key) {
+        TreeItem root = new TreeItem<>(key);
+        Object[] objs = compressToPairArray();
+        for (Object obj : objs) {
+            if (((VPair) ((ValueTriplet) obj).getValue()).getValue() instanceof DataMap) {
+                root.getChildren().add(((DataMap) ((VPair) ((ValueTriplet) obj).getValue()).getValue()).toTreeItem(((ValueTriplet) obj).getKey().toString()));
+            } else {
+                root.getChildren().add(new TreeItem<>(obj));
+            }
+        }
+        return root;
     }
 
     public Object[] compressToPairArray() {
@@ -27,5 +43,21 @@ public class DataMap<K, V> extends HashMap<K, V> {
             }
         }
         return objs;
+    }
+
+    @Override
+    public String toString() {
+        GenericData.changeTab(true);
+        String tabs = "\r\n";
+        for (int k = 0; k < GenericData.getTab(); k++) {
+            tabs += "\t";
+        }
+        String out = "{";
+        Object[] temp = compressToPairArray();
+        for (int i = 0; i < getFullSize(); i++)
+            if (temp[i] != null)
+                out += temp[i].toString().replaceAll("#tabs", tabs);
+        GenericData.changeTab(false);
+        return out + tabs.replaceFirst("\t", "") + "}";
     }
 }
