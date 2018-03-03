@@ -12,6 +12,26 @@ public class Component extends GenericData {
 
     public Component(int type) {
         super();
+        ui = new CompUI(this);
+    }
+
+    public Component(String input) {
+        super(input);
+        ui = new CompUI(this);
+    }
+
+    public Component(String input, int type) {
+        super(input);
+        setType(type);
+        ui = new CompUI(this);
+    }
+
+    public Component(String input, String type) {
+        super(input, type);
+        ui = new CompUI(this);
+    }
+
+    public void setType(int type){
         switch (type) {
             default:
             case 0:
@@ -24,27 +44,11 @@ public class Component extends GenericData {
                 this.type = "strike_craft_component_template";
                 break;
         }
-        ui = new CompUI(this);
-    }
-
-    public Component(String input) {
-        super(input);
-        ui = new CompUI(this);
-    }
-
-    public Component(String type, int x) {
-        this();
-        this.type = type;
-    }
-
-    public Component(String input, String type) {
-        super(input, type);
-        ui = new CompUI(this);
     }
 
     @Override
     public Component createNew() {
-        return new Component(type, 0);
+        return new Component(0);
     }
 
     public String getGroup() {

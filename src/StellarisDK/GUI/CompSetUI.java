@@ -55,6 +55,7 @@ public class CompSetUI extends AbstractUI {
                 }
             }
         }
+        System.out.println(obj.export());
         itemView.refresh();
         return obj;
     }

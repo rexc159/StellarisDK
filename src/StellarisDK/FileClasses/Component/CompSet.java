@@ -24,7 +24,7 @@ public class CompSet extends GenericData {
     }
 
     @Override
-    public CompSet createNew(){
+    public CompSet createNew() {
         return new CompSet();
     }
 
@@ -85,6 +85,6 @@ public class CompSet extends GenericData {
 
     @Override
     public String toString() {
-        return key;
+        return key != null ? key : name;
     }
 }

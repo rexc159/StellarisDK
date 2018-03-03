@@ -72,7 +72,7 @@ public abstract class GenericData {
         setName();
     }
 
-    String setName() {
+    protected String setName() {
         if (this instanceof ModDescriptor) {
             if(data.containsKey("name"))
                 name = data.get("name").toString();

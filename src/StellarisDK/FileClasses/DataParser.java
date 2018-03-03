@@ -1,5 +1,7 @@
 package StellarisDK.FileClasses;
 
+import StellarisDK.FileClasses.Anomaly.Anomaly;
+import StellarisDK.FileClasses.Anomaly.AnomalyCategory;
 import StellarisDK.FileClasses.Component.CompSet;
 import StellarisDK.FileClasses.Component.Component;
 import StellarisDK.FileClasses.Helper.DataMap;
@@ -28,12 +30,9 @@ public class DataParser {
         } while (temp != null);
         while (scan.hasNext()) {
             String objectDat = scan.findWithinHorizon(pattern, 0);
-//            System.out.println("Original: "+test);
-//            new Component(test).export();
             if (objectDat != null) {
                 Matcher obj = pattern.matcher(objectDat);
                 obj.find();
-                GenericData gData;
                 data = new Component();
                 data.setData((DataMap)data.load(obj.group(2)));
                 System.out.println(data.export());
@@ -41,33 +40,6 @@ public class DataParser {
                 break;
             }
         }
-    }
-
-    public static GenericData parseData(String path) throws IOException {
-        Scanner scan = new Scanner(new File(path));
-        Component data = null;
-        String temp;
-        do {
-            temp = scan.findWithinHorizon(constants, 0);
-            if (temp != null)
-                System.out.println(temp);
-        } while (temp != null);
-        while (scan.hasNext()) {
-            String objectDat = scan.findWithinHorizon(pattern, 0);
-//            System.out.println("Original: "+test);
-//            new Component(test).export();
-            if (objectDat != null) {
-                Matcher obj = pattern.matcher(objectDat);
-                obj.find();
-                GenericData gData;
-                data = new Component(objectDat, obj.group(1));
-                System.out.println(data.export());
-            } else {
-                break;
-            }
-        }
-        scan.close();
-        return data;
     }
 
     /*
@@ -101,11 +73,24 @@ public class DataParser {
                     case "ambient_object":
                         gData = new AmbientObject(obj.group(2));
                         break;
+                    case "anomaly":
+                        gData = new Anomaly(obj.group(2));
+                        break;
+                    case "anomaly_category":
+                        gData = new AnomalyCategory(obj.group(2));
+                        break;
                     case "component_set":
                         gData = new CompSet(obj.group(2));
                         break;
-                    case "component":
-                    case "anomaly":
+                    case "utility_component_template":
+                        gData = new Component(obj.group(2), 0);
+                        break;
+                    case "weapon_component_template":
+                        gData = new Component(obj.group(2), 1);
+                        break;
+                    case "strike_craft_component_template":
+                        gData = new Component(obj.group(2), 2);
+                        break;
                     default:
                         gData = new Component(obj.group(2), obj.group(1));
                 }

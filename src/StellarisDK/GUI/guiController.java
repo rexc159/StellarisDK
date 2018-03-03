@@ -2,6 +2,7 @@ package StellarisDK.GUI;
 
 import StellarisDK.DataLoc;
 import StellarisDK.FileClasses.*;
+import StellarisDK.FileClasses.Anomaly.Anomaly;
 import StellarisDK.FileClasses.Component.CompSet;
 import StellarisDK.FileClasses.Component.Component;
 import javafx.fxml.FXML;
@@ -122,7 +123,7 @@ public class guiController extends AnchorPane {
             case "ambient_objects":
                 return new TreeItem<>(new AmbientObject());
             case "anomalies":
-                break;
+                return new TreeItem<>(new Anomaly());
             case "armies":
                 break;
             case "ascension_perks":

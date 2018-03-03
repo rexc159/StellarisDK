@@ -42,18 +42,19 @@ public abstract class AbstractUI extends Region {
         loader.setController(this);
         try {
             loader.load();
-        } catch (IOException e) {
+            try {
+                btn_save.setOnAction(event -> save());
+            } catch (NullPointerException e) {
+                System.out.println("[ERROR] FXML Error: Missing Save Button (def: btn_save), Editor under construction?");
+            }
+        } catch (Exception e) {
             System.out.println("[ERROR] FXML Missing: " + fxml + ", switching to default.");
             loader = new FXMLLoader(getClass().getResource("FXML/default.fxml"));
+            loader.setController(this);
             try {
                 loader.load();
             } catch (IOException x) {
             }
-        }
-        try {
-            btn_save.setOnAction(event -> save());
-        } catch (NullPointerException e) {
-            System.out.println("[ERROR] FXML Error: Missing Save Button (def: btn_save), Editor under construction?");
         }
         Button close = new Button("\u2715");
         window.setContent(main);
