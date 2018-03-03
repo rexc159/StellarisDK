@@ -133,17 +133,25 @@ public abstract class GenericData {
         ArrayList data = new ArrayList() {
             @Override
             public String toString() {
-                GenericData.changeTab(true);
-                String tabs = "\r\n";
-                for (int k = 0; k < GenericData.getTab(); k++) {
-                    tabs += "\t";
+                if (size() != 0 && this.get(0) instanceof VPair) {
+                    GenericData.changeTab(true);
+                    String tabs = "\r\n";
+                    for (int k = 0; k < GenericData.getTab(); k++) {
+                        tabs += "\t";
+                    }
+                    String out = "{";
+                    for (Object item : this) {
+                        out += tabs + item;
+                    }
+                    GenericData.changeTab(false);
+                    return out + tabs.replaceFirst("\t", "") + "}";
+                } else {
+                    String out = "{ ";
+                    for (Object item : this) {
+                        out += item + " ";
+                    }
+                    return out + "}";
                 }
-                String out = "{";
-                for (Object item : this) {
-                    out += tabs+item;
-                }
-                GenericData.changeTab(false);
-                return out + tabs.replaceFirst("\t", "") + "}";
             }
         };
         Matcher matcher = DataPattern.sLre.matcher(input);
@@ -182,9 +190,9 @@ public abstract class GenericData {
                 if (matcher.group(7).contains("{")) {
                     ValueTriplet dat;
                     Matcher color = DataPattern.color.matcher(matcher.group(7));
-                    if(color.find()){
-                        dat = new ValueTriplet<>(matcher.group(6).trim(), new StellarisColor(color.group(1).trim(),color.group(2).trim(),color.group(3).trim(),color.group(4).trim()), size++);
-                    }else{
+                    if (color.find()) {
+                        dat = new ValueTriplet<>(matcher.group(6).trim(), new StellarisColor(color.group(1).trim(), color.group(2).trim(), color.group(3).trim(), color.group(4).trim()), size++);
+                    } else {
                         dat = new ValueTriplet<>(matcher.group(6).trim(), sLrecursion(matcher.group(7)), size++);
                     }
                     if (data.containsKey(matcher.group(5))) {
@@ -207,8 +215,14 @@ public abstract class GenericData {
             } else if (matcher.group(1) != null) {
                 temp = new PairArrayList();
                 int order = size++;
-                DataMap secMap = (DataMap) load(matcher.group(4).replaceAll("(?m)^\t", ""));
-                ValueTriplet dat = new ValueTriplet<>(matcher.group(2).trim(), secMap, order);
+                DataMap secMap;
+                ValueTriplet dat;
+                if(!matcher.group(4).contains("=")){
+                    dat = new ValueTriplet<>(matcher.group(2).trim(), sLrecursion(matcher.group(4).trim().replaceAll("[\\t\\n\\r]", " ")), order);
+                }else{
+                    secMap = (DataMap) load(matcher.group(4).replaceAll("(?m)^\t", ""));
+                    dat = new ValueTriplet<>(matcher.group(2).trim(), secMap, order);
+                }
                 temp.add(dat);
                 if (data.containsKey(matcher.group(1).trim())) {
                     data.get(matcher.group(1).trim()).add(dat);

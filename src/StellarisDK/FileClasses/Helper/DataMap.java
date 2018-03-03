@@ -35,10 +35,10 @@ public class DataMap<K, V> extends HashMap<K, V> {
                 try {
                     if (((ValueTriplet) data).getValue() != null)
                         objs[((ValueTriplet) data).getOrder()] = new ValueTriplet<>(key, ((ValueTriplet) data).toPair(), ((ValueTriplet) data).getOrder());
-                } catch (StackOverflowError e) {
+                } catch (ArrayIndexOutOfBoundsException e) {
                     System.out.println("[ERROR] StackOverFlow, FROM: DataMap");
-                    System.out.println("[ERROR] CAUSE: Tried " + ((ValueTriplet) data).getOrder());
-                    System.out.println("[ERROR] SIZE: " + getFullSize());
+                    System.out.println("[ERROR] CAUSE: Tried " + key + " Value: " + ((ValueTriplet) data).getKey());
+                    System.out.println("[ERROR] SIZE: " + getFullSize() + ", Actual: " + ((ValueTriplet) data).getOrder());
                 }
             }
         }
