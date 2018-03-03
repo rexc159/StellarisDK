@@ -6,13 +6,13 @@ import StellarisDK.GUI.AnomalyCategoryUI;
 public class AnomalyCategory extends GenericData {
     public AnomalyCategory() {
         super();
-        this.type = "anomaly";
+        this.type = "anomaly_category";
         ui = new AnomalyCategoryUI(this);
     }
 
     public AnomalyCategory(String input) {
         super(input);
-        this.type = "anomaly";
+        this.type = "anomaly_category";
         ui = new AnomalyCategoryUI(this);
     }
 
