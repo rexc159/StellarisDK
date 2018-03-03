@@ -380,7 +380,7 @@ public class guiController extends AnchorPane {
         boolean output = false;
         String temp = "";
         for (Object item : current.getChildren()) {
-            if (((TreeItem) item).getValue() instanceof GenericData || ((TreeItem) item).getValue().equals("Constants")) {
+            if (((TreeItem) item).getValue() instanceof GenericData || ((TreeItem) item).getValue().equals("Constants") || ((TreeItem) item).getValue().equals("Namespace")) {
                 if (((TreeItem) item).getChildren().size() != 0) {
                     for (Object constant : ((TreeItem) item).getChildren()) {
                         output = true;
@@ -395,7 +395,7 @@ public class guiController extends AnchorPane {
                 output = false;
                 temp = ((Locale) ((TreeItem) item).getValue()).export();
             } else if (((TreeItem) item).getChildren().size() != 0) {
-                if (((TreeItem) item).getValue().equals("Constants")) {
+                if (((TreeItem) item).getValue().equals("Constants") || ((TreeItem) item).getValue().equals("Namespace")) {
                     saveFiles(saveLoc, (TreeItem) item);
                 } else {
                     saveLoc.mkdir();

@@ -56,6 +56,15 @@ public class DataParser {
         Scanner scan = new Scanner(file);
         String temp;
         TreeItem<String> consts = new TreeItem<>("Constants");
+        TreeItem<String> namespace = new TreeItem<>("Namespace");
+        Pattern name = Pattern.compile("namespace\\s*=\\s*\"(\\w+)\"");
+        do {
+            temp = scan.findWithinHorizon(name, 0);
+            if (temp != null)
+                namespace.getChildren().add(new TreeItem<>(temp));
+        }while (temp != null);
+        if(!namespace.getChildren().isEmpty())
+            out.add(namespace);
         do {
             temp = scan.findWithinHorizon(constants, 0);
             if (temp != null)

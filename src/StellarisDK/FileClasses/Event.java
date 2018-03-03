@@ -5,6 +5,8 @@ import javafx.scene.control.TreeItem;
 
 public class Event extends GenericData {
 
+    private String namespace;
+
     public Event() {
         super();
         ui = new EventUI(this);

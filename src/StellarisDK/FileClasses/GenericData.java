@@ -161,7 +161,6 @@ public abstract class GenericData {
                 if(color.find()){
                     data.add(new VPair(matcher.group(1).trim(), new VPair(matcher.group(2).trim(), new StellarisColor(color.group(1).trim(),color.group(2).trim(),color.group(3).trim(),color.group(4).trim()))));
                 }
-//                data.add(new VPair(matcher.group(1).trim(), new VPair(matcher.group(2).trim(), matcher.group(3).trim())));
             } else if (matcher.group(4) != null) {
                 data.add(new VPair(matcher.group(4).trim(), new VPair(matcher.group(5).trim(), sLrecursion(matcher.group(6)))));
             } else if (matcher.group(7) != null) {
