@@ -17,7 +17,7 @@ import java.io.IOException;
 
 public abstract class AbstractUI extends Region {
 
-    FXMLLoader loader;
+    AnchorPane root;
 
     @FXML
     AnchorPane main;
@@ -33,6 +33,10 @@ public abstract class AbstractUI extends Region {
 
     public void reload() {
         load(obj);
+    }
+
+    public void setRoot(AnchorPane root){
+        this.root = root;
     }
 
     void init(String fxml) {

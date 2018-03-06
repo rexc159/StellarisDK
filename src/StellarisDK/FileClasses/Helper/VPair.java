@@ -1,18 +1,30 @@
 package StellarisDK.FileClasses.Helper;
 
-import javafx.util.Pair;
+public class VPair<K,V> {
+    private K key;
+    private V value;
 
-public class VPair extends Pair {
-    public VPair(Object key, Object value) {
-        super(key, value);
+    public VPair(K key, V value) {
+        this.key = key;
+        this.value = value;
     }
 
-    public VPair setValue(Object value) {
-        return new VPair(getKey(), value);
+    public VPair setValue(V value) {
+        this.value = value;
+        return this;
     }
 
-    public VPair setKey(Object key) {
-        return new VPair(key, getValue());
+    public VPair setKey(K key) {
+        this.key = key;
+        return this;
+    }
+
+    public K getKey() {
+        return key;
+    }
+
+    public V getValue() {
+        return value;
     }
 
     public String toExport() {

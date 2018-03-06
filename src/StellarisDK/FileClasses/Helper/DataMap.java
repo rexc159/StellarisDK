@@ -17,10 +17,10 @@ public class DataMap<K, V> extends HashMap<K, V> {
 
     public TreeItem toTreeItem(String key) {
         TreeItem root = new TreeItem<>(key);
-        Object[] objs = compressToPairArray();
-        for (Object obj : objs) {
-            if (((VPair) ((ValueTriplet) obj).getValue()).getValue() instanceof DataMap) {
-                root.getChildren().add(((DataMap) ((VPair) ((ValueTriplet) obj).getValue()).getValue()).toTreeItem(((ValueTriplet) obj).getKey().toString()));
+        ValueTriplet[] objs = compressToPairArray();
+        for (ValueTriplet obj : objs) {
+            if (((VPair) obj.getValue()).getValue() instanceof DataMap) {
+                root.getChildren().add(((DataMap) ((VPair) obj.getValue()).getValue()).toTreeItem(obj.getKey().toString()));
             } else {
                 root.getChildren().add(new TreeItem<>(obj));
             }
@@ -28,8 +28,8 @@ public class DataMap<K, V> extends HashMap<K, V> {
         return root;
     }
 
-    public Object[] compressToPairArray() {
-        Object[] objs = new Object[getFullSize()];
+    public ValueTriplet[] compressToPairArray() {
+        ValueTriplet[] objs = new ValueTriplet[getFullSize()];
         for (Object key : keySet()) {
             for (Object data : ((ArrayList) get(key))) {
                 try {

@@ -5,10 +5,15 @@ import StellarisDK.FileClasses.*;
 import StellarisDK.FileClasses.Anomaly.Anomaly;
 import StellarisDK.FileClasses.Component.CompSet;
 import StellarisDK.FileClasses.Component.Component;
+import com.sun.javafx.scene.control.skin.LabeledText;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
@@ -53,6 +58,63 @@ public class guiController extends AnchorPane {
             throw new RuntimeException(e);
         }
 
+        itemView.setOnDragDetected(event -> {
+            Node node = event.getPickResult().getIntersectedNode();
+            if (node instanceof LabeledText || node instanceof TreeCell) {
+                TreeItem item;
+                if (node instanceof LabeledText) {
+                    item = ((TreeCell) node.getParent()).getTreeItem();
+                } else {
+                    item = ((TreeCell) node).getTreeItem();
+                }
+                if(item.isLeaf() && item.getParent().getValue().toString().contains(".txt")){
+                    Dragboard db = node.startDragAndDrop(TransferMode.MOVE);
+                    ClipboardContent clipboard = new ClipboardContent();
+                    clipboard.putString(Integer.toString(item.getParent().getChildren().indexOf(item)));
+                    db.setContent(clipboard);
+                }
+            }
+
+            event.consume();
+        });
+
+        itemView.setOnDragOver(event -> {
+
+            if (event.getGestureSource() != event.getPickResult().getIntersectedNode()) {
+                System.out.println("onDragOver");
+                event.acceptTransferModes(TransferMode.MOVE);
+            }
+
+            event.consume();
+        });
+
+        itemView.setOnDragEntered(event -> {
+            if (event.getGestureSource() != event.getPickResult().getIntersectedNode()) {
+                System.out.println("onDragEntered");
+            }
+            event.consume();
+        });
+
+        itemView.setOnDragExited(event -> {
+
+            event.consume();
+        });
+
+        itemView.setOnDragDropped(event -> {
+            System.out.println("dropped");
+            System.out.println("FROM: " + event.getGestureSource());
+            System.out.println("TO: " + event.getPickResult().getIntersectedNode());
+            event.setDropCompleted(true);
+            event.consume();
+        });
+
+        itemView.setOnDragDone(event -> {
+            if (event.getTransferMode() == TransferMode.MOVE) {
+                System.out.println("Done");
+            }
+            event.consume();
+        });
+
         itemView.setEditable(true);
         itemView.setCellFactory(new Callback<TreeView, TreeCell>() {
             @Override
@@ -63,7 +125,8 @@ public class guiController extends AnchorPane {
                         if (this.getTreeItem().getValue() instanceof GenericData) {
                             System.out.println("Starting Editor");
                             super.startEdit();
-                            open((GenericData) this.getTreeItem().getValue());
+                            ((GenericData) this.getItem()).ui.setRoot(mainWindow);
+                            open((GenericData) this.getItem());
                             super.cancelEdit();
                         }
                     }
