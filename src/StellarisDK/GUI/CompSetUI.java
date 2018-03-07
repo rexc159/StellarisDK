@@ -18,7 +18,7 @@ public class CompSetUI extends AbstractUI {
         init("FXML/compSetFX.fxml");
         tabPane = (TabPane) main.getChildren().get(2);
         window.setText("Component Set Editor");
-        load(obj);
+        this.obj = obj;
     }
 
     public void addComp(Component comp){
@@ -30,13 +30,7 @@ public class CompSetUI extends AbstractUI {
     }
 
     @Override
-    public void load(Object object) {
-        if (object instanceof String) {
-            obj.load((String) object);
-            System.out.println("Loaded");
-        } else {
-            obj = (CompSet) object;
-        }
+    public void load() {
         for (Node node : ((GridPane) main.getChildren().get(0)).getChildren()) {
             if (node.getId() != null) {
                 if (node instanceof TextField) {

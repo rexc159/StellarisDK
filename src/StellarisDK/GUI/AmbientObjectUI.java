@@ -28,17 +28,11 @@ public class AmbientObjectUI extends AbstractUI {
     public AmbientObjectUI(AmbientObject obj) {
         init("FXML/ambientObjectFX.fxml");
         window.setText("Ambient Object Editor");
-        load(obj);
+        this.obj = obj;
     }
 
     @Override
-    public void load(Object object) {
-        if (object instanceof String) {
-            obj.load((String) object);
-        } else {
-            obj = (AmbientObject) object;
-        }
-
+    public void load() {
         name.setText(obj.getFirstValue(name.getId()));
         tooltip.setText(obj.getFirstValue(tooltip.getId()));
         description.setText(obj.getFirstValue(description.getId()));

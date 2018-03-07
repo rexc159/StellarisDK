@@ -1,6 +1,8 @@
 package StellarisDK.GUI;
 
 import StellarisDK.FileClasses.GenericData;
+import StellarisDK.FileClasses.Helper.DataCell;
+import StellarisDK.FileClasses.Helper.DataMap;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -30,10 +32,6 @@ public abstract class AbstractUI extends Region {
     TreeView itemView;
 
     GenericData obj;
-
-    public void reload() {
-        load(obj);
-    }
 
     public void setRoot(AnchorPane root) {
         this.root = root;
@@ -97,10 +95,17 @@ public abstract class AbstractUI extends Region {
         btn.setOnAction(event -> ((Pane) getParent()).getChildren().remove(this));
     }
 
-    public abstract Object save();
+    public void load() {
+        treeView.setEditable(true);
+        treeView.setCellFactory(param -> new DataCell());
+        treeView.setRoot(obj.toTreeItem());
+    }
 
-    public abstract void load(Object object);
-
+    public Object save() {
+        obj.setData((DataMap)obj.load(unparse(treeView.getRoot())));
+        System.out.println(obj.export());
+        return obj;
+    }
 
     public String unparse(TreeItem root) {
         String tabs = "\r\n";

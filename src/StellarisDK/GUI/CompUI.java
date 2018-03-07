@@ -3,13 +3,9 @@ package StellarisDK.GUI;
 import StellarisDK.FileClasses.Component.Component;
 import StellarisDK.FileClasses.Helper.PairArrayList;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
-import javafx.scene.layout.GridPane;
-
-import java.util.ArrayList;
+import javafx.scene.control.TreeView;
 
 public class CompUI extends AbstractUI {
 
@@ -19,11 +15,14 @@ public class CompUI extends AbstractUI {
     @FXML
     ChoiceBox compSize;
 
+    @FXML
+    TreeView treeView;
+
     public CompUI(Component obj) {
-        init("FXML/compFX.fxml");
+        init("FXML/treeUI.fxml");
         window.setText("Component Editor");
-        loadCompSize();
-        load(obj);
+//        loadCompSize();
+        this.obj = obj;
     }
 
     public void loadCompSize() {
@@ -53,43 +52,40 @@ public class CompUI extends AbstractUI {
             compGroup.getSelectionModel().select(((PairArrayList) obj.getValue("component_set")).getFirstString().toUpperCase());
     }
 
-    @Override
-    public void load(Object object) {
-        if (object instanceof String) {
-            obj.load((String) object);
-        } else {
-            obj = (Component) object;
-        }
-        for (Node node : ((GridPane) main.getChildren().get(0)).getChildren()) {
-            if (node.getId() != null) {
-                if (node instanceof TextField) {
-                    try {
-                        ((TextField) node).setText(((ArrayList<Object>) obj.getValue(node.getId())).get(0).toString()
-                                .replaceAll("\"", ""));
-                    } catch (NullPointerException e) {
-//                        System.out.println("Empty Key, Ignore");
-                    }
-                }
-            }
-        }
+//    @Override
+//    public void load() {
+//        treeView.setEditable(true);
+//        treeView.setCellFactory(param -> new DataCell());
+//        treeView.setRoot(obj.toTreeItem());
+//        for (Node node : ((GridPane) main.getChildren().get(0)).getChildren()) {
+//            if (node.getId() != null) {
+//                if (node instanceof TextField) {
+//                    try {
+//                        ((TextField) node).setText(((ArrayList<Object>) obj.getValue(node.getId())).get(0).toString()
+//                                .replaceAll("\"", ""));
+//                    } catch (NullPointerException e) {
+//                    }
+//                }
+//            }
+//        }
 //        if(obj.getKey("size"))
 //            compSize.getSelectionModel().select(((PairArrayList) obj.getValue("size")).getFirstString().toUpperCase());
 //        loadCompSet();
-    }
+//    }
 
-    @Override
-    public Object save() {
-        for (Node node : ((GridPane) main.getChildren().get(0)).getChildren()) {
-            if (node.getId() != null) {
-                if (node instanceof TextField) {
-                    obj.setValue(node.getId(),((TextField) node).getText(),true);
-                }
-            }
-        }
-        obj.setValue("component_set", compGroup.getSelectionModel().getSelectedItem(), true);
-        obj.setValue("size", compSize.getSelectionModel().getSelectedItem(), true);
-        System.out.println(obj.export());
-        itemView.refresh();
-        return null;
-    }
+//    @Override
+//    public Object save() {
+//        for (Node node : ((GridPane) main.getChildren().get(0)).getChildren()) {
+//            if (node.getId() != null) {
+//                if (node instanceof TextField) {
+//                    obj.setValue(node.getId(),((TextField) node).getText(),true);
+//                }
+//            }
+//        }
+//        obj.setValue("component_set", compGroup.getSelectionModel().getSelectedItem(), true);
+//        obj.setValue("size", compSize.getSelectionModel().getSelectedItem(), true);
+//        System.out.println(obj.export());
+//        itemView.refresh();
+//        return null;
+//    }
 }

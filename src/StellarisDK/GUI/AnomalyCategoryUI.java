@@ -6,8 +6,8 @@ public class AnomalyCategoryUI extends AbstractUI {
 
     public AnomalyCategoryUI(AnomalyCategory obj) {
         init("FXML/anomalyCategoryFX.fxml");
-        window.setText("Anomaly Editor");
-        load(obj);
+        window.setText("Anomaly Category Editor");
+        this.obj = obj;
     }
 
     @Override
@@ -16,7 +16,7 @@ public class AnomalyCategoryUI extends AbstractUI {
     }
 
     @Override
-    public void load(Object object) {
+    public void load() {
 
     }
 }

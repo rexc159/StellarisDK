@@ -454,7 +454,7 @@ public class guiController extends AnchorPane {
 
     private void open(GenericData obj) {
         obj.ui.setTree(itemView);
-        obj.ui.reload();
+        obj.ui.load();
         if (!mainWindow.getChildren().contains(obj.ui))
             mainWindow.getChildren().add(obj.ui);
     }

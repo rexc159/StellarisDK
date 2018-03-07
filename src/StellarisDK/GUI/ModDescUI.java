@@ -17,17 +17,11 @@ public class ModDescUI extends AbstractUI {
     public ModDescUI(ModDescriptor obj) {
         init("FXML/mdFX.fxml");
         window.setText("Mod Descriptor");
-        load(obj);
+        this.obj = obj;
     }
 
     @Override
-    public void load(Object object) {
-        if (object instanceof String) {
-            obj.load((String) object);
-            System.out.println("Loaded");
-        } else {
-            obj = (ModDescriptor) object;
-        }
+    public void load() {
         for (Node node : ((GridPane) main.getChildren().get(0)).getChildren()) {
             if (node.getId() != null) {
                 if (node.getId().equals("tags") || node.getId().equals("dependencies")) {

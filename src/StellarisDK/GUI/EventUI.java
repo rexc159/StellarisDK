@@ -20,16 +20,11 @@ public class EventUI extends AbstractUI {
     public EventUI(Event obj) {
         init("FXML/eventFX.fxml");
         window.setText("Event Editor");
-        load(obj);
+        this.obj = obj;
     }
 
     @Override
-    public void load(Object object) {
-        if (object instanceof String) {
-            obj.load((String) object);
-        } else {
-            obj = (Event) object;
-        }
+    public void load() {
         treeView.setEditable(true);
         treeView.setCellFactory(param -> new DataCell());
         treeView.setRoot(obj.toTreeItem());

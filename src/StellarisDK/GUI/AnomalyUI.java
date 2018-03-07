@@ -7,7 +7,7 @@ public class AnomalyUI extends AbstractUI {
     public AnomalyUI(Anomaly obj) {
         init("FXML/anomalyFX.fxml");
         window.setText("Anomaly Editor");
-        load(obj);
+        this.obj = obj;
     }
 
     @Override
@@ -16,7 +16,7 @@ public class AnomalyUI extends AbstractUI {
     }
 
     @Override
-    public void load(Object object) {
+    public void load() {
 
     }
 }
