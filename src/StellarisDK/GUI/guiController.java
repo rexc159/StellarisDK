@@ -131,21 +131,23 @@ public class guiController extends AnchorPane {
                 cell.setOnDragDropped(event -> {
                     System.out.println("FROM: " + event.getGestureSource());
                     System.out.println("TO: " + cell);
-                    TreeItem target;
+                    TreeItem target = cell.getTreeItem();
                     TreeItem source;
                     if (event.getGestureSource() instanceof LabeledText) {
                         source = ((TreeCell) ((Node) event.getGestureSource()).getParent()).getTreeItem();
                     } else {
                         source = ((TreeCell) event.getGestureSource()).getTreeItem();
                     }
+                    int index = target.getParent().getChildren().indexOf(target);
                     source.getParent().getChildren().remove(source);
-                    if (cell.getItem().toString().contains(".txt")) {
-                        target = cell.getTreeItem();
+                    if (target.toString().contains(".txt")) {
                         target.getChildren().add(source);
                     } else {
-                        target = cell.getTreeItem();
-                        int index = target.getParent().getChildren().indexOf(target);
-                        target.getParent().getChildren().add(index, source);
+                        if(index == target.getParent().getChildren().size()){
+                            target.getParent().getChildren().add(source);
+                        }else {
+                            target.getParent().getChildren().add(index, source);
+                        }
                     }
                     event.setDropCompleted(true);
                     event.consume();

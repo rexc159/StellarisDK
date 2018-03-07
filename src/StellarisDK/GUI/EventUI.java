@@ -154,7 +154,11 @@ public class EventUI extends AbstractUI {
                     }
                     int index = target.getParent().getChildren().indexOf(target);
                     source.getParent().getChildren().remove(source);
-                    target.getParent().getChildren().add(index, source);
+                    if(index == target.getParent().getChildren().size()){
+                        target.getParent().getChildren().add(source);
+                    }else {
+                        target.getParent().getChildren().add(index, source);
+                    }
                     event.setDropCompleted(true);
                     event.consume();
                 });
