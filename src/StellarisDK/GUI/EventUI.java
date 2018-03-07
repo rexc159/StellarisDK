@@ -4,11 +4,17 @@ import StellarisDK.FileClasses.Event;
 import StellarisDK.FileClasses.Helper.DataMap;
 import StellarisDK.FileClasses.Helper.VPair;
 import StellarisDK.FileClasses.Helper.ValueTriplet;
+import com.sun.javafx.scene.control.skin.LabeledText;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeCell;
+import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.Dragboard;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.TransferMode;
 import javafx.util.Callback;
 
 public class EventUI extends AbstractUI {
@@ -39,10 +45,10 @@ public class EventUI extends AbstractUI {
         treeView.setCellFactory(new Callback<TreeView, TreeCell>() {
             @Override
             public TreeCell call(TreeView param) {
-                return new TreeCell(){
+                TreeCell<Object> cell = new TreeCell<Object>() {
                     private TextField textField;
 
-                    public DataMap toDataMap(){
+                    public DataMap toDataMap() {
                         return null;
                     }
 
@@ -52,12 +58,12 @@ public class EventUI extends AbstractUI {
                         if (textField == null) {
                             textField = new TextField(((VPair) ((ValueTriplet) getItem()).getValue()).getValue().toString());
                             textField.setOnKeyReleased(event -> {
-                                    if (event.getCode() == KeyCode.ENTER) {
-                                        commitEdit(textField.getText());
-                                    } else if (event.getCode() == KeyCode.ESCAPE) {
-                                        cancelEdit();
-                                    }
-                                });
+                                if (event.getCode() == KeyCode.ENTER) {
+                                    commitEdit(textField.getText());
+                                } else if (event.getCode() == KeyCode.ESCAPE) {
+                                    cancelEdit();
+                                }
+                            });
                         }
                         setText(null);
                         setGraphic(textField);
@@ -98,6 +104,69 @@ public class EventUI extends AbstractUI {
                         }
                     }
                 };
+
+                cell.setOnDragDetected(event -> {
+                    TreeItem item = cell.getTreeItem();
+                    Dragboard db = cell.startDragAndDrop(TransferMode.MOVE);
+                    ClipboardContent clipboard = new ClipboardContent();
+                    clipboard.putString(Integer.toString(item.getParent().getChildren().indexOf(item)));
+                    db.setContent(clipboard);
+                    event.consume();
+                });
+
+                cell.setOnDragOver(event -> {
+                    if (event.getGestureSource() != cell) {
+                        TreeItem source;
+                        TreeItem item = cell.getTreeItem();
+                        if (event.getGestureSource() instanceof LabeledText) {
+                            source = ((TreeCell) ((Node) event.getGestureSource()).getParent()).getTreeItem();
+                        } else {
+                            source = ((TreeCell) event.getGestureSource()).getTreeItem();
+                        }
+                        if(source.getParent().equals(item.getParent())){
+                            event.acceptTransferModes(TransferMode.MOVE);
+                        }
+                    }
+                    event.consume();
+                });
+
+                cell.setOnDragEntered(event -> {
+                    if (event.getGestureSource() != cell) {
+                        cell.updateSelected(true);
+                    }
+                    event.consume();
+                });
+
+                cell.setOnDragExited(event -> {
+                    cell.updateSelected(false);
+                    event.consume();
+                });
+
+                cell.setOnDragDropped(event -> {
+                    System.out.println("FROM: " + event.getGestureSource());
+                    System.out.println("TO: " + cell);
+                    TreeItem target = cell.getTreeItem();
+                    TreeItem source;
+                    if (event.getGestureSource() instanceof LabeledText) {
+                        source = ((TreeCell) ((Node) event.getGestureSource()).getParent()).getTreeItem();
+                    } else {
+                        source = ((TreeCell) event.getGestureSource()).getTreeItem();
+                    }
+                    int index = target.getParent().getChildren().indexOf(target);
+                    source.getParent().getChildren().remove(source);
+                    target.getParent().getChildren().add(index, source);
+                    event.setDropCompleted(true);
+                    event.consume();
+                });
+
+                cell.setOnDragDone(event -> {
+                    if (event.getTransferMode() == TransferMode.MOVE) {
+                        System.out.println("Done");
+                    }
+                    event.consume();
+                });
+
+                return cell;
             }
         });
         treeView.setRoot(((Event) obj).toTreeItem());
