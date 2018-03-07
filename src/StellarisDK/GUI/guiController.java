@@ -524,16 +524,16 @@ public class guiController extends AnchorPane {
             }
             main.mkdir();
             saveFiles(main, itemView.getRoot());
-        }
 
-        // Temp Code
-        Stage dialog = new Stage();
-        dialog.initModality(Modality.APPLICATION_MODAL);
-        dialog.initOwner(this.stage);
-        HBox box = new HBox();
-        box.getChildren().add(new Text("Saving Complete"));
-        dialog.setScene(new Scene(box));
-        dialog.show();
+            // Temp Code
+            Stage dialog = new Stage();
+            dialog.initModality(Modality.APPLICATION_MODAL);
+            dialog.initOwner(this.stage);
+            HBox box = new HBox();
+            box.getChildren().add(new Text("Saving Complete"));
+            dialog.setScene(new Scene(box));
+            dialog.show();
+        }
     }
 
     @FXML

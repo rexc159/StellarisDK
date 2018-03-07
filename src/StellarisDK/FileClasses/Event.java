@@ -1,7 +1,6 @@
 package StellarisDK.FileClasses;
 
 import StellarisDK.GUI.EventUI;
-import javafx.scene.control.TreeItem;
 
 public class Event extends GenericData {
 
@@ -16,10 +15,6 @@ public class Event extends GenericData {
         super(input);
         this.type = "country_event";
         ui = new EventUI(this);
-    }
-
-    public TreeItem toTreeItem(){
-        return data.toTreeItem(type);
     }
 
     @Override

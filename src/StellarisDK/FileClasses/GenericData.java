@@ -2,6 +2,7 @@ package StellarisDK.FileClasses;
 
 import StellarisDK.FileClasses.Helper.*;
 import StellarisDK.GUI.AbstractUI;
+import javafx.scene.control.TreeItem;
 
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -120,16 +121,6 @@ public abstract class GenericData {
     }
 
     private ArrayList sLrecursion(String input) {
-//        ArrayList data = new ArrayList(){
-//            @Override
-//            public String toString() {
-//                String out = "{ ";
-//                for (Object item : this) {
-//                    out += item + " ";
-//                }
-//                return out + "}";
-//            }
-//        };
         ArrayList data = new ArrayList() {
             @Override
             public String toString() {
@@ -175,6 +166,10 @@ public abstract class GenericData {
     }
 
     public abstract GenericData createNew();
+
+    public TreeItem toTreeItem(){
+        return data.toTreeItem(type);
+    }
 
     public Object load(String input) {
         int size = 0;
