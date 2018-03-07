@@ -21,7 +21,13 @@ public class DataMap<K, V> extends HashMap<K, V> {
         for (ValueTriplet obj : objs) {
             if (((VPair) obj.getValue()).getValue() instanceof DataMap) {
                 root.getChildren().add(((DataMap) ((VPair) obj.getValue()).getValue()).toTreeItem(obj.getKey().toString()));
-            } else {
+            } else if (((VPair) obj.getValue()).getValue() instanceof ArrayList) {
+                TreeItem group = new TreeItem<>(obj.getKey());
+                for(Object arr : (ArrayList)((VPair) obj.getValue()).getValue()){
+                    group.getChildren().add(new TreeItem<>(arr));
+                }
+                root.getChildren().add(group);
+            }else {
                 root.getChildren().add(new TreeItem<>(obj));
             }
         }

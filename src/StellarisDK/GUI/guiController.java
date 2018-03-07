@@ -58,63 +58,6 @@ public class guiController extends AnchorPane {
             throw new RuntimeException(e);
         }
 
-        itemView.setOnDragDetected(event -> {
-            Node node = event.getPickResult().getIntersectedNode();
-            if (node instanceof LabeledText || node instanceof TreeCell) {
-                TreeItem item;
-                if (node instanceof LabeledText) {
-                    item = ((TreeCell) node.getParent()).getTreeItem();
-                } else {
-                    item = ((TreeCell) node).getTreeItem();
-                }
-                if(item.isLeaf() && item.getParent().getValue().toString().contains(".txt")){
-                    Dragboard db = node.startDragAndDrop(TransferMode.MOVE);
-                    ClipboardContent clipboard = new ClipboardContent();
-                    clipboard.putString(Integer.toString(item.getParent().getChildren().indexOf(item)));
-                    db.setContent(clipboard);
-                }
-            }
-
-            event.consume();
-        });
-
-        itemView.setOnDragOver(event -> {
-
-            if (event.getGestureSource() != event.getPickResult().getIntersectedNode()) {
-                System.out.println("onDragOver");
-                event.acceptTransferModes(TransferMode.MOVE);
-            }
-
-            event.consume();
-        });
-
-        itemView.setOnDragEntered(event -> {
-            if (event.getGestureSource() != event.getPickResult().getIntersectedNode()) {
-                System.out.println("onDragEntered");
-            }
-            event.consume();
-        });
-
-        itemView.setOnDragExited(event -> {
-
-            event.consume();
-        });
-
-        itemView.setOnDragDropped(event -> {
-            System.out.println("dropped");
-            System.out.println("FROM: " + event.getGestureSource());
-            System.out.println("TO: " + event.getPickResult().getIntersectedNode());
-            event.setDropCompleted(true);
-            event.consume();
-        });
-
-        itemView.setOnDragDone(event -> {
-            if (event.getTransferMode() == TransferMode.MOVE) {
-                System.out.println("Done");
-            }
-            event.consume();
-        });
-
         itemView.setEditable(true);
         itemView.setCellFactory(new Callback<TreeView, TreeCell>() {
             @Override
@@ -142,6 +85,79 @@ public class guiController extends AnchorPane {
                     }
                 };
                 ContextMenu contextMenu = createCM(cell);
+                cell.setOnDragDetected(event -> {
+                    TreeItem item = cell.getTreeItem();
+                    if (item.isLeaf() && item.getParent().getValue().toString().contains(".txt")) {
+                        Dragboard db = cell.startDragAndDrop(TransferMode.MOVE);
+                        ClipboardContent clipboard = new ClipboardContent();
+                        clipboard.putString(Integer.toString(item.getParent().getChildren().indexOf(item)));
+                        db.setContent(clipboard);
+                    }
+                    event.consume();
+                });
+
+                cell.setOnDragOver(event -> {
+                    if (event.getGestureSource() != cell) {
+                        TreeItem source;
+                        TreeItem item = cell.getTreeItem();
+                        if (item.getValue().toString().contains(".txt") || item.getParent().getValue().toString().contains(".txt")) {
+                            TreeItem targetParent = item.getParent();
+                            if (event.getGestureSource() instanceof LabeledText) {
+                                source = ((TreeCell) ((Node) event.getGestureSource()).getParent()).getTreeItem();
+                            } else {
+                                source = ((TreeCell) event.getGestureSource()).getTreeItem();
+                            }
+                            TreeItem parent = source.getParent().getParent();
+                            if (targetParent.getValue().equals(parent.getValue()) || targetParent.getParent().getValue().equals(parent.getValue())) {
+                                event.acceptTransferModes(TransferMode.MOVE);
+                            }
+                        }
+                    }
+                    event.consume();
+                });
+
+                cell.setOnDragEntered(event -> {
+                    if (event.getGestureSource() != cell) {
+                        cell.updateSelected(true);
+                    }
+                    event.consume();
+                });
+
+                cell.setOnDragExited(event -> {
+                    cell.updateSelected(false);
+                    event.consume();
+                });
+
+                cell.setOnDragDropped(event -> {
+                    System.out.println("FROM: " + event.getGestureSource());
+                    System.out.println("TO: " + cell);
+                    TreeItem target;
+                    TreeItem source;
+                    if (event.getGestureSource() instanceof LabeledText) {
+                        source = ((TreeCell) ((Node) event.getGestureSource()).getParent()).getTreeItem();
+                    } else {
+                        source = ((TreeCell) event.getGestureSource()).getTreeItem();
+                    }
+                    source.getParent().getChildren().remove(source);
+                    if (cell.getItem().toString().contains(".txt")) {
+                        target = cell.getTreeItem();
+                        target.getChildren().add(source);
+                    } else {
+                        target = cell.getTreeItem();
+                        int index = target.getParent().getChildren().indexOf(target);
+                        target.getParent().getChildren().add(index, source);
+                    }
+                    event.setDropCompleted(true);
+                    event.consume();
+                });
+
+                cell.setOnDragDone(event -> {
+                    if (event.getTransferMode() == TransferMode.MOVE) {
+                        System.out.println("Done");
+                    }
+                    event.consume();
+                });
+
                 cell.setContextMenu(contextMenu);
                 return cell;
             }
@@ -160,9 +176,9 @@ public class guiController extends AnchorPane {
             } else if (cell.getTreeItem().getParent() != null) {
                 if (cell.getTreeItem().getParent().getValue().equals("common")) {
                     cell.getTreeItem().getChildren().add(new TreeItem<>("Test.txt"));
-                }else if (cell.getTreeItem().getValue().equals("events")) {
+                } else if (cell.getTreeItem().getValue().equals("events")) {
                     cell.getTreeItem().getChildren().add(new TreeItem<>("Test.txt"));
-                }else if (cell.getTreeItem().getValue().equals("localisation")) {
+                } else if (cell.getTreeItem().getValue().equals("localisation")) {
                     cell.getTreeItem().getChildren().add(new TreeItem<>("Test.yml"));
                 }
             }
@@ -384,7 +400,7 @@ public class guiController extends AnchorPane {
         itemView.getRoot().getChildren().add(common);
         for (String folder : DataLoc.common) {
             TreeItem<String> temp = new TreeItem<>(folder);
-            if(folder.equals("component_sets"))
+            if (folder.equals("component_sets"))
                 compSet = temp;
             TreeItem<String> subfolder;
             String sF_name;
