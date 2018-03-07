@@ -2,6 +2,7 @@ package StellarisDK.GUI;
 
 import StellarisDK.FileClasses.Event;
 import StellarisDK.FileClasses.Helper.DataCell;
+import StellarisDK.FileClasses.Helper.DataMap;
 import javafx.fxml.FXML;
 import javafx.scene.control.TreeView;
 
@@ -18,7 +19,7 @@ public class EventUI extends AbstractUI {
 
     public EventUI(Event obj) {
         init("FXML/eventFX.fxml");
-        window.setText("Component Editor");
+        window.setText("Event Editor");
         load(obj);
     }
 
@@ -36,6 +37,8 @@ public class EventUI extends AbstractUI {
 
     @Override
     public Object save() {
-        return null;
+        obj.setData((DataMap)obj.load(unparse(treeView.getRoot())));
+        System.out.println(obj.export());
+        return obj;
     }
 }

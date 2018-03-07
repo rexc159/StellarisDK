@@ -5,10 +5,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.TitledPane;
-import javafx.scene.control.TreeView;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
@@ -25,6 +22,9 @@ public abstract class AbstractUI extends Region {
     @FXML
     Button btn_save;
 
+    @FXML
+    TreeView treeView;
+
     TitledPane window = new TitledPane();
 
     TreeView itemView;
@@ -35,7 +35,7 @@ public abstract class AbstractUI extends Region {
         load(obj);
     }
 
-    public void setRoot(AnchorPane root){
+    public void setRoot(AnchorPane root) {
         this.root = root;
     }
 
@@ -100,6 +100,26 @@ public abstract class AbstractUI extends Region {
     public abstract Object save();
 
     public abstract void load(Object object);
+
+
+    public String unparse(TreeItem root) {
+        String tabs = "\r\n";
+        for (int k = 0; k <= treeView.getTreeItemLevel(root); k++) {
+            tabs += "\t";
+        }
+        String out = "{";
+        for (Object item : root.getChildren()) {
+            if (((TreeItem) item).isLeaf()) {
+                if (((TreeItem) item).getValue().toString().contains("#tabs"))
+                    out += ((TreeItem) item).getValue().toString().replaceAll("#tabs", tabs);
+                else
+                    out += tabs + ((TreeItem) item).getValue().toString();
+            } else {
+                out += tabs + ((TreeItem) item).getValue() + " = " + unparse(((TreeItem) item));
+            }
+        }
+        return out + tabs.replaceFirst("\t", "") + "}";
+    }
 
     @Override
     public String toString() {

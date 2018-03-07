@@ -82,10 +82,6 @@ public class DataCell<T> extends TreeCell<T> {
         });
     }
 
-    public DataMap toDataMap() {
-        return null;
-    }
-
     @Override
     public void startEdit() {
         super.startEdit();
@@ -114,7 +110,7 @@ public class DataCell<T> extends TreeCell<T> {
     @Override
     public void cancelEdit() {
         super.cancelEdit();
-        setText(getItem().toString());
+        setText(getItem().toString().replaceAll("#tabs", ""));
         setGraphic(getTreeItem().getGraphic());
     }
 
@@ -127,12 +123,12 @@ public class DataCell<T> extends TreeCell<T> {
         } else {
             if (isEditing()) {
                 if (textField != null) {
-                    textField.setText(getItem().toString());
+                    textField.setText(getItem().toString().replaceAll("#tabs", ""));
                 }
                 setText(null);
                 setGraphic(textField);
             } else {
-                setText(getItem().toString());
+                setText(getItem().toString().replaceAll("#tabs", ""));
                 setGraphic(getTreeItem().getGraphic());
             }
         }

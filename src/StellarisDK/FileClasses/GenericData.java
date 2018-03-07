@@ -93,7 +93,11 @@ public abstract class GenericData {
     public void setValue(String key, Object value, boolean addIfAbsent) {
         if (addIfAbsent && !data.containsKey(key)) {
             PairArrayList temp = new PairArrayList();
-            temp.add(new ValueTriplet<>("=", value, data.size()));
+            if(value instanceof ValueTriplet){
+                temp.add(value);
+            }else{
+                temp.add(new ValueTriplet<>("=", value, data.size()));
+            }
             data.put(key, temp);
         } else {
             ((ValueTriplet) ((PairArrayList) data.get(key)).get(0)).setValue(value);
