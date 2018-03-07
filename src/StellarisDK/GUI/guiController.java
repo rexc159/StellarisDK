@@ -26,6 +26,8 @@ import javafx.util.Callback;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import static StellarisDK.FileClasses.DataParser.parseToConsole;
 
@@ -513,7 +515,14 @@ public class guiController extends AnchorPane {
         DirectoryChooser fc = new DirectoryChooser();
         File main = fc.showDialog(stage);
         if (main != null) {
-            main = new File(main.getPath() + "\\" + ((ModDescriptor) itemView.getRoot().getValue()).getDir());
+            String folder = ((ModDescriptor) itemView.getRoot().getValue()).getDir();
+            main = new File(main.getPath(),folder);
+            if(main.exists()){
+                DateTimeFormatter dTF = DateTimeFormatter.ofPattern("_yyyy-MM-dd_HH-mm-ss");
+                main.renameTo(new File(main.getParent(),folder + dTF.format(LocalDateTime.now())));
+                main = new File(main.getParent(),folder);
+            }
+            main.mkdir();
             saveFiles(main, itemView.getRoot());
         }
 
