@@ -366,11 +366,11 @@ public class guiController extends AnchorPane {
                         e.printStackTrace();
                     }
                 }
-                System.gc();
             }
         } catch (NullPointerException e) {
             System.out.println("[ERROR] IGNORE: Empty/Missing Folder, FROM: " + files.getPath());
         }
+        System.gc();
     }
 
     private void loadEvents(boolean load) {
