@@ -40,7 +40,7 @@ public class ModDescUI extends AbstractUI {
                         if (event.getClickCount() == 2) {
                             Node cell = event.getPickResult().getIntersectedNode();
                             if (cell instanceof ListView || ((ListCell) cell).getItem() == null) {
-                                ((ListView) node).getItems().add(((ListView) node).getItems().size(), new String());
+                                ((ListView) node).getItems().add(((ListView) node).getItems().size());
                             }
                         }
                     });

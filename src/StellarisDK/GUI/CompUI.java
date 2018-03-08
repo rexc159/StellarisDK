@@ -19,7 +19,7 @@ public class CompUI extends AbstractUI {
     TreeView treeView;
 
     public CompUI(Component obj) {
-        init("FXML/treeUI.fxml");
+        init("FXML/default.fxml");
         window.setText("Component Editor");
 //        loadCompSize();
         this.obj = obj;

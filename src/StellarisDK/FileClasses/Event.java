@@ -8,6 +8,7 @@ public class Event extends GenericData {
 
     public Event() {
         super();
+        this.type = "event";
         ui = new EventUI(this);
     }
 

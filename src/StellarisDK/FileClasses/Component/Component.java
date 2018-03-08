@@ -10,11 +10,6 @@ public class Component extends GenericData {
         ui = new CompUI(this);
     }
 
-    public Component(int type) {
-        super();
-        ui = new CompUI(this);
-    }
-
     public Component(String input) {
         super(input);
         ui = new CompUI(this);
@@ -48,7 +43,7 @@ public class Component extends GenericData {
 
     @Override
     public Component createNew() {
-        return new Component(0);
+        return new Component();
     }
 
     public String getGroup() {

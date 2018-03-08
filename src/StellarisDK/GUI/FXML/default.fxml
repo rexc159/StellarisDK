@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.TreeView?>
+<?import javafx.scene.layout.*?>
 <AnchorPane fx:id="main" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Label text="Editor Under Construction :(" />
+      <Label layoutY="4.0" text="Editor Under Construction :(" />
+      <TreeView fx:id="treeView" layoutY="25.0" maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="350.0" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="25.0" />
+      <Button id="btn_save" fx:id="btn_save" layoutX="197.0" layoutY="425.0" mnemonicParsing="false" text="Save" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0" />
    </children>
 </AnchorPane>

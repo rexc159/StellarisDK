@@ -189,9 +189,7 @@ public class guiController extends AnchorPane {
         });
         MenuItem delete = new MenuItem("Delete");
         delete.setOnAction(event -> {
-            if (cell.getTreeItem().getValue() instanceof GenericData) {
-                cell.getTreeItem().getParent().getChildren().remove(cell.getTreeItem());
-            } else if (cell.getTreeItem().getValue().toString().contains(".txt")) {
+            if(cell.getItem().toString().contains(".txt") || cell.getTreeItem().getParent().getValue().toString().contains(".txt")){
                 cell.getTreeItem().getParent().getChildren().remove(cell.getTreeItem());
             }
         });
@@ -226,7 +224,7 @@ public class guiController extends AnchorPane {
             case "component_sets":
                 return new TreeItem<>(new CompSet());
             case "component_templates":
-                return new TreeItem<>(new Component(0));
+                return new TreeItem<>(new Component());
             case "country_types":
             case "defines":
             case "deposits":
@@ -289,7 +287,9 @@ public class guiController extends AnchorPane {
             case "tradition_categories":
             case "traditions":
             case "traits":
+                break;
             case "events":
+                return new TreeItem<>(new Event());
             case "localisation":
         }
         return new TreeItem<>("Not Implemented");
