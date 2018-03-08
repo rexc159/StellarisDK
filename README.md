@@ -1,5 +1,7 @@
-# Stellaris Modding Kit
+# Stellaris Modding Kit (WIP)
 General Purpose Mod Development Tool Kit for Stellaris
+
+#### Latest Version: v0.1.9-alpha
 
 ## Description
 This modding kit, or "Stellaris Development Kit (SDK)" is designed to:
@@ -10,3 +12,8 @@ This modding kit, or "Stellaris Development Kit (SDK)" is designed to:
 ## Current Features
 * Mod Descriptor Editor
 * Component Set Editor
+* Import & Export of all mod files
+    * Near exact I/O (excludes all comments)
+    * Auto backup of loaded files
+* Primitive Tree Style Editor for remaining data
+    * Allows modifying & re-ordering of ***existing data***
