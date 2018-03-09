@@ -12,6 +12,7 @@ This modding kit, or "Stellaris Development Kit (SDK)" is designed to:
 ## Current Features
 * Mod Descriptor Editor
 * Component Set Editor
+* Ambient Object Editor
 * Import & Export of all mod files
     * Near exact I/O (excludes all comments)
     * Auto backup of loaded files

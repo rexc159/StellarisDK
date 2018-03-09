@@ -9,14 +9,4 @@ public class AnomalyCategoryUI extends AbstractUI {
         window.setText("Anomaly Category Editor");
         this.obj = obj;
     }
-
-    @Override
-    public Object save() {
-        return null;
-    }
-
-    @Override
-    public void load() {
-
-    }
 }

@@ -2,6 +2,7 @@ package StellarisDK.FileClasses.Helper;
 
 import com.sun.javafx.scene.control.skin.LabeledText;
 import javafx.scene.Node;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
@@ -81,16 +82,26 @@ public class DataCell<T> extends TreeCell<T> {
             }
             event.consume();
         });
+
+        this.setOnContextMenuRequested(event -> {
+            if (getItem() instanceof ValueTriplet) {
+                System.out.println(getItem());
+            }
+        });
     }
 
     @Override
     public void startEdit() {
         super.startEdit();
         if (textField == null) {
-            textField = new TextField(((VPair) ((ValueTriplet) getItem()).getValue()).getValue().toString());
+            if (getItem() instanceof String) {
+                textField = new TextField(getItem().toString());
+            } else {
+                textField = new TextField(((VPair) ((ValueTriplet) getItem()).getValue()).getValue().toString());
+            }
             textField.setOnKeyReleased(event -> {
                 if (event.getCode() == KeyCode.ENTER) {
-                    commitEdit(textField.getText());
+                    commitEdit((T) textField.getText());
                 } else if (event.getCode() == KeyCode.ESCAPE) {
                     cancelEdit();
                 }
@@ -102,8 +113,12 @@ public class DataCell<T> extends TreeCell<T> {
     }
 
     @Override
-    public void commitEdit(Object newValue) {
-        ((VPair) ((ValueTriplet) getItem()).getValue()).setValue(newValue);
+    public void commitEdit(T newValue) {
+        if (getItem() instanceof String) {
+            super.commitEdit(newValue);
+        } else {
+            ((VPair) ((ValueTriplet) getItem()).getValue()).setValue(newValue);
+        }
         super.commitEdit(getItem());
     }
 
@@ -128,9 +143,20 @@ public class DataCell<T> extends TreeCell<T> {
                 setText(null);
                 setGraphic(textField);
             } else {
-                setText(getItem().toString().replaceAll("#tabs", ""));
+                if (getItem() == null) {
+                    setText("New Item");
+                } else {
+                    setText(getItem().toString().replaceAll("#tabs", ""));
+                }
                 setGraphic(getTreeItem().getGraphic());
             }
         }
+    }
+
+    private void setCM() {
+        ContextMenu contextMenu = new ContextMenu();
+
+
+        setContextMenu(contextMenu);
     }
 }

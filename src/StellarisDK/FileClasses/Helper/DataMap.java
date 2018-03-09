@@ -22,11 +22,7 @@ public class DataMap<K, V> extends HashMap<K, V> {
             if (((VPair) obj.getValue()).getValue() instanceof DataMap) {
                 root.getChildren().add(((DataMap) ((VPair) obj.getValue()).getValue()).toTreeItem(obj.getKey().toString()));
             } else if (((VPair) obj.getValue()).getValue() instanceof PairArrayList) {
-                TreeItem group = new TreeItem<>(obj.getKey());
-                group = ((PairArrayList) ((VPair) obj.getValue()).getValue()).toTreeItem(obj.getKey().toString());
-//                for(Object arr : (ArrayList)((VPair) obj.getValue()).getValue()){
-//                    group.getChildren().add(new TreeItem<>(arr));
-//                }
+                TreeItem group = ((PairArrayList) ((VPair) obj.getValue()).getValue()).toTreeItem(obj.getKey().toString());
                 root.getChildren().add(group);
             }else {
                 root.getChildren().add(new TreeItem<>(obj));

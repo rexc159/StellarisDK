@@ -19,12 +19,14 @@ public class PairArrayList extends ArrayList {
                 }else{
                     root.getChildren().add(new TreeItem<>(obj));
                 }
-            }else{
+            }else if (obj instanceof ValueTriplet){
                 if(((ValueTriplet) obj).getValue() instanceof PairArrayList){
                     root.getChildren().add(((PairArrayList) ((ValueTriplet) obj).getValue()).toTreeItem(((ValueTriplet) obj).getKey().toString()));
                 }else{
                     root.getChildren().add(new TreeItem<>(obj));
                 }
+            }else {
+                root.getChildren().add(new TreeItem<>(obj));
             }
         }
         return root;

@@ -44,11 +44,6 @@ public abstract class AbstractUI extends Region {
         loader.setController(this);
         try {
             loader.load();
-            try {
-                btn_save.setOnAction(event -> save());
-            } catch (NullPointerException e) {
-                System.out.println("[ERROR] FXML Error: Missing Save Button (def: btn_save), Editor under construction?");
-            }
         } catch (Exception e) {
             System.out.println("[ERROR] FXML Missing: " + fxml + ", switching to default.");
             loader = new FXMLLoader(getClass().getResource("FXML/default.fxml"));
@@ -57,6 +52,11 @@ public abstract class AbstractUI extends Region {
                 loader.load();
             } catch (IOException x) {
             }
+        }
+        try {
+            btn_save.setOnAction(event -> save());
+        } catch (NullPointerException e) {
+            System.out.println("[ERROR] FXML Error: Missing Save Button (def: btn_save), Editor under construction?");
         }
         Button close = new Button("\u2715");
         window.setContent(main);
@@ -102,8 +102,10 @@ public abstract class AbstractUI extends Region {
     }
 
     public Object save() {
+        obj.setType(treeView.getRoot().getValue().toString());
         obj.setData((DataMap)obj.load(unparse(treeView.getRoot())));
         System.out.println(obj.export());
+        itemView.refresh();
         return obj;
     }
 

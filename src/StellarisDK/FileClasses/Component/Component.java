@@ -7,6 +7,7 @@ public class Component extends GenericData {
 
     public Component() {
         super();
+        setType(0);
         ui = new CompUI(this);
     }
 

@@ -10,13 +10,6 @@ import java.util.regex.Matcher;
 /**
  * GenericData is the abstract base class for all other data type, as well as the data model of the
  * entire project. Each "Data" class contains an UI element and data stored with a LinkedHashMap.
- * Currently, this is not memory efficient as values within the HashMap are stored as ArrayLists and
- * recursively defined HashMaps regardless of data size, this combined with Java's HashMap implementation
- * led to huge memory overhead.
- * Although such overhead maybe resolved with JSONObjects, such changes will result in delay of release
- * therefore, performance related issues are pushed to after full Alpha release.
- * Alternatively, since all objects are reasonably sized Strings, storing the data as String objects,
- * and parsing it each time maybe an even better solution.
  * @author      Rex
  * @version     %I%, %G%
  * @since       0.0.1
@@ -93,9 +86,9 @@ public abstract class GenericData {
     public void setValue(String key, Object value, boolean addIfAbsent) {
         if (addIfAbsent && !data.containsKey(key)) {
             PairArrayList temp = new PairArrayList();
-            if(value instanceof ValueTriplet){
+            if (value instanceof ValueTriplet) {
                 temp.add(value);
-            }else{
+            } else {
                 temp.add(new ValueTriplet<>("=", value, data.size()));
             }
             data.put(key, temp);
@@ -106,6 +99,10 @@ public abstract class GenericData {
 
     public void setData(DataMap data) {
         this.data = data;
+    }
+
+    public void setType(String type){
+        this.type = type;
     }
 
     public static int getTab() {
@@ -126,7 +123,6 @@ public abstract class GenericData {
 
     private PairArrayList sLrecursion(String input) {
         PairArrayList data = new PairArrayList() {
-
             @Override
             public String toString() {
                 if (size() != 0 && this.get(0) instanceof VPair) {
@@ -176,7 +172,7 @@ public abstract class GenericData {
 
     public abstract GenericData createNew();
 
-    public TreeItem toTreeItem(){
+    public TreeItem toTreeItem() {
         return data.toTreeItem(type);
     }
 
@@ -194,9 +190,9 @@ public abstract class GenericData {
                     ValueTriplet dat;
                     Matcher color = DataPattern.color.matcher(matcher.group(7));
                     if (color.find()) {
-                        try{
+                        try {
                             dat = new ValueTriplet<>(matcher.group(6).trim(), new StellarisColor(color.group(1).trim(), color.group(2).trim(), color.group(3).trim(), color.group(4).trim(), color.group(5).trim()), size++);
-                        }catch (NullPointerException e){
+                        } catch (NullPointerException e) {
                             dat = new ValueTriplet<>(matcher.group(6).trim(), new StellarisColor(color.group(1).trim(), color.group(2).trim(), color.group(3).trim(), color.group(4).trim()), size++);
                         }
                     } else {
@@ -224,9 +220,9 @@ public abstract class GenericData {
                 int order = size++;
                 DataMap secMap;
                 ValueTriplet dat;
-                if(!matcher.group(4).contains("=")){
+                if (!matcher.group(4).contains("=")) {
                     dat = new ValueTriplet<>(matcher.group(2).trim(), sLrecursion(matcher.group(4).trim().replaceAll("[\\t\\n\\r]", " ")), order);
-                }else{
+                } else {
                     secMap = (DataMap) load(matcher.group(4).replaceAll("(?m)^\t", ""));
                     dat = new ValueTriplet<>(matcher.group(2).trim(), secMap, order);
                 }

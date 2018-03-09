@@ -81,17 +81,17 @@ public class guiController extends AnchorPane {
                             ((GenericData) this.getItem()).ui.setRoot(mainWindow);
                             open((GenericData) this.getItem());
                             super.cancelEdit();
-                        }else if (getItem().toString().endsWith(".txt")){
+                        } else if (getItem().toString().endsWith(".txt")) {
                             super.startEdit();
-                            if(txt == null){
+                            if (txt == null) {
                                 txt = new TextField(getItem().toString());
-                                txt.setOnKeyReleased(event ->{
-                                    if(event.getCode() == KeyCode.ENTER){
-                                        if(!txt.getText().trim().endsWith(".txt")){
-                                            txt.setText(txt.getText().trim()+".txt");
+                                txt.setOnKeyReleased(event -> {
+                                    if (event.getCode() == KeyCode.ENTER) {
+                                        if (!txt.getText().trim().endsWith(".txt")) {
+                                            txt.setText(txt.getText().trim() + ".txt");
                                         }
                                         commitEdit(txt.getText());
-                                    }else if (event.getCode() == KeyCode.ESCAPE){
+                                    } else if (event.getCode() == KeyCode.ESCAPE) {
                                         cancelEdit();
                                     }
                                 });
@@ -188,9 +188,9 @@ public class guiController extends AnchorPane {
                     if (target.toString().endsWith(".txt")) {
                         target.getChildren().add(source);
                     } else {
-                        if(index == target.getParent().getChildren().size()){
+                        if (index == target.getParent().getChildren().size()) {
                             target.getParent().getChildren().add(source);
-                        }else {
+                        } else {
                             target.getParent().getChildren().add(index, source);
                         }
                     }
@@ -209,53 +209,53 @@ public class guiController extends AnchorPane {
 
                 return cell;
             }
-        });
-    }
 
-    private void setCM(TreeCell cell) {
-        ContextMenu contextMenu = new ContextMenu();
-        MenuItem createNew = new MenuItem("New..");
-        createNew.setOnAction(event -> {
-            if (cell.getTreeItem().getValue() instanceof GenericData) {
-                TreeItem newCell = new TreeItem<>(((GenericData) cell.getTreeItem().getValue()).createNew());
-                cell.getTreeItem().getParent().getChildren().add(newCell);
-            } else if (cell.getTreeItem().getValue().toString().endsWith(".txt")) {
-                cell.getTreeItem().getChildren().add(createNew(cell.getTreeItem().getParent().getValue().toString()));
-            } else if (cell.getTreeItem().getParent() != null) {
-                if(cell.getItem().equals("events") || cell.getTreeItem().getParent().getValue().toString().equals("common")){
-                    cell.getTreeItem().getChildren().add(new TreeItem<>("New File.txt"));
-                }else if (cell.getTreeItem().getParent().getValue().toString().equals("localisation")){
-                    cell.getTreeItem().getChildren().add(new TreeItem<>("New Locale.yml"));
-                }
+            private void setCM(TreeCell cell) {
+                ContextMenu contextMenu = new ContextMenu();
+                MenuItem createNew = new MenuItem("New..");
+                createNew.setOnAction(event -> {
+                    if (cell.getTreeItem().getValue() instanceof GenericData) {
+                        TreeItem newCell = new TreeItem<>(((GenericData) cell.getTreeItem().getValue()).createNew());
+                        cell.getTreeItem().getParent().getChildren().add(newCell);
+                    } else if (cell.getTreeItem().getValue().toString().endsWith(".txt")) {
+                        cell.getTreeItem().getChildren().add(createNew(cell.getTreeItem().getParent().getValue().toString()));
+                    } else if (cell.getTreeItem().getParent() != null) {
+                        if (cell.getItem().equals("events") || cell.getTreeItem().getParent().getValue().toString().equals("common")) {
+                            cell.getTreeItem().getChildren().add(new TreeItem<>("New File.txt"));
+                        } else if (cell.getTreeItem().getParent().getValue().toString().equals("localisation")) {
+                            cell.getTreeItem().getChildren().add(new TreeItem<>("New Locale.yml"));
+                        }
+                    }
+                });
+                MenuItem edit = new MenuItem("Rename");
+                edit.setOnAction(event -> {
+                    cell.startEdit();
+                });
+                MenuItem delete = new MenuItem("Delete");
+                delete.setOnAction(event -> {
+                    if (cell.getItem().toString().contains(".txt") || cell.getTreeItem().getParent().getValue().toString().contains(".txt")) {
+                        cell.getTreeItem().getParent().getChildren().remove(cell.getTreeItem());
+                    }
+                });
+
+                cell.setOnContextMenuRequested(event -> {
+                    cell.getContextMenu().getItems().clear();
+                    if (cell.getItem() != null && cell.getTreeItem().getParent() != null) {
+                        if (cell.getTreeItem().getParent().getValue().equals("common") || cell.getItem().equals("events")) {
+                            cell.getContextMenu().getItems().add(createNew);
+                        } else if (cell.getItem().toString().endsWith(".txt")) {
+                            cell.getContextMenu().getItems().addAll(createNew, edit, delete);
+                        } else if (cell.getTreeItem().getParent().getValue().toString().endsWith(".txt")) {
+                            cell.getContextMenu().getItems().addAll(createNew, delete);
+                        }
+                    }
+                });
+
+                contextMenu.getItems().addAll(createNew, edit, delete);
+
+                cell.setContextMenu(contextMenu);
             }
         });
-        MenuItem edit = new MenuItem("Rename");
-        edit.setOnAction(event -> {
-            cell.startEdit();
-        });
-        MenuItem delete = new MenuItem("Delete");
-        delete.setOnAction(event -> {
-            if (cell.getItem().toString().contains(".txt") || cell.getTreeItem().getParent().getValue().toString().contains(".txt")) {
-                cell.getTreeItem().getParent().getChildren().remove(cell.getTreeItem());
-            }
-        });
-
-        cell.setOnContextMenuRequested(event -> {
-            cell.getContextMenu().getItems().clear();
-            if(cell.getTreeItem().getParent() != null){
-                if (cell.getTreeItem().getParent().getValue().equals("common") || cell.getItem().equals("events")) {
-                    cell.getContextMenu().getItems().add(createNew);
-                } else if (cell.getItem().toString().endsWith(".txt")) {
-                    cell.getContextMenu().getItems().addAll(createNew, edit, delete);
-                } else if (cell.getTreeItem().getParent().getValue().toString().endsWith(".txt")) {
-                    cell.getContextMenu().getItems().addAll(createNew, delete);
-                }
-            }
-        });
-
-        contextMenu.getItems().addAll(createNew, edit, delete);
-
-        cell.setContextMenu(contextMenu);
     }
 
     private TreeItem createNew(String type) {
@@ -389,7 +389,7 @@ public class guiController extends AnchorPane {
     @FXML
     protected void createNewMD() {
         mainMd = new ModDescriptor();
-        if(modRoot != null){
+        if (modRoot != null) {
             itemView.getRoot().getChildren().remove(modRoot);
         }
         modRoot = new TreeItem<>(mainMd);
@@ -398,7 +398,7 @@ public class guiController extends AnchorPane {
 //        itemView.setRoot(new TreeItem<>(mainMd));
 //        itemView.getRoot().getChildren().add(new TreeItem<>(mainMd));
         itemView.getRoot().setExpanded(true);
-        loadMod("" , modRoot, false);
+        loadMod("", modRoot, false);
         open(mainMd);
     }
 
@@ -410,7 +410,7 @@ public class guiController extends AnchorPane {
         File modPath = fc.showOpenDialog(stage);
         if (modPath != null) {
             mainMd = new ModDescriptor(modPath.getPath());
-            if(modRoot != null){
+            if (modRoot != null) {
                 itemView.getRoot().getChildren().remove(modRoot);
             }
             modRoot = new TreeItem<>(mainMd);
@@ -443,7 +443,7 @@ public class guiController extends AnchorPane {
         }
     }
 
-    private void openWarningBox(String msg){
+    private void openWarningBox(String msg) {
         Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.initOwner(this.stage);
@@ -550,9 +550,9 @@ public class guiController extends AnchorPane {
     }
 
     private void loadMod(String loadPath, TreeItem root, boolean load) {
-        loadCommon(loadPath,root, load);
-        loadEvents(loadPath,root, load);
-        loadLocale(loadPath,root, load);
+        loadCommon(loadPath, root, load);
+        loadEvents(loadPath, root, load);
+        loadLocale(loadPath, root, load);
     }
 
     private void open(GenericData obj) {
@@ -630,13 +630,13 @@ public class guiController extends AnchorPane {
                 saveFiles(main, modRoot);
                 openWarningBox("Saving Complete! Remember to transfer resources from original folder.");
             }
-        }else{
+        } else {
             openWarningBox("No Mod Loaded/No Mod Path Defined!");
         }
     }
 
     @FXML
-    protected void closeMod(){
+    protected void closeMod() {
         itemView.getRoot().getChildren().remove(modRoot);
         modRoot = null;
         System.gc();
