@@ -2,10 +2,7 @@ package StellarisDK.FileClasses.Helper;
 
 import com.sun.javafx.scene.control.skin.LabeledText;
 import javafx.scene.Node;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TreeCell;
-import javafx.scene.control.TreeItem;
+import javafx.scene.control.*;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.KeyCode;
@@ -88,6 +85,8 @@ public class DataCell<T> extends TreeCell<T> {
                 System.out.println(getItem());
             }
         });
+
+        setCM();
     }
 
     @Override
@@ -155,8 +154,20 @@ public class DataCell<T> extends TreeCell<T> {
 
     private void setCM() {
         ContextMenu contextMenu = new ContextMenu();
+        MenuItem createNew = new MenuItem("New..");
+        createNew.setOnAction(event -> {
+            getTreeItem().getChildren().add(new TreeItem("Click to Edit.."));
+        });
+        MenuItem edit = new MenuItem("Rename");
+        edit.setOnAction(event -> startEdit());
 
+        MenuItem delete = new MenuItem("Delete");
+        delete.setOnAction(event -> {
+            if(getTreeItem().getParent() != null)
+                getTreeItem().getParent().getChildren().remove(getTreeItem());
+        });
 
+        contextMenu.getItems().addAll(createNew, edit, delete);
         setContextMenu(contextMenu);
     }
 }
