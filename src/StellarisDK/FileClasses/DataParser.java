@@ -77,34 +77,35 @@ public class DataParser {
             if (objectDat != null) {
                 Matcher obj = pattern.matcher(objectDat);
                 obj.find();
+                String tabby = obj.group(2).replaceAll(" {4}", "\t");
                 GenericData gData;
                 switch (obj.group(1)) {
                     case "country_event":
-                        gData = new Event(obj.group(2));
+                        gData = new Event(tabby);
                         break;
                     case "ambient_object":
-                        gData = new AmbientObject(obj.group(2));
+                        gData = new AmbientObject(tabby);
                         break;
                     case "anomaly":
-                        gData = new Anomaly(obj.group(2));
+                        gData = new Anomaly(tabby);
                         break;
                     case "anomaly_category":
-                        gData = new AnomalyCategory(obj.group(2));
+                        gData = new AnomalyCategory(tabby);
                         break;
                     case "component_set":
-                        gData = new CompSet(obj.group(2));
+                        gData = new CompSet(tabby);
                         break;
                     case "utility_component_template":
-                        gData = new Component(obj.group(2), 0);
+                        gData = new Component(tabby, 0);
                         break;
                     case "weapon_component_template":
-                        gData = new Component(obj.group(2), 1);
+                        gData = new Component(tabby, 1);
                         break;
                     case "strike_craft_component_template":
-                        gData = new Component(obj.group(2), 2);
+                        gData = new Component(tabby, 2);
                         break;
                     default:
-                        gData = new Component(obj.group(2), obj.group(1));
+                        gData = new Component(tabby, obj.group(1));
                 }
                 out.add(new TreeItem<>(gData));
             } else {

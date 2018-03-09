@@ -9,14 +9,4 @@ public class AnomalyUI extends AbstractUI {
         window.setText("Anomaly Editor");
         this.obj = obj;
     }
-
-    @Override
-    public Object save() {
-        return null;
-    }
-
-    @Override
-    public void load() {
-
-    }
 }

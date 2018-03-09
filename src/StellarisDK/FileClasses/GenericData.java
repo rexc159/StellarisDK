@@ -124,8 +124,9 @@ public abstract class GenericData {
         return "\r\n" + type + " = " + data;
     }
 
-    private ArrayList sLrecursion(String input) {
-        ArrayList data = new ArrayList() {
+    private PairArrayList sLrecursion(String input) {
+        PairArrayList data = new PairArrayList() {
+
             @Override
             public String toString() {
                 if (size() != 0 && this.get(0) instanceof VPair) {
@@ -152,16 +153,20 @@ public abstract class GenericData {
         Matcher matcher = DataPattern.sLre.matcher(input);
         while (matcher.find()) {
             if (matcher.group(1) != null) {
-                Matcher color = DataPattern.color.matcher(matcher.group(7));
-                if(color.find()){
-                    data.add(new VPair(matcher.group(1).trim(), new VPair(matcher.group(2).trim(), new StellarisColor(color.group(1).trim(),color.group(2).trim(),color.group(3).trim(),color.group(4).trim()))));
+                Matcher color = DataPattern.color.matcher(matcher.group(3));
+                if (color.find()) {
+                    try {
+                        data.add(new VPair<>(matcher.group(1).trim(), new VPair<>(matcher.group(2).trim(), new StellarisColor(color.group(1).trim(), color.group(2).trim(), color.group(3).trim(), color.group(4).trim(), color.group(5).trim()))));
+                    } catch (NullPointerException e) {
+                        data.add(new VPair<>(matcher.group(1).trim(), new VPair<>(matcher.group(2).trim(), new StellarisColor(color.group(1).trim(), color.group(2).trim(), color.group(3).trim(), color.group(4).trim()))));
+                    }
                 }
             } else if (matcher.group(4) != null) {
-                data.add(new VPair(matcher.group(4).trim(), new VPair(matcher.group(5).trim(), sLrecursion(matcher.group(6)))));
+                data.add(new VPair<>(matcher.group(4).trim(), new VPair<>(matcher.group(5).trim(), sLrecursion(matcher.group(6)))));
             } else if (matcher.group(7) != null) {
-                data.add(new VPair(matcher.group(7).trim(), new VPair(matcher.group(8).trim(), matcher.group(9).trim())));
+                data.add(new VPair<>(matcher.group(7).trim(), new VPair<>(matcher.group(8).trim(), matcher.group(9).trim())));
             } else if (matcher.group(10) != null) {
-                data.add(new VPair(matcher.group(10).trim(), new VPair(matcher.group(11).trim(), matcher.group(12).trim())));
+                data.add(new VPair<>(matcher.group(10).trim(), new VPair<>(matcher.group(11).trim(), matcher.group(12).trim())));
             } else if (matcher.group(13) != null) {
                 data.add(matcher.group(13).trim());
             }
@@ -189,9 +194,13 @@ public abstract class GenericData {
                     ValueTriplet dat;
                     Matcher color = DataPattern.color.matcher(matcher.group(7));
                     if (color.find()) {
-                        dat = new ValueTriplet<>(matcher.group(6).trim(), new StellarisColor(color.group(1).trim(), color.group(2).trim(), color.group(3).trim(), color.group(4).trim()), size++);
+                        try{
+                            dat = new ValueTriplet<>(matcher.group(6).trim(), new StellarisColor(color.group(1).trim(), color.group(2).trim(), color.group(3).trim(), color.group(4).trim(), color.group(5).trim()), size++);
+                        }catch (NullPointerException e){
+                            dat = new ValueTriplet<>(matcher.group(6).trim(), new StellarisColor(color.group(1).trim(), color.group(2).trim(), color.group(3).trim(), color.group(4).trim()), size++);
+                        }
                     } else {
-                        dat = new ValueTriplet<>(matcher.group(6).trim(), sLrecursion(matcher.group(7)), size++);
+                        dat = new ValueTriplet<>(matcher.group(6).trim(), sLrecursion(matcher.group(7).trim()), size++);
                     }
                     if (data.containsKey(matcher.group(5))) {
                         data.get(matcher.group(5).trim()).add(dat);

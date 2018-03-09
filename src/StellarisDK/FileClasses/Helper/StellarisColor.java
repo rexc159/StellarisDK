@@ -6,12 +6,14 @@ public class StellarisColor {
     private double red;
     private double green;
     private double blue;
+    private double alpha = -1;
 
     public StellarisColor(){
         type = "hsv";
         red = 0;
         green = 0;
         blue = 0;
+        alpha = 1.0;
     }
 
     public StellarisColor(String type, double red, double green, double blue) {
@@ -26,6 +28,23 @@ public class StellarisColor {
         this.red = Double.parseDouble(red);
         this.green = Double.parseDouble(green);
         this.blue = Double.parseDouble(blue);
+    }
+
+
+    public StellarisColor(String type, double red, double green, double blue, double alpha) {
+        this.type = type;
+        this.red = red;
+        this.green = green;
+        this.blue = blue;
+        this.alpha = alpha;
+    }
+
+    public StellarisColor(String type, String red, String green, String blue, String alpha) {
+        this.type = type;
+        this.red = Double.parseDouble(red);
+        this.green = Double.parseDouble(green);
+        this.blue = Double.parseDouble(blue);
+        this.alpha = Double.parseDouble(alpha);
     }
 
     public String getType() {
@@ -60,8 +79,20 @@ public class StellarisColor {
         this.blue = blue;
     }
 
+    public double getAlpha() {
+        return alpha;
+    }
+
+    public void setAlpha(double alpha) {
+        this.alpha = alpha;
+    }
+
     @Override
     public String toString(){
-        return type+" { "+red+ " "+ green + " " + blue + " }";
+        if(alpha == -1){
+            return type+" { "+red+ " "+ green + " " + blue + " }";
+        }else{
+            return type+" { "+red+ " "+ green + " " + blue + " " + alpha + " }";
+        }
     }
 }

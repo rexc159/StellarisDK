@@ -21,9 +21,9 @@ public class DataPattern {
     // Group 7-9:   Standard key value pair
     // Group 10-12: String literal pair
     // Group 13:    Special match for tags
-    public static final Pattern sLre = Pattern.compile("([\\w:]+)(\\s*[=><]+\\s*)(hsv\\s*\\{.+?\\})|([\\w:]+)(\\s*[=><]+\\s*)\\{(.+?\\})|([\\w:]+)(\\s*[=><]+\\s*)([^\"]+?)\\s|([\\w:]+)(\\s*[=><]+\\s*)(.+?\")\\s*|([\\w\"]+)");
+    public static final Pattern sLre = Pattern.compile("([\\w:]+)(\\s*[=><]+\\s*)((?:hsv|rgb)\\s*\\{.+?\\})|([\\w:]+)(\\s*[=><]+\\s*)\\{(.+?\\})|([\\w:]+)(\\s*[=><]+\\s*)([^\"]+?)\\s|([\\w:]+)(\\s*[=><]+\\s*)(.+?\")\\s*|([\\w\"]+)");
 
-    public static final Pattern color = Pattern.compile("(hsv|rgb)\\s*\\{\\s*([\\d.]+)\\s*([\\d.]+)\\s*([\\d.]+)\\s*\\}\\s?");
+    public static final Pattern color = Pattern.compile("^(hsv|rgb)\\s*\\{\\s*([\\d.]+)\\s*([\\d.]+)\\s*([\\d.]+)\\s*([\\d.]+)?\\s*\\}\\s?");
 
     // Pattern matches for main data structure
     // Group 1-4:   Multi line recursion

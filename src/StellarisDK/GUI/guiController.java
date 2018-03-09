@@ -606,6 +606,7 @@ public class guiController extends AnchorPane {
     protected void closeMod(){
         mainMd = null;
         itemView.setRoot(null);
+        System.gc();
     }
 
     @FXML

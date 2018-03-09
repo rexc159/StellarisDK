@@ -16,6 +16,7 @@ public class DataCell<T> extends TreeCell<T> {
 
     public DataCell() {
         super();
+
         this.setOnDragDetected(event -> {
             TreeItem item = this.getTreeItem();
             Dragboard db = this.startDragAndDrop(TransferMode.MOVE);
@@ -98,7 +99,6 @@ public class DataCell<T> extends TreeCell<T> {
         setText(null);
         setGraphic(textField);
         textField.selectAll();
-        System.out.println(getItem().getClass());
     }
 
     @Override

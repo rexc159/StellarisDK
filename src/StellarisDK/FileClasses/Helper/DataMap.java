@@ -21,11 +21,12 @@ public class DataMap<K, V> extends HashMap<K, V> {
         for (ValueTriplet obj : objs) {
             if (((VPair) obj.getValue()).getValue() instanceof DataMap) {
                 root.getChildren().add(((DataMap) ((VPair) obj.getValue()).getValue()).toTreeItem(obj.getKey().toString()));
-            } else if (((VPair) obj.getValue()).getValue() instanceof ArrayList) {
+            } else if (((VPair) obj.getValue()).getValue() instanceof PairArrayList) {
                 TreeItem group = new TreeItem<>(obj.getKey());
-                for(Object arr : (ArrayList)((VPair) obj.getValue()).getValue()){
-                    group.getChildren().add(new TreeItem<>(arr));
-                }
+                group = ((PairArrayList) ((VPair) obj.getValue()).getValue()).toTreeItem(obj.getKey().toString());
+//                for(Object arr : (ArrayList)((VPair) obj.getValue()).getValue()){
+//                    group.getChildren().add(new TreeItem<>(arr));
+//                }
                 root.getChildren().add(group);
             }else {
                 root.getChildren().add(new TreeItem<>(obj));
@@ -39,8 +40,9 @@ public class DataMap<K, V> extends HashMap<K, V> {
         for (Object key : keySet()) {
             for (Object data : ((ArrayList) get(key))) {
                 try {
-                    if (((ValueTriplet) data).getValue() != null)
+                    if (((ValueTriplet) data).getValue() != null){
                         objs[((ValueTriplet) data).getOrder()] = new ValueTriplet<>(key, ((ValueTriplet) data).toPair(), ((ValueTriplet) data).getOrder());
+                    }
                 } catch (ArrayIndexOutOfBoundsException e) {
                     System.out.println("[ERROR] StackOverFlow, FROM: DataMap");
                     System.out.println("[ERROR] CAUSE: Tried " + key + " Value: " + ((ValueTriplet) data).getKey());
