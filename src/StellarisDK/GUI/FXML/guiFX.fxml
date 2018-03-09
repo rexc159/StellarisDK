@@ -16,26 +16,25 @@
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#createNewMD" text="New Mod" />
                         <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="false" onAction="#openFile" text="Open File" />
-                        <MenuItem mnemonicParsing="false" onAction="#openLocale" text="Open Locale" />
+                        <MenuItem mnemonicParsing="false" onAction="#openFile" text="Open File (Debug Option)" />
+                        <MenuItem mnemonicParsing="false" onAction="#openLocale" text="Open Locale (Debug Option)" />
                         <MenuItem mnemonicParsing="false" onAction="#openMod" text="Open Mod" />
                         <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="false" onAction="#saveAll" text="Save All" />
-                        <MenuItem mnemonicParsing="false" onAction="#export" text="Export..." />
-                        <MenuItem mnemonicParsing="false" text="Close" />
+                        <MenuItem mnemonicParsing="false" onAction="#saveAll" text="Export Mod" />
+                        <MenuItem mnemonicParsing="false" onAction="#closeMod" text="Close Mod" />
                         <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="false" text="Settings" />
+                        <MenuItem mnemonicParsing="false" text="Settings (Not Implemented)" />
                         <MenuItem mnemonicParsing="false" onAction="#exit" text="Quit" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Edit">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="Delete" />
+                        <MenuItem mnemonicParsing="false" text="Not Implemented" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Help">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="About" />
+                        <MenuItem mnemonicParsing="false" text="Not Implemented" />
                     </items>
                 </Menu>
             <Menu mnemonicParsing="false" text="Debug Options">

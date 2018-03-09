@@ -13,6 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
@@ -65,15 +66,42 @@ public class guiController extends AnchorPane {
             @Override
             public TreeCell call(TreeView param) {
                 TreeCell<Object> cell = new TreeCell<Object>() {
+                    private TextField txt;
+
                     @Override
                     public void startEdit() {
-                        if (this.getTreeItem().getValue() instanceof GenericData) {
+                        if (getItem() instanceof GenericData) {
                             System.out.println("Starting Editor");
                             super.startEdit();
                             ((GenericData) this.getItem()).ui.setRoot(mainWindow);
                             open((GenericData) this.getItem());
                             super.cancelEdit();
+                        }else if (getItem().toString().endsWith(".txt")){
+                            super.startEdit();
+                            if(txt == null){
+                                txt = new TextField(getItem().toString());
+                                txt.setOnKeyReleased(event ->{
+                                    if(event.getCode() == KeyCode.ENTER){
+                                        if(!txt.getText().trim().endsWith(".txt")){
+                                            txt.setText(txt.getText().trim()+".txt");
+                                        }
+                                        commitEdit(txt.getText());
+                                    }else if (event.getCode() == KeyCode.ESCAPE){
+                                        cancelEdit();
+                                    }
+                                });
+                            }
+                            setText(null);
+                            setGraphic(txt);
+                            txt.selectAll();
                         }
+                    }
+
+                    @Override
+                    public void cancelEdit() {
+                        super.cancelEdit();
+                        setText(getItem().toString());
+                        setGraphic(null);
                     }
 
                     @Override
@@ -81,15 +109,25 @@ public class guiController extends AnchorPane {
                         super.updateItem(item, empty);
                         if (empty) {
                             setText(null);
+                            setGraphic(null);
                         } else {
-                            setText(item.toString());
+                            if (isEditing()) {
+                                if (txt != null) {
+                                    txt.setText(getItem().toString());
+                                }
+                                setText(null);
+                                setGraphic(txt);
+                            } else {
+                                setText(getItem().toString());
+                                setGraphic(null);
+                            }
                         }
                     }
                 };
-                ContextMenu contextMenu = createCM(cell);
+
                 cell.setOnDragDetected(event -> {
                     TreeItem item = cell.getTreeItem();
-                    if (item.isLeaf() && item.getParent().getValue().toString().contains(".txt")) {
+                    if (item.isLeaf() && item.getParent().getValue().toString().endsWith(".txt")) {
                         Dragboard db = cell.startDragAndDrop(TransferMode.MOVE);
                         ClipboardContent clipboard = new ClipboardContent();
                         clipboard.putString(Integer.toString(item.getParent().getChildren().indexOf(item)));
@@ -102,7 +140,7 @@ public class guiController extends AnchorPane {
                     if (event.getGestureSource() != cell) {
                         TreeItem source;
                         TreeItem item = cell.getTreeItem();
-                        if (item.getValue().toString().contains(".txt") || item.getParent().getValue().toString().contains(".txt")) {
+                        if (item.getValue().toString().endsWith(".txt") || item.getParent().getValue().toString().endsWith(".txt")) {
                             TreeItem targetParent = item.getParent();
                             if (event.getGestureSource() instanceof LabeledText) {
                                 source = ((TreeCell) ((Node) event.getGestureSource()).getParent()).getTreeItem();
@@ -142,7 +180,7 @@ public class guiController extends AnchorPane {
                     }
                     int index = target.getParent().getChildren().indexOf(target);
                     source.getParent().getChildren().remove(source);
-                    if (target.toString().contains(".txt")) {
+                    if (target.toString().endsWith(".txt")) {
                         target.getChildren().add(source);
                     } else {
                         if(index == target.getParent().getChildren().size()){
@@ -162,39 +200,57 @@ public class guiController extends AnchorPane {
                     event.consume();
                 });
 
-                cell.setContextMenu(contextMenu);
+                setCM(cell);
+
                 return cell;
             }
         });
     }
 
-    private ContextMenu createCM(TreeCell cell) {
+    private void setCM(TreeCell cell) {
         ContextMenu contextMenu = new ContextMenu();
         MenuItem createNew = new MenuItem("New..");
         createNew.setOnAction(event -> {
             if (cell.getTreeItem().getValue() instanceof GenericData) {
                 TreeItem newCell = new TreeItem<>(((GenericData) cell.getTreeItem().getValue()).createNew());
                 cell.getTreeItem().getParent().getChildren().add(newCell);
-            } else if (cell.getTreeItem().getValue().toString().contains(".txt")) {
+            } else if (cell.getTreeItem().getValue().toString().endsWith(".txt")) {
                 cell.getTreeItem().getChildren().add(createNew(cell.getTreeItem().getParent().getValue().toString()));
             } else if (cell.getTreeItem().getParent() != null) {
-                if (cell.getTreeItem().getParent().getValue().equals("common")) {
-                    cell.getTreeItem().getChildren().add(new TreeItem<>("Test.txt"));
-                } else if (cell.getTreeItem().getValue().equals("events")) {
-                    cell.getTreeItem().getChildren().add(new TreeItem<>("Test.txt"));
-                } else if (cell.getTreeItem().getValue().equals("localisation")) {
-                    cell.getTreeItem().getChildren().add(new TreeItem<>("Test.yml"));
+                if(cell.getItem().equals("events") || cell.getTreeItem().getParent().getValue().toString().equals("common")){
+                    cell.getTreeItem().getChildren().add(new TreeItem<>("New File.txt"));
+                }else if (cell.getTreeItem().getParent().getValue().toString().equals("localisation")){
+                    cell.getTreeItem().getChildren().add(new TreeItem<>("New Locale.yml"));
                 }
             }
         });
+        MenuItem edit = new MenuItem("Rename");
+        edit.setOnAction(event -> {
+            cell.startEdit();
+        });
         MenuItem delete = new MenuItem("Delete");
         delete.setOnAction(event -> {
-            if(cell.getItem().toString().contains(".txt") || cell.getTreeItem().getParent().getValue().toString().contains(".txt")){
+            if (cell.getItem().toString().contains(".txt") || cell.getTreeItem().getParent().getValue().toString().contains(".txt")) {
                 cell.getTreeItem().getParent().getChildren().remove(cell.getTreeItem());
             }
         });
-        contextMenu.getItems().addAll(createNew, delete);
-        return contextMenu;
+
+        cell.setOnContextMenuRequested(event -> {
+            cell.getContextMenu().getItems().clear();
+            if(cell.getTreeItem().getParent() != null){
+                if (cell.getTreeItem().getParent().getValue().equals("common") || cell.getItem().equals("events")) {
+                    cell.getContextMenu().getItems().add(createNew);
+                } else if (cell.getItem().toString().endsWith(".txt")) {
+                    cell.getContextMenu().getItems().addAll(createNew, edit, delete);
+                } else if (cell.getTreeItem().getParent().getValue().toString().endsWith(".txt")) {
+                    cell.getContextMenu().getItems().addAll(createNew, delete);
+                }
+            }
+        });
+
+        contextMenu.getItems().addAll(createNew, edit, delete);
+
+        cell.setContextMenu(contextMenu);
     }
 
     private TreeItem createNew(String type) {
@@ -512,44 +568,44 @@ public class guiController extends AnchorPane {
 
     @FXML
     protected void saveAll() {
-        DirectoryChooser fc = new DirectoryChooser();
-        File main = fc.showDialog(stage);
-        if (main != null) {
-            String folder = ((ModDescriptor) itemView.getRoot().getValue()).getDir();
-            main = new File(main.getPath(),folder);
-            if(main.exists()){
-                DateTimeFormatter dTF = DateTimeFormatter.ofPattern("_yyyy-MM-dd_HH-mm-ss");
-                main.renameTo(new File(main.getParent(),folder + dTF.format(LocalDateTime.now())));
-                main = new File(main.getParent(),folder);
-            }
-            main.mkdir();
-            saveFiles(main, itemView.getRoot());
+        if (mainMd != null && mainMd.getValue("path") != null) {
+            DirectoryChooser fc = new DirectoryChooser();
+            File main = fc.showDialog(stage);
+            if (main != null) {
+                String folder = ((ModDescriptor) itemView.getRoot().getValue()).getDir();
+                main = new File(main.getPath(), folder);
+                if (main.exists()) {
+                    DateTimeFormatter dTF = DateTimeFormatter.ofPattern("_yyyy-MM-dd_HH-mm-ss");
+                    main.renameTo(new File(main.getParent(), folder + dTF.format(LocalDateTime.now())));
+                    main = new File(main.getParent(), folder);
+                }
+                main.mkdir();
+                saveFiles(main, itemView.getRoot());
 
-            // Temp Code
+                // Temp Code
+                Stage dialog = new Stage();
+                dialog.initModality(Modality.APPLICATION_MODAL);
+                dialog.initOwner(this.stage);
+                HBox box = new HBox();
+                box.getChildren().add(new Text("Saving Complete"));
+                dialog.setScene(new Scene(box));
+                dialog.show();
+            }
+        }else{
             Stage dialog = new Stage();
             dialog.initModality(Modality.APPLICATION_MODAL);
             dialog.initOwner(this.stage);
             HBox box = new HBox();
-            box.getChildren().add(new Text("Saving Complete"));
+            box.getChildren().add(new Text("No Mod Loaded/No Mod Path Defined!"));
             dialog.setScene(new Scene(box));
             dialog.show();
         }
     }
 
     @FXML
-    protected void export() {
-        FileChooser fc = new FileChooser();
-        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Mod Descriptors (*.mod)", "*.mod"));
-        File mod = fc.showSaveDialog(stage);
-        if (mod != null) {
-            try {
-                FileWriter fw = new FileWriter(mod);
-                fw.write(mainMd.export());
-                fw.close();
-            } catch (IOException e) {
-                System.out.println("Export Failed.");
-            }
-        }
+    protected void closeMod(){
+        mainMd = null;
+        itemView.setRoot(null);
     }
 
     @FXML
