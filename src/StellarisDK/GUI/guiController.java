@@ -44,6 +44,9 @@ public class guiController extends AnchorPane {
 
     private GenericData test;
 
+    private TreeItem modRoot;
+    private TreeItem vanillaRoot = new TreeItem<>("Stellaris");
+
     @FXML
     private TreeView itemView;
 
@@ -61,6 +64,8 @@ public class guiController extends AnchorPane {
             throw new RuntimeException(e);
         }
 
+        itemView.setRoot(new TreeItem<>("root"));
+        itemView.setShowRoot(false);
         itemView.setEditable(true);
         itemView.setCellFactory(new Callback<TreeView, TreeCell>() {
             @Override
@@ -384,10 +389,16 @@ public class guiController extends AnchorPane {
     @FXML
     protected void createNewMD() {
         mainMd = new ModDescriptor();
-        itemView.setRoot(new TreeItem<>(mainMd));
-        itemView.getRoot().getChildren().add(new TreeItem<>(mainMd));
+        if(modRoot != null){
+            itemView.getRoot().getChildren().remove(modRoot);
+        }
+        modRoot = new TreeItem<>(mainMd);
+        itemView.getRoot().getChildren().add(modRoot);
+        modRoot.getChildren().add(new TreeItem<>(mainMd));
+//        itemView.setRoot(new TreeItem<>(mainMd));
+//        itemView.getRoot().getChildren().add(new TreeItem<>(mainMd));
         itemView.getRoot().setExpanded(true);
-        loadMod(false);
+        loadMod("" , modRoot, false);
         open(mainMd);
     }
 
@@ -399,14 +410,47 @@ public class guiController extends AnchorPane {
         File modPath = fc.showOpenDialog(stage);
         if (modPath != null) {
             mainMd = new ModDescriptor(modPath.getPath());
-            itemView.setRoot(new TreeItem<>(mainMd));
-            itemView.getRoot().getChildren().add(new TreeItem(mainMd));
+            if(modRoot != null){
+                itemView.getRoot().getChildren().remove(modRoot);
+            }
+            modRoot = new TreeItem<>(mainMd);
+            itemView.getRoot().getChildren().add(modRoot);
+            modRoot.getChildren().add(new TreeItem<>(mainMd));
+//            itemView.setRoot(new TreeItem<>(mainMd));
+//            itemView.getRoot().getChildren().add(new TreeItem(mainMd));
             itemView.getRoot().setExpanded(true);
             if (mainMd.getValue("path") != null) {
                 mainLoadPath = modPath.getParentFile().getParent() + "\\" + (mainMd.getValue("path").toString().replaceAll("/", "\\\\"));
-                loadMod(true);
+                loadMod(mainLoadPath, modRoot, true);
             }
         }
+    }
+
+    @FXML
+    protected void loadVanilla() {
+        DirectoryChooser fc = new DirectoryChooser();
+        File main = fc.showDialog(stage);
+        if (main != null) {
+            if (main.getPath().endsWith("Stellaris")) {
+                if (!itemView.getRoot().getChildren().contains(vanillaRoot))
+                    itemView.getRoot().getChildren().add(0, vanillaRoot);
+                loadCommon(main.getPath(), vanillaRoot, true);
+                loadEvents(main.getPath(), vanillaRoot, true);
+                loadLocale(main.getPath(), vanillaRoot, true);
+            } else {
+                openWarningBox("Please select Stellaris main folder.");
+            }
+        }
+    }
+
+    private void openWarningBox(String msg){
+        Stage dialog = new Stage();
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.initOwner(this.stage);
+        HBox box = new HBox();
+        box.getChildren().add(new Text(msg));
+        dialog.setScene(new Scene(box));
+        dialog.show();
     }
 
     private void loadFiles(File files, TreeItem item) {
@@ -429,19 +473,21 @@ public class guiController extends AnchorPane {
         System.gc();
     }
 
-    private void loadEvents(boolean load) {
+    private void loadEvents(String loadPath, TreeItem root, boolean load) {
         TreeItem<String> event = new TreeItem<>("events");
-        itemView.getRoot().getChildren().add(event);
+        root.getChildren().add(event);
+//        itemView.getRoot().getChildren().add(event);
         if (load)
-            loadFiles(new File(mainLoadPath + "\\events"), event);
+            loadFiles(new File(loadPath + "\\events"), event);
     }
 
-    private void loadLocale(boolean load) {
+    private void loadLocale(String loadPath, TreeItem root, boolean load) {
         TreeItem<String> locale = new TreeItem<>("localisation");
-        itemView.getRoot().getChildren().add(locale);
+        root.getChildren().add(locale);
+//        itemView.getRoot().getChildren().add(locale);
         if (load) {
             try {
-                for (File file : new File(mainLoadPath + "\\localisation").listFiles()) {
+                for (File file : new File(loadPath + "\\localisation").listFiles()) {
                     TreeItem<String> temp = new TreeItem<>(file.getName());
                     locale.getChildren().add(temp);
                     try {
@@ -455,9 +501,10 @@ public class guiController extends AnchorPane {
         }
     }
 
-    private void loadCommon(boolean load) {
+    private void loadCommon(String loadPath, TreeItem root, boolean load) {
         TreeItem<String> common = new TreeItem<>("common");
-        itemView.getRoot().getChildren().add(common);
+        root.getChildren().add(common);
+//        itemView.getRoot().getChildren().add(common);
         for (String folder : DataLoc.common) {
             TreeItem<String> temp = new TreeItem<>(folder);
             if (folder.equals("component_sets"))
@@ -469,43 +516,43 @@ public class guiController extends AnchorPane {
                     sF_name = "authorities";
                     subfolder = new TreeItem<>(sF_name);
                     temp.getChildren().add(subfolder);
-                    loadFiles(new File(mainLoadPath + "\\common\\" + folder + "\\" + sF_name), subfolder);
+                    loadFiles(new File(loadPath + "\\common\\" + folder + "\\" + sF_name), subfolder);
 
                     sF_name = "civics";
                     subfolder = new TreeItem<>(sF_name);
                     temp.getChildren().add(subfolder);
-                    loadFiles(new File(mainLoadPath + "\\common\\" + folder + "\\" + sF_name), subfolder);
+                    loadFiles(new File(loadPath + "\\common\\" + folder + "\\" + sF_name), subfolder);
                     break;
 
                 case "random_names":
                     sF_name = "base";
                     subfolder = new TreeItem<>(sF_name);
                     temp.getChildren().add(subfolder);
-                    loadFiles(new File(mainLoadPath + "\\common\\" + folder + "\\" + sF_name), subfolder);
+                    loadFiles(new File(loadPath + "\\common\\" + folder + "\\" + sF_name), subfolder);
                     break;
 
                 case "technology":
                     sF_name = "category";
                     subfolder = new TreeItem<>(sF_name);
                     temp.getChildren().add(subfolder);
-                    loadFiles(new File(mainLoadPath + "\\common\\" + folder + "\\" + sF_name), subfolder);
+                    loadFiles(new File(loadPath + "\\common\\" + folder + "\\" + sF_name), subfolder);
 
                     sF_name = "tier";
                     subfolder = new TreeItem<>(sF_name);
                     temp.getChildren().add(subfolder);
-                    loadFiles(new File(mainLoadPath + "\\common\\" + folder + "\\" + sF_name), subfolder);
+                    loadFiles(new File(loadPath + "\\common\\" + folder + "\\" + sF_name), subfolder);
                     break;
             }
             common.getChildren().add(temp);
             if (load)
-                loadFiles(new File(mainLoadPath + "\\common\\" + folder), temp);
+                loadFiles(new File(loadPath + "\\common\\" + folder), temp);
         }
     }
 
-    private void loadMod(boolean load) {
-        loadCommon(load);
-        loadEvents(load);
-        loadLocale(load);
+    private void loadMod(String loadPath, TreeItem root, boolean load) {
+        loadCommon(loadPath,root, load);
+        loadEvents(loadPath,root, load);
+        loadLocale(loadPath,root, load);
     }
 
     private void open(GenericData obj) {
@@ -548,7 +595,7 @@ public class guiController extends AnchorPane {
             File out = new File(saveLoc.getPath());
             try {
                 if (out.isDirectory()) {
-                    FileWriter fw = new FileWriter(new File(out.getParent() + "\\" + itemView.getRoot().getValue() + ".mod"));
+                    FileWriter fw = new FileWriter(new File(out.getParent() + "\\" + modRoot.getValue() + ".mod"));
                     fw.write(mainMd.export());
                     fw.close();
                 } else {
@@ -572,7 +619,7 @@ public class guiController extends AnchorPane {
             DirectoryChooser fc = new DirectoryChooser();
             File main = fc.showDialog(stage);
             if (main != null) {
-                String folder = ((ModDescriptor) itemView.getRoot().getValue()).getDir();
+                String folder = mainMd.getDir();
                 main = new File(main.getPath(), folder);
                 if (main.exists()) {
                     DateTimeFormatter dTF = DateTimeFormatter.ofPattern("_yyyy-MM-dd_HH-mm-ss");
@@ -580,32 +627,18 @@ public class guiController extends AnchorPane {
                     main = new File(main.getParent(), folder);
                 }
                 main.mkdir();
-                saveFiles(main, itemView.getRoot());
-
-                // Temp Code
-                Stage dialog = new Stage();
-                dialog.initModality(Modality.APPLICATION_MODAL);
-                dialog.initOwner(this.stage);
-                HBox box = new HBox();
-                box.getChildren().add(new Text("Saving Complete"));
-                dialog.setScene(new Scene(box));
-                dialog.show();
+                saveFiles(main, modRoot);
+                openWarningBox("Saving Complete! Remember to transfer resources from original folder.");
             }
         }else{
-            Stage dialog = new Stage();
-            dialog.initModality(Modality.APPLICATION_MODAL);
-            dialog.initOwner(this.stage);
-            HBox box = new HBox();
-            box.getChildren().add(new Text("No Mod Loaded/No Mod Path Defined!"));
-            dialog.setScene(new Scene(box));
-            dialog.show();
+            openWarningBox("No Mod Loaded/No Mod Path Defined!");
         }
     }
 
     @FXML
     protected void closeMod(){
-        mainMd = null;
-        itemView.setRoot(null);
+        itemView.getRoot().getChildren().remove(modRoot);
+        modRoot = null;
         System.gc();
     }
 
