@@ -17,4 +17,11 @@ This modding kit, or "Stellaris Development Kit (SDK)" is designed to:
     * Near exact I/O (excludes all comments)
     * Auto backup of loaded files
 * Primitive Tree Style Editor for remaining data
-    * Allows modifying & re-ordering of ***existing data***
+    * Allows modifying & re-ordering of entries
+
+## Planned Features
+* Load multiple mods
+* Tree Editor
+    * Allow autocomplete
+    * Reference to other existing items
+* Flowchart style editor for Events
