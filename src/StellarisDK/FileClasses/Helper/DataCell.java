@@ -11,6 +11,7 @@ import javafx.scene.input.TransferMode;
 public class DataCell<T> extends TreeCell<T> {
 
     private TextField textField;
+    private static TreeItem cellContent;
 
     public DataCell() {
         super();
@@ -143,6 +144,14 @@ public class DataCell<T> extends TreeCell<T> {
         }
     }
 
+    private TreeItem<T> clone(TreeItem<T> items){
+        TreeItem<T> copy = new TreeItem<>(items.getValue());
+        for(Object item : items.getChildren()){
+            copy.getChildren().add(clone((TreeItem<T>)item));
+        }
+        return copy;
+    }
+
     private void setCM() {
         ContextMenu contextMenu = new ContextMenu();
         MenuItem createNew = new MenuItem("New..");
@@ -158,7 +167,38 @@ public class DataCell<T> extends TreeCell<T> {
                 getTreeItem().getParent().getChildren().remove(getTreeItem());
         });
 
-        contextMenu.getItems().addAll(createNew, edit, delete);
+
+        MenuItem cut = new MenuItem("Cut");
+        cut.setOnAction(event -> {
+            cellContent = getTreeItem();
+            getTreeItem().getParent().getChildren().remove(getTreeItem());
+        });
+
+        MenuItem copy = new MenuItem("Copy");
+        copy.setOnAction(event -> {
+            cellContent = getTreeItem();
+        });
+
+        MenuItem paste = new MenuItem("Paste");
+        paste.setOnAction(event -> {
+            if(getTreeItem().getParent() != null)
+                getTreeItem().getParent().getChildren().add(clone(cellContent));
+            else
+                getTreeItem().getChildren().add(clone(cellContent));
+        });
+
+        contextMenu.getItems().addAll(createNew, edit, cut, copy, paste, delete);
         setContextMenu(contextMenu);
+
+        setOnContextMenuRequested(event ->{
+            if(this.getTreeItem().getParent() == null){
+                contextMenu.getItems().removeAll(cut, copy, delete);
+            }
+            if(cellContent == null){
+                paste.setDisable(true);
+            }else{
+                paste.setDisable(false);
+            }
+        });
     }
 }

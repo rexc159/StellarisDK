@@ -109,6 +109,13 @@ public abstract class GenericData {
         return data.getFullSize();
     }
 
+    public Object clone() {
+        GenericData copy = createNew();
+        copy.setType(type);
+        copy.setData(data);
+        return copy;
+    }
+
     public abstract TreeItem getRequiredTreeSet();
 
     public static int getTab() {

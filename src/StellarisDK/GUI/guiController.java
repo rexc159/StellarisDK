@@ -47,6 +47,9 @@ public class guiController extends AnchorPane {
     private TreeItem modRoot;
     private TreeItem vanillaRoot = new TreeItem<>("Stellaris");
 
+    private GenericData cContent;
+    private String cParent;
+
     @FXML
     private TreeView itemView;
 
@@ -185,7 +188,7 @@ public class guiController extends AnchorPane {
                     }
                     int index = target.getParent().getChildren().indexOf(target);
                     source.getParent().getChildren().remove(source);
-                    if (target.toString().endsWith(".txt")) {
+                    if (target.getValue().toString().endsWith(".txt")) {
                         target.getChildren().add(source);
                     } else {
                         if (index == target.getParent().getChildren().size()) {
@@ -238,15 +241,48 @@ public class guiController extends AnchorPane {
                     }
                 });
 
+                MenuItem cut = new MenuItem("Cut");
+                cut.setOnAction(event -> {
+                    if (cell.getTreeItem().getParent().getValue().toString().endsWith(".txt")) {
+                        cContent = (GenericData) cell.getItem();
+                        cParent = cell.getTreeItem().getParent().getParent().getValue().toString();
+                        cell.getTreeItem().getParent().getChildren().remove(cell.getTreeItem());
+                    }
+                });
+
+                MenuItem copy = new MenuItem("Copy");
+                copy.setOnAction(event -> {
+                    if (cell.getTreeItem().getParent().getValue().toString().endsWith(".txt")) {
+                        cContent = (GenericData) cell.getItem();
+                        cParent = cell.getTreeItem().getParent().getParent().getValue().toString();
+                    }
+                });
+
+                MenuItem paste = new MenuItem("Paste");
+                paste.setOnAction(event -> {
+                    if (cContent.getClass().equals(cell.getItem().getClass())) {
+                        cell.getTreeItem().getParent().getChildren().add(new TreeItem<>(cContent.clone()));
+                    } else if (cell.getTreeItem().getValue().toString().endsWith(".txt")) {
+                        if (cell.getTreeItem().getParent().getValue().equals(cParent))
+                            cell.getTreeItem().getChildren().add(new TreeItem<>(cContent.clone()));
+                    }
+                });
+
+
                 cell.setOnContextMenuRequested(event -> {
                     cell.getContextMenu().getItems().clear();
+                    if(cContent == null){
+                        paste.setDisable(true);
+                    }else{
+                        paste.setDisable(false);
+                    }
                     if (cell.getItem() != null && cell.getTreeItem().getParent() != null) {
                         if (cell.getTreeItem().getParent().getValue().equals("common") || cell.getItem().equals("events")) {
                             cell.getContextMenu().getItems().add(createNew);
                         } else if (cell.getItem().toString().endsWith(".txt")) {
-                            cell.getContextMenu().getItems().addAll(createNew, edit, delete);
+                            cell.getContextMenu().getItems().addAll(createNew, edit, paste, delete);
                         } else if (cell.getTreeItem().getParent().getValue().toString().endsWith(".txt")) {
-                            cell.getContextMenu().getItems().addAll(createNew, delete);
+                            cell.getContextMenu().getItems().addAll(createNew, cut, copy, paste, delete);
                         }
                     }
                 });
