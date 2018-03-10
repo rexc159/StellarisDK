@@ -105,6 +105,12 @@ public abstract class GenericData {
         this.type = type;
     }
 
+    public int getSize(){
+        return data.getFullSize();
+    }
+
+    public abstract TreeItem getRequiredTreeSet();
+
     public static int getTab() {
         return tab;
     }

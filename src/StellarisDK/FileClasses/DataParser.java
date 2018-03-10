@@ -80,6 +80,9 @@ public class DataParser {
                 String tabby = obj.group(2).replaceAll(" {4}", "\t");
                 GenericData gData;
                 switch (obj.group(1)) {
+                    case "agenda":
+                        gData = new Agenda(tabby, obj.group(1));
+                        break;
                     case "country_event":
                         gData = new Event(tabby);
                         break;

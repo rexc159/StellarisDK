@@ -2,6 +2,7 @@ package StellarisDK.FileClasses.Component;
 
 import StellarisDK.FileClasses.GenericData;
 import StellarisDK.GUI.CompSetUI;
+import javafx.scene.control.TreeItem;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -81,6 +82,11 @@ public class CompSet extends GenericData {
                 "\ticon = \"" + icon + "\"\n" +
                 "\ticon_frame = " + icon_frame + "\n" +
                 "}\n";
+    }
+
+    @Override
+    public TreeItem getRequiredTreeSet() {
+        return null;
     }
 
     @Override

@@ -2,6 +2,7 @@ package StellarisDK.FileClasses;
 
 import StellarisDK.FileClasses.Helper.DataMap;
 import StellarisDK.GUI.ModDescUI;
+import javafx.scene.control.TreeItem;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -100,4 +101,8 @@ public class ModDescriptor extends GenericData {
         return out.replaceAll("\\\\", "\\\\\\\\");
     }
 
+    @Override
+    public TreeItem getRequiredTreeSet() {
+        return null;
+    }
 }

@@ -2,6 +2,7 @@ package StellarisDK.FileClasses.Anomaly;
 
 import StellarisDK.FileClasses.GenericData;
 import StellarisDK.GUI.AnomalyUI;
+import javafx.scene.control.TreeItem;
 
 public class Anomaly extends GenericData {
 
@@ -20,5 +21,10 @@ public class Anomaly extends GenericData {
     @Override
     public GenericData createNew() {
         return new Anomaly();
+    }
+
+    @Override
+    public TreeItem getRequiredTreeSet() {
+        return null;
     }
 }

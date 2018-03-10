@@ -93,11 +93,7 @@ public class DataCell<T> extends TreeCell<T> {
     public void startEdit() {
         super.startEdit();
         if (textField == null) {
-            if (getItem() instanceof String) {
-                textField = new TextField(getItem().toString());
-            } else {
-                textField = new TextField(((VPair) ((ValueTriplet) getItem()).getValue()).getValue().toString());
-            }
+            textField = new TextField(getItem().toString().replaceAll("#tabs",""));
             textField.setOnKeyReleased(event -> {
                 if (event.getCode() == KeyCode.ENTER) {
                     commitEdit((T) textField.getText());
@@ -113,12 +109,7 @@ public class DataCell<T> extends TreeCell<T> {
 
     @Override
     public void commitEdit(T newValue) {
-        if (getItem() instanceof String) {
-            super.commitEdit(newValue);
-        } else {
-            ((VPair) ((ValueTriplet) getItem()).getValue()).setValue(newValue);
-        }
-        super.commitEdit(getItem());
+        super.commitEdit(newValue);
     }
 
     @Override

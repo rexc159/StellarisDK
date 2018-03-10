@@ -261,7 +261,7 @@ public class guiController extends AnchorPane {
     private TreeItem createNew(String type) {
         switch (type) {
             case "agendas":
-                break;
+                return new TreeItem<>(new Agenda());
             case "ambient_objects":
                 return new TreeItem<>(new AmbientObject());
             case "anomalies":

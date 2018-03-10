@@ -2,6 +2,7 @@ package StellarisDK.FileClasses.Component;
 
 import StellarisDK.FileClasses.GenericData;
 import StellarisDK.GUI.CompUI;
+import javafx.scene.control.TreeItem;
 
 public class Component extends GenericData {
 
@@ -49,5 +50,10 @@ public class Component extends GenericData {
 
     public String getGroup() {
         return data.get("component_set").toString();
+    }
+
+    @Override
+    public TreeItem getRequiredTreeSet() {
+        return null;
     }
 }
