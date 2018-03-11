@@ -2,11 +2,11 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" type="AnchorPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" type="AnchorPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <SplitPane dividerPositions="0.5" layoutY="32.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="32.0">
             <items>
-                <TreeView id="itemView" fx:id="itemView" maxWidth="600.0" minWidth="-Infinity" prefWidth="200.0" SplitPane.resizableWithParent="false" />
+                <TreeView id="itemView" fx:id="itemView" maxWidth="300.0" minWidth="-Infinity" prefWidth="200.0" SplitPane.resizableWithParent="false" />
                 <AnchorPane fx:id="mainWindow" minHeight="0.0" />
             </items>
         </SplitPane>

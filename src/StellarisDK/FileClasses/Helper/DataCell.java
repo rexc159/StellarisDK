@@ -18,11 +18,13 @@ public class DataCell<T> extends TreeCell<T> {
 
         this.setOnDragDetected(event -> {
             TreeItem item = this.getTreeItem();
-            Dragboard db = this.startDragAndDrop(TransferMode.MOVE);
-            ClipboardContent clipboard = new ClipboardContent();
-            clipboard.putString(Integer.toString(item.getParent().getChildren().indexOf(item)));
-            db.setContent(clipboard);
-            event.consume();
+            if(item.getParent() != null){
+                Dragboard db = this.startDragAndDrop(TransferMode.MOVE);
+                ClipboardContent clipboard = new ClipboardContent();
+                clipboard.putString(Integer.toString(item.getParent().getChildren().indexOf(item)));
+                db.setContent(clipboard);
+                event.consume();
+            }
         });
 
         this.setOnDragOver(event -> {
@@ -92,25 +94,51 @@ public class DataCell<T> extends TreeCell<T> {
 
     @Override
     public void startEdit() {
-        super.startEdit();
-        if (textField == null) {
-            textField = new TextField(getItem().toString().replaceAll("#tabs",""));
-            textField.setOnKeyReleased(event -> {
-                if (event.getCode() == KeyCode.ENTER) {
-                    commitEdit((T) textField.getText());
-                } else if (event.getCode() == KeyCode.ESCAPE) {
-                    cancelEdit();
-                }
-            });
+        if((getItem() instanceof DataEntry)){
+            if(((DataEntry) getItem()).isEditable()){
+                startEditor();
+            }else{
+                return;
+            }
         }
-        setText(null);
+        startEditor();
+    }
+
+    public void startEditor() {
+        super.startEdit();
+        if (getItem() instanceof DataEntry) {
+            ValueTriplet vT = (ValueTriplet) ((DataEntry) getItem()).getTreeEntry().getValue();
+            textField = new TextField(((VPair) vT.getValue()).getValue().toString());
+        } else {
+            textField = new TextField(getItem().toString().replaceAll("#tabs", ""));
+        }
+        textField.setOnKeyReleased(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                commitEdit((T) textField.getText());
+            } else if (event.getCode() == KeyCode.ESCAPE) {
+                cancelEdit();
+            }
+        });
+        if (getItem() instanceof DataEntry) {
+            ValueTriplet vT = (ValueTriplet) ((DataEntry) getItem()).getTreeEntry().getValue();
+            setText(vT.getKey().toString() + ": ");
+            setContentDisplay(ContentDisplay.RIGHT);
+        } else {
+            setText(null);
+        }
         setGraphic(textField);
         textField.selectAll();
     }
 
     @Override
     public void commitEdit(T newValue) {
-        super.commitEdit(newValue);
+        if (getItem() instanceof DataEntry) {
+            ValueTriplet vT = (ValueTriplet)((DataEntry) getItem()).getTreeEntry().getValue();
+            ((VPair) vT.getValue()).setValue(newValue);
+            super.commitEdit(getTreeItem().getValue());
+        } else {
+            super.commitEdit(newValue);
+        }
     }
 
     @Override
@@ -145,7 +173,12 @@ public class DataCell<T> extends TreeCell<T> {
     }
 
     private TreeItem<T> clone(TreeItem<T> items){
-        TreeItem<T> copy = new TreeItem<>(items.getValue());
+        TreeItem<T> copy;
+        if(items.getValue() instanceof DataEntry){
+            copy = new TreeItem<>((T)((DataEntry) items.getValue()).getTreeEntry().getValue());
+        }else{
+            copy = new TreeItem<>(items.getValue());
+        }
         for(Object item : items.getChildren()){
             copy.getChildren().add(clone((TreeItem<T>)item));
         }
@@ -156,7 +189,7 @@ public class DataCell<T> extends TreeCell<T> {
         ContextMenu contextMenu = new ContextMenu();
         MenuItem createNew = new MenuItem("New..");
         createNew.setOnAction(event -> {
-            getTreeItem().getChildren().add(new TreeItem("Click to Edit.."));
+            getTreeItem().getChildren().add(new TreeItem("Click_to_Edit"));
         });
         MenuItem edit = new MenuItem("Rename");
         edit.setOnAction(event -> startEdit());
@@ -191,8 +224,19 @@ public class DataCell<T> extends TreeCell<T> {
         setContextMenu(contextMenu);
 
         setOnContextMenuRequested(event ->{
+            contextMenu.getItems().clear();
+            contextMenu.getItems().addAll(createNew, edit, cut, copy, paste, delete);
             if(this.getTreeItem().getParent() == null){
                 contextMenu.getItems().removeAll(cut, copy, delete);
+            }
+            if((getItem() instanceof DataEntry)){
+                contextMenu.getItems().removeAll(cut, delete);
+                if(!((DataEntry) getItem()).isEditable()){
+                    contextMenu.getItems().removeAll(edit);
+                }
+                if(((DataEntry) getItem()).isSingleEntry()){
+                    contextMenu.getItems().remove(createNew);
+                }
             }
             if(cellContent == null){
                 paste.setDisable(true);

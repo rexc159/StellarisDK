@@ -4,7 +4,7 @@ import javafx.scene.control.TreeItem;
 
 import java.util.ArrayList;
 
-public class PairArrayList extends ArrayList {
+public class PairArrayList<T> extends ArrayList<T> {
 
     public TreeItem toTreeItem(String key) {
         TreeItem root = new TreeItem<>(key);

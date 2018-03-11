@@ -101,11 +101,11 @@ public abstract class GenericData {
         this.data = data;
     }
 
-    public void setType(String type){
+    public void setType(String type) {
         this.type = type;
     }
 
-    public int getSize(){
+    public int getSize() {
         return data.getFullSize();
     }
 
@@ -191,40 +191,44 @@ public abstract class GenericData {
 
     public Object load(String input) {
         int size = 0;
-        DataMap<String, ArrayList<Object>> data = new DataMap<>();
+        DataMap<String, PairArrayList<DataEntry>> data = new DataMap<>();
         Matcher matcher;
 
         matcher = DataPattern.newCombine.matcher(input);
 
         while (matcher.find()) {
-            ArrayList temp;
+            PairArrayList<DataEntry> temp;
             if (matcher.group(5) != null) {
                 if (matcher.group(7).contains("{")) {
                     ValueTriplet dat;
+                    DataEntry entry;
                     Matcher color = DataPattern.color.matcher(matcher.group(7));
                     if (color.find()) {
                         try {
                             dat = new ValueTriplet<>(matcher.group(6).trim(), new StellarisColor(color.group(1).trim(), color.group(2).trim(), color.group(3).trim(), color.group(4).trim(), color.group(5).trim()), size++);
+                            entry = new DataEntry(dat, true, false);
                         } catch (NullPointerException e) {
                             dat = new ValueTriplet<>(matcher.group(6).trim(), new StellarisColor(color.group(1).trim(), color.group(2).trim(), color.group(3).trim(), color.group(4).trim()), size++);
+                            entry = new DataEntry(dat, true, true);
                         }
                     } else {
                         dat = new ValueTriplet<>(matcher.group(6).trim(), sLrecursion(matcher.group(7).trim()), size++);
+                        entry = new DataEntry(dat, true, true);
                     }
                     if (data.containsKey(matcher.group(5))) {
-                        data.get(matcher.group(5).trim()).add(dat);
+                        data.get(matcher.group(5).trim()).add(entry);
                     } else {
-                        temp = new PairArrayList();
-                        temp.add(dat);
+                        temp = new PairArrayList<>();
+                        temp.add(entry);
                         data.put(matcher.group(5).trim(), temp);
                     }
                 } else {
                     ValueTriplet dat = new ValueTriplet<>(matcher.group(6).trim(), matcher.group(7).trim(), size++);
                     if (data.containsKey(matcher.group(5).trim())) {
-                        data.get(matcher.group(5).trim()).add(dat);
+                        data.get(matcher.group(5).trim()).add(new DataEntry(dat, true, true));
                     } else {
-                        temp = new PairArrayList();
-                        temp.add(dat);
+                        temp = new PairArrayList<>();
+                        temp.add(new DataEntry(dat, true, true));
                         data.put(matcher.group(5).trim(), temp);
                     }
                 }
@@ -239,9 +243,9 @@ public abstract class GenericData {
                     secMap = (DataMap) load(matcher.group(4).replaceAll("(?m)^\t", ""));
                     dat = new ValueTriplet<>(matcher.group(2).trim(), secMap, order);
                 }
-                temp.add(dat);
+                temp.add(new DataEntry(dat, true, false));
                 if (data.containsKey(matcher.group(1).trim())) {
-                    data.get(matcher.group(1).trim()).add(dat);
+                    data.get(matcher.group(1).trim()).add(new DataEntry(dat, true, false));
                 } else {
                     data.put(matcher.group(1).trim(), temp);
                 }

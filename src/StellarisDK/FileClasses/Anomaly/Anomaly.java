@@ -1,10 +1,19 @@
 package StellarisDK.FileClasses.Anomaly;
 
 import StellarisDK.FileClasses.GenericData;
+import StellarisDK.FileClasses.Helper.DataEntry;
+import StellarisDK.FileClasses.Helper.VPair;
+import StellarisDK.FileClasses.Helper.ValueTriplet;
 import StellarisDK.GUI.AnomalyUI;
 import javafx.scene.control.TreeItem;
 
 public class Anomaly extends GenericData {
+
+    private DataEntry[] requiredSet = {
+            new DataEntry(new ValueTriplet<>("event", new VPair<>("=", "..."), 0), true, true),
+            new DataEntry(new ValueTriplet<>("category", new VPair<>("=", "..."), 0), true, true),
+            new DataEntry("potential", false, false)
+    };
 
     public Anomaly() {
         super();
@@ -25,6 +34,10 @@ public class Anomaly extends GenericData {
 
     @Override
     public TreeItem getRequiredTreeSet() {
-        return null;
+        TreeItem root = new TreeItem<>(new DataEntry(type, false, false));
+        for (DataEntry entry : requiredSet) {
+            root.getChildren().add(entry.toNestedTree());
+        }
+        return root;
     }
 }

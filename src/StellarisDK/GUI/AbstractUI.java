@@ -98,7 +98,11 @@ public abstract class AbstractUI extends Region {
     public void load() {
         treeView.setEditable(true);
         treeView.setCellFactory(param -> new DataCell());
-        treeView.setRoot(obj.toTreeItem());
+        if(obj.getSize() != 0){
+            treeView.setRoot(obj.toTreeItem());
+        }else{
+            treeView.setRoot(obj.getRequiredTreeSet());
+        }
     }
 
     public Object save() {

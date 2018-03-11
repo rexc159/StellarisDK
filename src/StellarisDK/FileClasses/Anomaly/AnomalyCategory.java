@@ -5,6 +5,7 @@ import StellarisDK.GUI.AnomalyCategoryUI;
 import javafx.scene.control.TreeItem;
 
 public class AnomalyCategory extends GenericData {
+    
     public AnomalyCategory() {
         super();
         this.type = "anomaly_category";

@@ -1,15 +1,19 @@
 package StellarisDK.FileClasses;
 
+import StellarisDK.FileClasses.Helper.DataEntry;
 import StellarisDK.GUI.AgendaUI;
 import javafx.scene.control.TreeItem;
 
 public class Agenda extends GenericData {
 
-    private String[] requiredSet = {"weight_modifier", "modifier"};
+    private DataEntry[] requiredSet = {
+                    new DataEntry("weight_modifier", false, false),
+                    new DataEntry("modifier", false, false)
+            };
 
     public Agenda() {
         super();
-        this.type = "agenda";
+        this.type = "new_agenda";
         ui = new AgendaUI(this);
     }
 
@@ -19,10 +23,14 @@ public class Agenda extends GenericData {
     }
 
     @Override
-    public TreeItem getRequiredTreeSet(){
-        TreeItem root = new TreeItem<>("agenda");
-        for(String set : requiredSet){
-            root.getChildren().addAll(new TreeItem<>(set));
+    public TreeItem getRequiredTreeSet() {
+        TreeItem root = new TreeItem<>(new DataEntry(type, true, false));
+        for (DataEntry entry : requiredSet) {
+            TreeItem temp = new TreeItem<>(entry);
+            if(!entry.isSingleEntry()){
+                temp.getChildren().add(new TreeItem<>("click_to_edit"));
+            }
+            root.getChildren().add(temp);
         }
         return root;
     }

@@ -36,13 +36,13 @@ public class DataMap<K, V> extends HashMap<K, V> {
         for (Object key : keySet()) {
             for (Object data : ((ArrayList) get(key))) {
                 try {
-                    if (((ValueTriplet) data).getValue() != null){
-                        objs[((ValueTriplet) data).getOrder()] = new ValueTriplet<>(key, ((ValueTriplet) data).toPair(), ((ValueTriplet) data).getOrder());
+                    if (((DataEntry)data).getEntry().getValue() != null){
+                        objs[((DataEntry)data).getEntry().getOrder()] = new ValueTriplet<>(key, ((DataEntry)data).getEntry().toPair(), ((DataEntry)data).getEntry().getOrder());
                     }
                 } catch (ArrayIndexOutOfBoundsException e) {
                     System.out.println("[ERROR] StackOverFlow, FROM: DataMap");
-                    System.out.println("[ERROR] CAUSE: Tried " + key + " Value: " + ((ValueTriplet) data).getKey());
-                    System.out.println("[ERROR] SIZE: " + getFullSize() + ", Actual: " + ((ValueTriplet) data).getOrder());
+                    System.out.println("[ERROR] CAUSE: Tried " + key + " Value: " + ((DataEntry)data).getEntry().getKey());
+                    System.out.println("[ERROR] SIZE: " + getFullSize() + ", Actual: " + ((DataEntry)data).getEntry().getOrder());
                 }
             }
         }

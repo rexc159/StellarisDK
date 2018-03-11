@@ -3,6 +3,7 @@ package StellarisDK.GUI;
 import StellarisDK.DataLoc;
 import StellarisDK.FileClasses.*;
 import StellarisDK.FileClasses.Anomaly.Anomaly;
+import StellarisDK.FileClasses.Anomaly.AnomalyCategory;
 import StellarisDK.FileClasses.Component.CompSet;
 import StellarisDK.FileClasses.Component.Component;
 import com.sun.javafx.scene.control.skin.LabeledText;
@@ -213,9 +214,19 @@ public class guiController extends AnchorPane {
                 return cell;
             }
 
+            private MenuItem createItem(TreeCell cell, String type){
+                MenuItem item = new MenuItem(type);
+                item.setOnAction(event ->{
+                    cell.getTreeItem().getChildren().add(createNew(type));
+                });
+                return item;
+            }
+
             private void setCM(TreeCell cell) {
                 ContextMenu contextMenu = new ContextMenu();
-                MenuItem createNew = new MenuItem("New..");
+                Menu create = new Menu("New..");
+
+                MenuItem createNew = new MenuItem("New");
                 createNew.setOnAction(event -> {
                     if (cell.getTreeItem().getValue() instanceof GenericData) {
                         TreeItem newCell = new TreeItem<>(((GenericData) cell.getTreeItem().getValue()).createNew());
@@ -230,10 +241,12 @@ public class guiController extends AnchorPane {
                         }
                     }
                 });
+
                 MenuItem edit = new MenuItem("Rename");
                 edit.setOnAction(event -> {
                     cell.startEdit();
                 });
+
                 MenuItem delete = new MenuItem("Delete");
                 delete.setOnAction(event -> {
                     if (cell.getItem().toString().contains(".txt") || cell.getTreeItem().getParent().getValue().toString().contains(".txt")) {
@@ -268,9 +281,9 @@ public class guiController extends AnchorPane {
                     }
                 });
 
-
                 cell.setOnContextMenuRequested(event -> {
                     cell.getContextMenu().getItems().clear();
+                    create.getItems().clear();
                     if(cContent == null){
                         paste.setDisable(true);
                     }else{
@@ -280,14 +293,19 @@ public class guiController extends AnchorPane {
                         if (cell.getTreeItem().getParent().getValue().equals("common") || cell.getItem().equals("events")) {
                             cell.getContextMenu().getItems().add(createNew);
                         } else if (cell.getItem().toString().endsWith(".txt")) {
-                            cell.getContextMenu().getItems().addAll(createNew, edit, paste, delete);
+                            if(cell.getTreeItem().getParent().getValue().toString().equals("anomalies")){
+                                cell.getContextMenu().getItems().addAll(create, edit, paste, delete);
+                                create.getItems().addAll(createItem(cell,"anomaly"), createItem(cell, "anomaly_category"));
+                            } else{
+                                cell.getContextMenu().getItems().addAll(createNew, edit, paste, delete);
+                            }
                         } else if (cell.getTreeItem().getParent().getValue().toString().endsWith(".txt")) {
                             cell.getContextMenu().getItems().addAll(createNew, cut, copy, paste, delete);
                         }
                     }
                 });
 
-                contextMenu.getItems().addAll(createNew, edit, delete);
+                contextMenu.getItems().addAll(createNew, cut, copy, paste, delete);
 
                 cell.setContextMenu(contextMenu);
             }
@@ -300,12 +318,14 @@ public class guiController extends AnchorPane {
                 return new TreeItem<>(new Agenda());
             case "ambient_objects":
                 return new TreeItem<>(new AmbientObject());
-            case "anomalies":
+            case "anomaly":
                 return new TreeItem<>(new Anomaly());
+            case "anomaly_category":
+                return new TreeItem<>(new AnomalyCategory());
             case "armies":
-                break;
+                return new TreeItem<>(new Army());
             case "ascension_perks":
-                break;
+                return new TreeItem<>(new Tradition(false));
             case "attitudes":
                 break;
             case "bombardment_stances":
@@ -383,6 +403,7 @@ public class guiController extends AnchorPane {
             case "tile_blockers":
             case "tradition_categories":
             case "traditions":
+                return new TreeItem<>(new Tradition(true));
             case "traits":
                 break;
             case "events":

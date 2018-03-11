@@ -19,6 +19,11 @@ public class Event extends GenericData {
         ui = new EventUI(this);
     }
 
+    public Event(String input, String type) {
+        super(input, type);
+        ui = new EventUI(this);
+    }
+
     @Override
     public GenericData createNew() {
         return new Event();

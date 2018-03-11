@@ -24,6 +24,6 @@ public class AmbientObject extends GenericData {
 
     @Override
     public TreeItem getRequiredTreeSet() {
-        return null;
+        return new TreeItem<>(type);
     }
 }
