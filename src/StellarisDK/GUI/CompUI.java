@@ -1,7 +1,7 @@
 package StellarisDK.GUI;
 
 import StellarisDK.FileClasses.Component.Component;
-import StellarisDK.FileClasses.Helper.PairArrayList;
+import StellarisDK.FileClasses.Helper.EntryArrayList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TreeItem;
@@ -49,7 +49,7 @@ public class CompUI extends AbstractUI {
             }
         }
         if (obj.getKey("component_set"))
-            compGroup.getSelectionModel().select(((PairArrayList) obj.getValue("component_set")).getFirstString().toUpperCase());
+            compGroup.getSelectionModel().select(((EntryArrayList) obj.getValue("component_set")).getFirstString().toUpperCase());
     }
 
 //    @Override

@@ -1,5 +1,6 @@
 package StellarisDK.FileClasses;
 
+import StellarisDK.FileClasses.Helper.DataEntry;
 import StellarisDK.FileClasses.Helper.DataMap;
 import StellarisDK.GUI.ModDescUI;
 import javafx.scene.control.TreeItem;
@@ -7,34 +8,35 @@ import javafx.scene.control.TreeItem;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.regex.Matcher;
 
 public class ModDescriptor extends GenericData {
 
+    @Override
+    public void setRequiredSet() {
+        requiredSet = new DataEntry[]{};
+    }
+
     public ModDescriptor() {
-        super();
+        data = new DataMap();
+        name = "New Mod";
         ui = new ModDescUI(this);
     }
 
     public ModDescriptor(String path) {
-        super(path);
+        data = load(path);
         ui = new ModDescUI(this);
-    }
-
-    public ModDescriptor(String type, int x) {
-        this();
-        this.type = type;
     }
 
     @Override
     public ModDescriptor createNew(){
-        return new ModDescriptor(type, 0);
+        return new ModDescriptor();
     }
 
     @Override
-    public void setValue(String key, Object value, boolean addIfAbsent) {
+    public void setValue(String key, Object value, boolean addIfAbsent, int index) {
         if (addIfAbsent) {
             data.put(key, value);
         } else {
@@ -44,7 +46,7 @@ public class ModDescriptor extends GenericData {
 
     @Override
     public DataMap load(String path) {
-        DataMap<String, Object> data = new DataMap<>();
+        DataMap<Object> data = new DataMap<>();
         for (String key : data.keySet()) {
             data.replace(key, null);
         }
@@ -65,7 +67,7 @@ public class ModDescriptor extends GenericData {
         }
 
         while (cv_match.find()) {
-            LinkedList<String> temp = new LinkedList<String>() {
+            ArrayList<String> temp = new ArrayList<String>() {
                 @Override
                 public String toString() {
                     String out = "{\n";

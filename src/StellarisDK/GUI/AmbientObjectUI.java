@@ -49,41 +49,34 @@ public class AmbientObjectUI extends AbstractUI {
         }
     }
 
+    private void saveNode(TextField node){
+        if (node.getText() == null || node.getText().equals("")) {
+            obj.setValue(node.getId(), null, true, 0);
+        } else {
+            obj.setValue(node.getId(), node.getText(), true, 0);
+        }
+    }
+
     @Override
     public Object save() {
-        if (name.getText().equals("")) {
-            obj.setValue(name.getId(), null, true);
+        if(name.getText() == null || name.getText().equals("")){
+            obj.setValue(name.getId(), "Unnamed Object", true, 0);
         } else {
-            obj.setValue(name.getId(), "\"" + name.getText() + "\"", true);
+            obj.setValue(name.getId(), name.getText(), true, 0);
         }
-
-        if (tooltip.getText().equals("")) {
-            obj.setValue(tooltip.getId(), null, true);
-        } else {
-            obj.setValue(tooltip.getId(), "\"" + tooltip.getText() + "\"", true);
-        }
-
-        if (description.getText().equals("")) {
-            obj.setValue(description.getId(), null, true);
-        } else {
-            obj.setValue(description.getId(), "\"" + description.getText() + "\"", true);
-        }
-
-        if (entity.getText().equals("")) {
-            obj.setValue(entity.getId(), null, true);
-        } else {
-            obj.setValue(entity.getId(), "\"" + entity.getText() + "\"", true);
-        }
+        saveNode(tooltip);
+        saveNode(description);
+        saveNode(entity);
 
         if (show_name.isSelected()) {
-            obj.setValue(show_name.getId(), "yes", true);
+            obj.setValue(show_name.getId(), "yes", true, 0);
         } else {
-            obj.setValue(show_name.getId(), "no", true);
+            obj.setValue(show_name.getId(), "no", true, 0);
         }
         if (selectable.isSelected()) {
-            obj.setValue(selectable.getId(), "yes", true);
+            obj.setValue(selectable.getId(), "yes", true, 0);
         } else {
-            obj.setValue(selectable.getId(), "no", true);
+            obj.setValue(selectable.getId(), "no", true, 0);
         }
 
         System.out.println(obj.export());

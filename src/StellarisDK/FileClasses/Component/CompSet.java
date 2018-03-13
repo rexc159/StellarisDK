@@ -1,6 +1,7 @@
 package StellarisDK.FileClasses.Component;
 
 import StellarisDK.FileClasses.GenericData;
+import StellarisDK.FileClasses.Helper.DataEntry;
 import StellarisDK.GUI.CompSetUI;
 import javafx.scene.control.TreeItem;
 
@@ -13,6 +14,11 @@ public class CompSet extends GenericData {
     private String icon;
     private String icon_frame = "1";
     protected final Pattern kv = Pattern.compile("(?m)^\\t?(\\w+) . ([^\\{#\\n]+)(#.+)*");
+
+    @Override
+    public void setRequiredSet() {
+        requiredSet = new DataEntry[]{};
+    }
 
     public CompSet() {
         super();
@@ -63,7 +69,7 @@ public class CompSet extends GenericData {
     }
 
     @Override
-    public void setValue(String key, Object value, boolean addIfAbsent) {
+    public void setValue(String key, Object value, boolean addIfAbsent, int index) {
         switch (key) {
             case "key":
                 this.key = value.toString();

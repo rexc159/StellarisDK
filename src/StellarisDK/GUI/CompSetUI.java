@@ -1,9 +1,7 @@
 package StellarisDK.GUI;
 
 import StellarisDK.FileClasses.Component.CompSet;
-import StellarisDK.FileClasses.Component.Component;
 import javafx.scene.Node;
-import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
@@ -19,14 +17,6 @@ public class CompSetUI extends AbstractUI {
         tabPane = (TabPane) main.getChildren().get(2);
         window.setText("Component Set Editor");
         this.obj = obj;
-    }
-
-    public void addComp(Component comp){
-//        compList.add(comp);
-        Tab tab = new Tab(comp.toString());
-        tab.setContent(comp.ui.main);
-        tab.getContent().setStyle("-fx-background-color: #FFFFFF;");
-        tabPane.getTabs().add(tab);
     }
 
     @Override
@@ -45,7 +35,7 @@ public class CompSetUI extends AbstractUI {
         for (Node node : ((GridPane) main.getChildren().get(0)).getChildren()) {
             if (node.getId() != null) {
                 if (node instanceof TextField) {
-                    obj.setValue(node.getId(), ((TextField) node).getText(), true);
+                    obj.setValue(node.getId(), ((TextField) node).getText(), true, 0);
                 }
             }
         }

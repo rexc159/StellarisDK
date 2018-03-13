@@ -6,14 +6,17 @@ import javafx.scene.control.TreeItem;
 
 public class Agenda extends GenericData {
 
-    private DataEntry[] requiredSet = {
-                    new DataEntry("weight_modifier", false, false),
-                    new DataEntry("modifier", false, false)
-            };
+    @Override
+    public void setRequiredSet() {
+        requiredSet = new DataEntry[]{
+                new DataEntry("weight_modifier", 1001),
+                new DataEntry("modifier", 1001)
+        };
+    }
 
     public Agenda() {
         super();
-        this.type = "new_agenda";
+        this.type = new DataEntry("new_agenda", 1011);
         ui = new AgendaUI(this);
     }
 
@@ -24,7 +27,7 @@ public class Agenda extends GenericData {
 
     @Override
     public TreeItem getRequiredTreeSet() {
-        TreeItem root = new TreeItem<>(new DataEntry(type, true, false));
+        TreeItem root = new TreeItem<>(type);
         for (DataEntry entry : requiredSet) {
             TreeItem temp = new TreeItem<>(entry);
             if(!entry.isSingleEntry()){

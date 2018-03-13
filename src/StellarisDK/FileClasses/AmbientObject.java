@@ -1,19 +1,25 @@
 package StellarisDK.FileClasses;
 
+import StellarisDK.FileClasses.Helper.DataEntry;
 import StellarisDK.GUI.AmbientObjectUI;
 import javafx.scene.control.TreeItem;
 
 public class AmbientObject extends GenericData {
 
+    @Override
+    public void setRequiredSet() {
+        requiredSet = new DataEntry[]{};
+    }
+
     public AmbientObject() {
         super();
-        this.type = "ambient_object";
+        this.type = new DataEntry("ambient_object", 1011);
         ui = new AmbientObjectUI(this);
     }
 
     public AmbientObject(String input) {
         super(input);
-        this.type = "ambient_object";
+        this.type = new DataEntry("ambient_object", 1011);
         ui = new AmbientObjectUI(this);
     }
 

@@ -83,12 +83,6 @@ public class DataCell<T> extends TreeCell<T> {
             event.consume();
         });
 
-        this.setOnContextMenuRequested(event -> {
-            if (getItem() instanceof ValueTriplet) {
-                System.out.println(getItem());
-            }
-        });
-
         setCM();
     }
 
@@ -97,20 +91,22 @@ public class DataCell<T> extends TreeCell<T> {
         if((getItem() instanceof DataEntry)){
             if(((DataEntry) getItem()).isEditable()){
                 startEditor();
-            }else{
-                return;
             }
+        }else{
+            startEditor();
         }
-        startEditor();
     }
 
-    public void startEditor() {
+    private void startEditor() {
         super.startEdit();
         if (getItem() instanceof DataEntry) {
-            ValueTriplet vT = (ValueTriplet) ((DataEntry) getItem()).getTreeEntry().getValue();
-            textField = new TextField(((VPair) vT.getValue()).getValue().toString());
+            if(((DataEntry) getItem()).isRequired()){
+                textField = new TextField(((DataEntry) getItem()).getValue().toString());
+            }else{
+                textField = new TextField(getItem().toString());
+            }
         } else {
-            textField = new TextField(getItem().toString().replaceAll("#tabs", ""));
+            textField = new TextField(getItem().toString());
         }
         textField.setOnKeyReleased(event -> {
             if (event.getCode() == KeyCode.ENTER) {
@@ -119,9 +115,8 @@ public class DataCell<T> extends TreeCell<T> {
                 cancelEdit();
             }
         });
-        if (getItem() instanceof DataEntry) {
-            ValueTriplet vT = (ValueTriplet) ((DataEntry) getItem()).getTreeEntry().getValue();
-            setText(vT.getKey().toString() + ": ");
+        if (getItem() instanceof DataEntry && ((DataEntry) getItem()).isRequired()) {
+            setText(((DataEntry) getItem()).getKey() + ": ");
             setContentDisplay(ContentDisplay.RIGHT);
         } else {
             setText(null);
@@ -132,10 +127,14 @@ public class DataCell<T> extends TreeCell<T> {
 
     @Override
     public void commitEdit(T newValue) {
+        System.out.println(getItem().getClass());
         if (getItem() instanceof DataEntry) {
-            ValueTriplet vT = (ValueTriplet)((DataEntry) getItem()).getTreeEntry().getValue();
-            ((VPair) vT.getValue()).setValue(newValue);
-            super.commitEdit(getTreeItem().getValue());
+            if(((DataEntry) getItem()).isRequired()){
+                ((DataEntry) getItem()).setValue(newValue);
+                super.commitEdit(getTreeItem().getValue());
+            }else{
+                super.commitEdit(newValue);
+            }
         } else {
             super.commitEdit(newValue);
         }
@@ -175,7 +174,7 @@ public class DataCell<T> extends TreeCell<T> {
     private TreeItem<T> clone(TreeItem<T> items){
         TreeItem<T> copy;
         if(items.getValue() instanceof DataEntry){
-            copy = new TreeItem<>((T)((DataEntry) items.getValue()).getTreeEntry().getValue());
+            copy = new TreeItem(((DataEntry) items.getValue()).copy());
         }else{
             copy = new TreeItem<>(items.getValue());
         }
@@ -230,7 +229,9 @@ public class DataCell<T> extends TreeCell<T> {
                 contextMenu.getItems().removeAll(cut, copy, delete);
             }
             if((getItem() instanceof DataEntry)){
-                contextMenu.getItems().removeAll(cut, delete);
+                if(((DataEntry) getItem()).isRequired()){
+                    contextMenu.getItems().removeAll(cut, delete);
+                }
                 if(!((DataEntry) getItem()).isEditable()){
                     contextMenu.getItems().removeAll(edit);
                 }

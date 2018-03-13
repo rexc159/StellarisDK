@@ -2,55 +2,86 @@ package StellarisDK.FileClasses.Helper;
 
 import javafx.scene.control.TreeItem;
 
-public class DataEntry {
+public class DataEntry<V> {
 
     private boolean singleEntry = true;
     private boolean editable = true;
     private boolean required = false;
-    private ValueTriplet entry;
 
-    public DataEntry(String entry) {
-        this.entry = new ValueTriplet<>("", entry, 0);
+    private String key;
+    private String operator = "";
+    private V value;
+    private int order = 0;
+
+    public DataEntry(String key) {
+        this.key = key;
     }
 
-    public DataEntry(ValueTriplet entry) {
-        this.entry = entry;
+    public DataEntry(String key, int binary) {
+        setBinary(binary);
+        this.key = key;
     }
 
-    public DataEntry(String entry, boolean editable) {
-        this.editable = editable;
-        this.entry = new ValueTriplet<>("", entry, 0);
+    public DataEntry(String key, V value, int binary) {
+        setBinary(binary);
+        this.key = key;
+        this.operator = "=";
+        this.value = value;
     }
 
-    public DataEntry(ValueTriplet entry, boolean editable) {
-        this.editable = editable;
-        this.entry = entry;
+    public DataEntry(String key, V value, int order, int binary) {
+        setBinary(binary);
+        this.key = key;
+        this.operator = "=";
+        this.value = value;
+        this.order = order;
     }
 
-    public DataEntry(String entry, boolean editable, boolean singleEntry) {
-        this.singleEntry = singleEntry;
-        this.editable = editable;
-        this.entry = new ValueTriplet<>("", entry, 0);
+    public DataEntry(String key, String operator, V value, int binary) {
+        setBinary(binary);
+        this.key = key;
+        this.operator = operator;
+        this.value = value;
     }
 
-    public DataEntry(ValueTriplet entry, boolean editable, boolean singleEntry) {
-        this.singleEntry = singleEntry;
-        this.editable = editable;
-        this.entry = entry;
+    public DataEntry(String key, String operator, V value, int order, int binary) {
+        setBinary(binary);
+        this.key = key;
+        this.operator = operator;
+        this.value = value;
+        this.order = order;
     }
 
-    public DataEntry(String entry, boolean editable, boolean singleEntry, boolean required) {
-        this.singleEntry = singleEntry;
-        this.editable = editable;
-        this.required = required;
-        this.entry = new ValueTriplet<>("", entry, 0);
+    public String getKey() {
+        return key;
     }
 
-    public DataEntry(ValueTriplet entry, boolean editable, boolean singleEntry, boolean required) {
-        this.singleEntry = singleEntry;
-        this.editable = editable;
-        this.required = required;
-        this.entry = entry;
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public String getOperator() {
+        return operator;
+    }
+
+    public void setOperator(String operator) {
+        this.operator = operator;
+    }
+
+    public V getValue() {
+        return value;
+    }
+
+    public void setValue(V value) {
+        this.value = value;
+    }
+
+    public int getOrder() {
+        return order;
+    }
+
+    public void setOrder(int order) {
+        this.order = order;
     }
 
     public boolean isSingleEntry() {
@@ -69,18 +100,6 @@ public class DataEntry {
         this.editable = editable;
     }
 
-    public TreeItem getTreeEntry() {
-        return new TreeItem<>(entry);
-    }
-
-    public ValueTriplet getEntry() {
-        return entry;
-    }
-
-    public void setEntry(ValueTriplet entry) {
-        this.entry = entry;
-    }
-
     public boolean isRequired() {
         return required;
     }
@@ -89,15 +108,19 @@ public class DataEntry {
         this.required = required;
     }
 
-    public int getBinary(){
-        return (singleEntry ? 100 : 0) + (editable ? 10 : 0) + (required ? 1 : 0);
+    public int getBinary() {
+        return 1000 + (singleEntry ? 100 : 0) + (editable ? 10 : 0) + (required ? 1 : 0);
     }
 
     public void setBinary(int binary) {
         char[] group = Integer.toString(binary).toCharArray();
-        this.singleEntry = group[0] == '1';
-        this.editable = group[1] == '1';
-        this.required = group[2] == '1';
+        this.singleEntry = group[1] == '1';
+        this.editable = group[2] == '1';
+        this.required = group[3] == '1';
+    }
+
+    public DataEntry copy(){
+        return new DataEntry<>(key, operator, value, order, getBinary());
     }
 
     public TreeItem toNestedTree() {
@@ -107,9 +130,8 @@ public class DataEntry {
         return temp;
     }
 
-
     @Override
     public String toString() {
-        return entry.toString();
+        return (key + " " + operator + " " + (value != null ? value : "")).trim();
     }
 }

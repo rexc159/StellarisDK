@@ -1,21 +1,21 @@
 package StellarisDK.FileClasses;
 
+import StellarisDK.FileClasses.Helper.DataEntry;
 import StellarisDK.GUI.EventUI;
 import javafx.scene.control.TreeItem;
 
 public class Event extends GenericData {
 
+    @Override
+    public void setRequiredSet() {
+        requiredSet = new DataEntry[]{};
+    }
+
     private String namespace;
 
     public Event() {
         super();
-        this.type = "event";
-        ui = new EventUI(this);
-    }
-
-    public Event(String input) {
-        super(input);
-        this.type = "country_event";
+        this.type = new DataEntry("event", 1011);
         ui = new EventUI(this);
     }
 

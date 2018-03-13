@@ -108,6 +108,7 @@ public abstract class AbstractUI extends Region {
     public Object save() {
         obj.setType(treeView.getRoot().getValue().toString());
         obj.setData((DataMap)obj.load(unparse(treeView.getRoot())));
+        obj.lockEntries();
         System.out.println(obj.export());
         itemView.refresh();
         return obj;

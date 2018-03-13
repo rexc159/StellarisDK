@@ -2,28 +2,29 @@ package StellarisDK.FileClasses.Anomaly;
 
 import StellarisDK.FileClasses.GenericData;
 import StellarisDK.FileClasses.Helper.DataEntry;
-import StellarisDK.FileClasses.Helper.VPair;
-import StellarisDK.FileClasses.Helper.ValueTriplet;
 import StellarisDK.GUI.AnomalyUI;
 import javafx.scene.control.TreeItem;
 
 public class Anomaly extends GenericData {
 
-    private DataEntry[] requiredSet = {
-            new DataEntry(new ValueTriplet<>("event", new VPair<>("=", "..."), 0), true, true),
-            new DataEntry(new ValueTriplet<>("category", new VPair<>("=", "..."), 0), true, true),
-            new DataEntry("potential", false, false)
-    };
+    @Override
+    public void setRequiredSet() {
+        this.requiredSet = new DataEntry[]{
+                new DataEntry<>("event", "=", "...", 1111),
+                new DataEntry<>("category", "=", "...", 1111),
+                new DataEntry<>("potential", 1001)
+        };
+    }
 
     public Anomaly() {
         super();
-        this.type = "anomaly";
+        this.type = new DataEntry("anomaly", 1001);
         ui = new AnomalyUI(this);
     }
 
     public Anomaly(String input) {
         super(input);
-        this.type = "anomaly";
+        this.type = new DataEntry("anomaly", 1001);
         ui = new AnomalyUI(this);
     }
 
@@ -34,9 +35,13 @@ public class Anomaly extends GenericData {
 
     @Override
     public TreeItem getRequiredTreeSet() {
-        TreeItem root = new TreeItem<>(new DataEntry(type, false, false));
+        TreeItem root = new TreeItem<>(type);
         for (DataEntry entry : requiredSet) {
-            root.getChildren().add(entry.toNestedTree());
+            TreeItem temp = new TreeItem<>(entry);
+            if(!entry.isSingleEntry()){
+                temp.getChildren().add(new TreeItem<>("click_to_edit"));
+            }
+            root.getChildren().add(temp);
         }
         return root;
     }

@@ -1,10 +1,16 @@
 package StellarisDK.FileClasses.Component;
 
 import StellarisDK.FileClasses.GenericData;
+import StellarisDK.FileClasses.Helper.DataEntry;
 import StellarisDK.GUI.CompUI;
 import javafx.scene.control.TreeItem;
 
 public class Component extends GenericData {
+
+    @Override
+    public void setRequiredSet() {
+        requiredSet = new DataEntry[]{};
+    }
 
     public Component() {
         super();
@@ -32,13 +38,13 @@ public class Component extends GenericData {
         switch (type) {
             default:
             case 0:
-                this.type = "utility_component_template";
+                this.type = new DataEntry("utility_component_template", 1001);
                 break;
             case 1:
-                this.type = "weapon_component_template";
+                this.type = new DataEntry("weapon_component_template", 1001);
                 break;
             case 2:
-                this.type = "strike_craft_component_template";
+                this.type = new DataEntry("strike_craft_component_template", 1001);
                 break;
         }
     }
