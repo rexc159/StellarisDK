@@ -6,12 +6,12 @@ import java.util.ArrayList;
 
 public class EntryArrayList<T> extends ArrayList<T> {
 
-    public TreeItem toTreeItem(String key) {
-        TreeItem root = new TreeItem<>(key);
+    public TreeItem toTreeItem(DataEntry key) {
+        TreeItem root = new TreeItem<>(new DataEntry(key.getKey(), key.getBinary()));
         for (Object obj : this) {
             if(obj instanceof DataEntry){
                 if(((DataEntry) obj).getValue() instanceof EntryArrayList){
-                    root.getChildren().add(((EntryArrayList) ((DataEntry) obj).getValue()).toTreeItem(((DataEntry) obj).getKey()));
+                    root.getChildren().add(((EntryArrayList) ((DataEntry) obj).getValue()).toTreeItem(((DataEntry) obj)));
                 }else{
                     root.getChildren().add(new TreeItem<>(obj));
                 }

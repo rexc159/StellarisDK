@@ -19,12 +19,11 @@ public class DataMap<V> extends HashMap<String, V> {
         TreeItem<DataEntry> root = new TreeItem<>(new DataEntry(key.getKey(), key.getBinary()));
         DataEntry[] objs = compressToPairArray();
         for (DataEntry obj : objs) {
-            System.out.println(obj.toString() + obj.getBinary());
             if(obj.getValue() instanceof DataMap){
                 TreeItem item = ((DataMap) obj.getValue()).toTreeItem(obj);
                 root.getChildren().add(item);
             } else if (obj.getValue() instanceof EntryArrayList) {
-                TreeItem group = ((EntryArrayList) obj.getValue()).toTreeItem(obj.getKey());
+                TreeItem group = ((EntryArrayList) obj.getValue()).toTreeItem(obj);
                 root.getChildren().add(group);
             } else {
                 root.getChildren().add(new TreeItem<>(obj));

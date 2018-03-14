@@ -2,7 +2,6 @@ package StellarisDK.FileClasses;
 
 import StellarisDK.FileClasses.Helper.DataEntry;
 import StellarisDK.GUI.EventUI;
-import javafx.scene.control.TreeItem;
 
 public class Event extends GenericData {
 
@@ -29,8 +28,4 @@ public class Event extends GenericData {
         return new Event();
     }
 
-    @Override
-    public TreeItem getRequiredTreeSet() {
-        return null;
-    }
 }

@@ -3,13 +3,20 @@ package StellarisDK.FileClasses.Component;
 import StellarisDK.FileClasses.GenericData;
 import StellarisDK.FileClasses.Helper.DataEntry;
 import StellarisDK.GUI.CompUI;
-import javafx.scene.control.TreeItem;
 
 public class Component extends GenericData {
 
     @Override
     public void setRequiredSet() {
-        requiredSet = new DataEntry[]{};
+        DataEntry key = new DataEntry<>("key", "=", "new_component", 1111);
+        DataEntry size = new DataEntry<>("size", "=", "size", 1111);
+        DataEntry icon = new DataEntry<>("icon", "=", "new_component", 1111);
+        DataEntry icon_frame = new DataEntry<>("icon_frame", "=", "new_component", 1111);
+        DataEntry power = new DataEntry<>("power", "=", "new_component", 1111);
+        DataEntry cost = new DataEntry<>("cost", "=", "new_component", 1111);
+        DataEntry component_set = new DataEntry<>("component_set", "=", "new_component", 1111);
+
+        requiredSet = new DataEntry[]{key, size, icon, icon_frame, power, cost, component_set};
     }
 
     public Component() {
@@ -56,10 +63,5 @@ public class Component extends GenericData {
 
     public String getGroup() {
         return data.get("component_set").toString();
-    }
-
-    @Override
-    public TreeItem getRequiredTreeSet() {
-        return null;
     }
 }

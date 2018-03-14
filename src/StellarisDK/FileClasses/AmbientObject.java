@@ -2,7 +2,6 @@ package StellarisDK.FileClasses;
 
 import StellarisDK.FileClasses.Helper.DataEntry;
 import StellarisDK.GUI.AmbientObjectUI;
-import javafx.scene.control.TreeItem;
 
 public class AmbientObject extends GenericData {
 
@@ -28,8 +27,4 @@ public class AmbientObject extends GenericData {
         return new AmbientObject();
     }
 
-    @Override
-    public TreeItem getRequiredTreeSet() {
-        return new TreeItem<>(type);
-    }
 }

@@ -2,12 +2,16 @@ package StellarisDK.GUI;
 
 import StellarisDK.FileClasses.GenericData;
 import StellarisDK.FileClasses.Helper.DataCell;
+import StellarisDK.FileClasses.Helper.DataEntry;
 import StellarisDK.FileClasses.Helper.DataMap;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
@@ -32,6 +36,8 @@ public abstract class AbstractUI extends Region {
     TreeView itemView;
 
     GenericData obj;
+
+    private static TreeItem copiedItem;
 
     public void setRoot(AnchorPane root) {
         this.root = root;
@@ -96,8 +102,48 @@ public abstract class AbstractUI extends Region {
     }
 
     public void load() {
+        obj.lockEntries();
         treeView.setEditable(true);
         treeView.setCellFactory(param -> new DataCell());
+        treeView.setOnKeyPressed(event -> {
+            TreeItem selected = (TreeItem)treeView.getSelectionModel().getSelectedItem();
+            if (new KeyCodeCombination(KeyCode.X, KeyCombination.CONTROL_DOWN).match(event)) {
+                if(     selected.getParent() != null &&
+                        selected.getValue() instanceof DataEntry &&
+                        !((DataEntry) selected.getValue()).isRequired()
+                        ){
+                    System.out.println("CTRL+X");
+                    copiedItem = selected;
+                    selected.getParent().getChildren().remove(selected);
+                }
+            } else if (new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_DOWN).match(event)) {
+                if(selected.getParent() != null){
+                    System.out.println("CTRL+C");
+                    copiedItem = selected;
+                }else{
+                    copiedItem = null;
+                }
+            } else if (new KeyCodeCombination(KeyCode.V, KeyCombination.CONTROL_DOWN).match(event)) {
+                if (copiedItem != null){
+                    System.out.println("CTRL+V");
+                    if(selected.getParent() != null || ((DataEntry) selected.getValue()).isSingleEntry())
+                        selected.getParent().getChildren().add(DataCell.clone(copiedItem));
+                    else
+                        selected.getChildren().add(DataCell.clone(copiedItem));
+                }
+            } else if (new KeyCodeCombination(KeyCode.N, KeyCombination.CONTROL_DOWN).match(event)) {
+                System.out.println("CTRL+N");
+                if (!((DataEntry) selected.getValue()).isSingleEntry()) {
+                    selected.getChildren().add(new TreeItem<>("Click_to_Edit"));
+                }else {
+                    selected.getParent().getChildren().add(new TreeItem<>("Click_to_Edit"));
+                }
+            } else if (event.getCode() == KeyCode.DELETE) {
+                if (selected.getParent() != null || !((DataEntry) selected.getValue()).isRequired())
+                    selected.getParent().getChildren().remove(selected);
+            }
+            event.consume();
+        });
         if(obj.getSize() != 0){
             treeView.setRoot(obj.toTreeItem());
         }else{
@@ -108,7 +154,6 @@ public abstract class AbstractUI extends Region {
     public Object save() {
         obj.setType(treeView.getRoot().getValue().toString());
         obj.setData((DataMap)obj.load(unparse(treeView.getRoot())));
-        obj.lockEntries();
         System.out.println(obj.export());
         itemView.refresh();
         return obj;

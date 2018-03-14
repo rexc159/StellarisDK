@@ -2,7 +2,6 @@ package StellarisDK.FileClasses;
 
 import StellarisDK.FileClasses.Helper.DataEntry;
 import StellarisDK.GUI.ArmyUI;
-import javafx.scene.control.TreeItem;
 
 public class Army extends GenericData {
 
@@ -27,8 +26,4 @@ public class Army extends GenericData {
         return new Army();
     }
 
-    @Override
-    public TreeItem getRequiredTreeSet() {
-        return null;
-    }
 }

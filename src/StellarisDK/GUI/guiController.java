@@ -12,10 +12,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.TransferMode;
+import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
@@ -310,6 +307,51 @@ public class guiController extends AnchorPane {
                 cell.setContextMenu(contextMenu);
             }
         });
+
+        itemView.setOnKeyPressed(event -> {
+            TreeItem selected = (TreeItem)itemView.getSelectionModel().getSelectedItem();
+            if (new KeyCodeCombination(KeyCode.X, KeyCombination.CONTROL_DOWN).match(event)) {
+                if(selected.getParent() != null && selected.getParent().getValue().toString().endsWith(".txt")){
+                    System.out.println("CTRL+X");
+                    cContent = (GenericData) selected.getValue();
+                    cParent = selected.getParent().getParent().getValue().toString();
+                    selected.getParent().getChildren().remove(selected);
+                }
+            } else if (new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_DOWN).match(event)) {
+                if(selected.getParent() != null && selected.getParent().getValue().toString().endsWith(".txt")){
+                    System.out.println("CTRL+C");
+                    cContent = (GenericData) selected.getValue();
+                    cParent = selected.getParent().getParent().getValue().toString();
+                }
+            } else if (new KeyCodeCombination(KeyCode.V, KeyCombination.CONTROL_DOWN).match(event)) {
+                    System.out.println("CTRL+V");
+                    if (cContent.getClass().equals(selected.getValue().getClass())) {
+                        selected.getParent().getChildren().add(new TreeItem<>(cContent.clone()));
+                    } else if (selected.getValue().toString().endsWith(".txt")) {
+                        if (selected.getParent().getValue().equals(cParent))
+                            selected.getChildren().add(new TreeItem<>(cContent.clone()));
+                }
+            } else if (new KeyCodeCombination(KeyCode.N, KeyCombination.CONTROL_DOWN).match(event)) {
+                System.out.println("CTRL+N");
+                if (!(selected.getValue() instanceof ModDescriptor) && selected.getValue() instanceof GenericData) {
+                    TreeItem newCell = new TreeItem<>(((GenericData) selected.getValue()).createNew());
+                    selected.getParent().getChildren().add(newCell);
+                } else if (selected.getValue().toString().endsWith(".txt")) {
+                    selected.getChildren().add(createNew(selected.getParent().getValue().toString()));
+                } else if (selected.getParent() != null) {
+                    if (selected.getValue().equals("events") || selected.getParent().getValue().toString().equals("common")) {
+                        selected.getChildren().add(new TreeItem<>("New File.txt"));
+                    } else if (selected.getParent().getValue().toString().equals("localisation")) {
+                        selected.getChildren().add(new TreeItem<>("New Locale.yml"));
+                    }
+                }
+            } else if (event.getCode() == KeyCode.DELETE) {
+                if (selected.getValue().toString().contains(".txt") || selected.getParent().getValue().toString().contains(".txt")) {
+                    selected.getParent().getChildren().remove(selected);
+                }
+            }
+            event.consume();
+        });
     }
 
     private TreeItem createNew(String type) {
@@ -318,6 +360,7 @@ public class guiController extends AnchorPane {
                 return new TreeItem<>(new Agenda());
             case "ambient_objects":
                 return new TreeItem<>(new AmbientObject());
+            case "anomalies":
             case "anomaly":
                 return new TreeItem<>(new Anomaly());
             case "anomaly_category":
@@ -452,8 +495,6 @@ public class guiController extends AnchorPane {
         modRoot = new TreeItem<>(mainMd);
         itemView.getRoot().getChildren().add(modRoot);
         modRoot.getChildren().add(new TreeItem<>(mainMd));
-//        itemView.setRoot(new TreeItem<>(mainMd));
-//        itemView.getRoot().getChildren().add(new TreeItem<>(mainMd));
         itemView.getRoot().setExpanded(true);
         loadMod("", modRoot, false);
         open(mainMd);
@@ -473,8 +514,6 @@ public class guiController extends AnchorPane {
             modRoot = new TreeItem<>(mainMd);
             itemView.getRoot().getChildren().add(modRoot);
             modRoot.getChildren().add(new TreeItem<>(mainMd));
-//            itemView.setRoot(new TreeItem<>(mainMd));
-//            itemView.getRoot().getChildren().add(new TreeItem(mainMd));
             itemView.getRoot().setExpanded(true);
             if (mainMd.getValue("path") != null) {
                 mainLoadPath = modPath.getParentFile().getParent() + "\\" + (mainMd.getValue("path").toString().replaceAll("/", "\\\\"));

@@ -2,7 +2,6 @@ package StellarisDK.FileClasses;
 
 import StellarisDK.FileClasses.Helper.DataEntry;
 import StellarisDK.GUI.TraditionUI;
-import javafx.scene.control.TreeItem;
 
 public class Tradition extends GenericData {
 
@@ -30,11 +29,6 @@ public class Tradition extends GenericData {
         super(input, type);
         this.ap = ap;
         ui = new TraditionUI(this, ap);
-    }
-
-    @Override
-    public TreeItem getRequiredTreeSet() {
-        return null;
     }
 
     @Override

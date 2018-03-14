@@ -119,8 +119,12 @@ public class DataEntry<V> {
         this.required = group[3] == '1';
     }
 
-    public DataEntry copy(){
-        return new DataEntry<>(key, operator, value, order, getBinary());
+    private int getBinaryNotRequired() {
+        return 1000 + (singleEntry ? 100 : 0) + (editable ? 10 : 0);
+    }
+
+    public DataEntry copy() {
+        return new DataEntry<>(key, operator, value, order, getBinaryNotRequired());
     }
 
     public TreeItem toNestedTree() {

@@ -18,7 +18,7 @@ public class DataCell<T> extends TreeCell<T> {
 
         this.setOnDragDetected(event -> {
             TreeItem item = this.getTreeItem();
-            if(item.getParent() != null){
+            if (item.getParent() != null) {
                 Dragboard db = this.startDragAndDrop(TransferMode.MOVE);
                 ClipboardContent clipboard = new ClipboardContent();
                 clipboard.putString(Integer.toString(item.getParent().getChildren().indexOf(item)));
@@ -88,11 +88,11 @@ public class DataCell<T> extends TreeCell<T> {
 
     @Override
     public void startEdit() {
-        if((getItem() instanceof DataEntry)){
-            if(((DataEntry) getItem()).isEditable()){
+        if ((getItem() instanceof DataEntry)) {
+            if (((DataEntry) getItem()).isEditable()) {
                 startEditor();
             }
-        }else{
+        } else {
             startEditor();
         }
     }
@@ -100,9 +100,9 @@ public class DataCell<T> extends TreeCell<T> {
     private void startEditor() {
         super.startEdit();
         if (getItem() instanceof DataEntry) {
-            if(((DataEntry) getItem()).isRequired()){
+            if (((DataEntry) getItem()).isRequired()) {
                 textField = new TextField(((DataEntry) getItem()).getValue().toString());
-            }else{
+            } else {
                 textField = new TextField(getItem().toString());
             }
         } else {
@@ -129,10 +129,10 @@ public class DataCell<T> extends TreeCell<T> {
     public void commitEdit(T newValue) {
         System.out.println(getItem().getClass());
         if (getItem() instanceof DataEntry) {
-            if(((DataEntry) getItem()).isRequired()){
+            if (((DataEntry) getItem()).isRequired()) {
                 ((DataEntry) getItem()).setValue(newValue);
                 super.commitEdit(getTreeItem().getValue());
-            }else{
+            } else {
                 super.commitEdit(newValue);
             }
         } else {
@@ -171,15 +171,15 @@ public class DataCell<T> extends TreeCell<T> {
         }
     }
 
-    private TreeItem<T> clone(TreeItem<T> items){
-        TreeItem<T> copy;
-        if(items.getValue() instanceof DataEntry){
-            copy = new TreeItem(((DataEntry) items.getValue()).copy());
-        }else{
+    public static TreeItem clone(TreeItem items) {
+        TreeItem copy;
+        if (items.getValue() instanceof DataEntry) {
+            copy = new TreeItem<>(((DataEntry) items.getValue()).copy());
+        } else {
             copy = new TreeItem<>(items.getValue());
         }
-        for(Object item : items.getChildren()){
-            copy.getChildren().add(clone((TreeItem<T>)item));
+        for (Object item : items.getChildren()) {
+            copy.getChildren().add(clone((TreeItem) item));
         }
         return copy;
     }
@@ -188,22 +188,32 @@ public class DataCell<T> extends TreeCell<T> {
         ContextMenu contextMenu = new ContextMenu();
         MenuItem createNew = new MenuItem("New..");
         createNew.setOnAction(event -> {
-            getTreeItem().getChildren().add(new TreeItem("Click_to_Edit"));
+            if (!((DataEntry) getItem()).isSingleEntry()) {
+                getTreeItem().getChildren().add(new TreeItem("Click_to_Edit"));
+            }else{
+                getTreeItem().getParent().getChildren().add(new TreeItem("Click_to_Edit"));
+            }
         });
         MenuItem edit = new MenuItem("Rename");
-        edit.setOnAction(event -> startEdit());
+        edit.setOnAction(event -> {
+            if (((DataEntry) getItem()).isEditable()) {
+                startEdit();
+            }
+        });
 
         MenuItem delete = new MenuItem("Delete");
         delete.setOnAction(event -> {
-            if(getTreeItem().getParent() != null)
+            if (getTreeItem().getParent() != null || !((DataEntry) getItem()).isRequired())
                 getTreeItem().getParent().getChildren().remove(getTreeItem());
         });
 
 
         MenuItem cut = new MenuItem("Cut");
         cut.setOnAction(event -> {
-            cellContent = getTreeItem();
-            getTreeItem().getParent().getChildren().remove(getTreeItem());
+            if(!((DataEntry) getItem()).isRequired()){
+                cellContent = getTreeItem();
+                getTreeItem().getParent().getChildren().remove(getTreeItem());
+            }
         });
 
         MenuItem copy = new MenuItem("Copy");
@@ -213,35 +223,35 @@ public class DataCell<T> extends TreeCell<T> {
 
         MenuItem paste = new MenuItem("Paste");
         paste.setOnAction(event -> {
-            if(getTreeItem().getParent() != null)
+            if (getTreeItem().getParent() != null || ((DataEntry) getItem()).isSingleEntry())
                 getTreeItem().getParent().getChildren().add(clone(cellContent));
             else
                 getTreeItem().getChildren().add(clone(cellContent));
         });
 
         contextMenu.getItems().addAll(createNew, edit, cut, copy, paste, delete);
-        setContextMenu(contextMenu);
+        this.setContextMenu(contextMenu);
 
-        setOnContextMenuRequested(event ->{
+        this.setOnContextMenuRequested(event -> {
             contextMenu.getItems().clear();
             contextMenu.getItems().addAll(createNew, edit, cut, copy, paste, delete);
-            if(this.getTreeItem().getParent() == null){
+            if (this.getTreeItem().getParent() == null) {
                 contextMenu.getItems().removeAll(cut, copy, delete);
             }
-            if((getItem() instanceof DataEntry)){
-                if(((DataEntry) getItem()).isRequired()){
+            if ((getItem() instanceof DataEntry)) {
+                if (((DataEntry) getItem()).isRequired()) {
                     contextMenu.getItems().removeAll(cut, delete);
                 }
-                if(!((DataEntry) getItem()).isEditable()){
+                if (!((DataEntry) getItem()).isEditable()) {
                     contextMenu.getItems().removeAll(edit);
                 }
-                if(((DataEntry) getItem()).isSingleEntry()){
+                if (((DataEntry) getItem()).isSingleEntry()) {
                     contextMenu.getItems().remove(createNew);
                 }
             }
-            if(cellContent == null){
+            if (cellContent == null) {
                 paste.setDisable(true);
-            }else{
+            } else {
                 paste.setDisable(false);
             }
         });

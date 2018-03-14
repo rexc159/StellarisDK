@@ -102,7 +102,6 @@ public abstract class GenericData {
                 temp.add((DataEntry) value);
             } else {
                 temp.add(new DataEntry<>(key, value, data.size(), 1110));
-//                temp.add(new DataEntry(new ValueTriplet<>("=", value, data.size())));
             }
             data.put(key, temp);
         } else {
@@ -135,7 +134,17 @@ public abstract class GenericData {
 
     public abstract void setRequiredSet();
 
-    public abstract TreeItem getRequiredTreeSet();
+    public TreeItem getRequiredTreeSet() {
+        TreeItem root = new TreeItem<>(type);
+        for (DataEntry entry : requiredSet) {
+            TreeItem temp = new TreeItem<>(entry);
+            if(!entry.isSingleEntry()){
+                temp.getChildren().add(new TreeItem<>("click_to_edit"));
+            }
+            root.getChildren().add(temp);
+        }
+        return root;
+    }
 
     public String export() {
         return "\r\n" + type + " = " + data;
@@ -179,21 +188,16 @@ public abstract class GenericData {
                 if (color.find()) {
                     try {
                         data.add(new DataEntry<>(matcher.group(1).trim(), matcher.group(2).trim(), new StellarisColor(color.group(1).trim(), color.group(2).trim(), color.group(3).trim(), color.group(4).trim(), color.group(5).trim()), 1110));
-//                        data.add(new VPair<>(matcher.group(1).trim(), new VPair<>(matcher.group(2).trim(), new StellarisColor(color.group(1).trim(), color.group(2).trim(), color.group(3).trim(), color.group(4).trim(), color.group(5).trim()))));
                     } catch (NullPointerException e) {
-//                        data.add(new VPair<>(matcher.group(1).trim(), new VPair<>(matcher.group(2).trim(), new StellarisColor(color.group(1).trim(), color.group(2).trim(), color.group(3).trim(), color.group(4).trim()))));
                         data.add(new DataEntry<>(matcher.group(1).trim(), matcher.group(2).trim(), new StellarisColor(color.group(1).trim(), color.group(2).trim(), color.group(3).trim(), color.group(4).trim()), 1110));
                     }
                 }
             } else if (matcher.group(4) != null) {
                 data.add(new DataEntry<>(matcher.group(4).trim(), matcher.group(5).trim(), sLrecursion(matcher.group(6)), 1010));
-//                data.add(new VPair<>(matcher.group(4).trim(), new VPair<>(matcher.group(5).trim(), sLrecursion(matcher.group(6)))));
             } else if (matcher.group(7) != null) {
                 data.add(new DataEntry<>(matcher.group(7).trim(), matcher.group(8).trim(), matcher.group(9).trim(), 1110));
-//                data.add(new VPair<>(matcher.group(7).trim(), new VPair<>(matcher.group(8).trim(), matcher.group(9).trim())));
             } else if (matcher.group(10) != null) {
                 data.add(new DataEntry<>(matcher.group(10).trim(), matcher.group(11).trim(), matcher.group(12).trim(), 1110));
-//                data.add(new VPair<>(matcher.group(10).trim(), new VPair<>(matcher.group(11).trim(), matcher.group(12).trim())));
             } else if (matcher.group(13) != null) {
                 data.add(matcher.group(13).trim());
             }

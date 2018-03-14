@@ -9,11 +9,9 @@ import javafx.scene.control.TreeView;
 
 public class CompUI extends AbstractUI {
 
-    @FXML
-    ChoiceBox compGroup;
+    private ChoiceBox compGroup;
 
-    @FXML
-    ChoiceBox compSize;
+    private ChoiceBox compSize;
 
     @FXML
     TreeView treeView;
