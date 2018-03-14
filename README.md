@@ -1,7 +1,7 @@
 # Stellaris Modding Kit (WIP)
 General Purpose Mod Development Tool Kit for Stellaris
 
-#### Latest Version: v0.2.0-alpha
+#### Latest Version: v0.2.1-alpha
 
 ## Description
 This modding kit, or "Stellaris Development Kit (SDK)" is designed to:
