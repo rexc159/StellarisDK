@@ -18,7 +18,7 @@ public class DataCell<T> extends TreeCell<T> {
 
         this.setOnDragDetected(event -> {
             TreeItem item = this.getTreeItem();
-            if (item.getParent() != null) {
+            if (item != null && item.getParent() != null) {
                 Dragboard db = this.startDragAndDrop(TransferMode.MOVE);
                 ClipboardContent clipboard = new ClipboardContent();
                 clipboard.putString(Integer.toString(item.getParent().getChildren().indexOf(item)));
@@ -218,7 +218,7 @@ public class DataCell<T> extends TreeCell<T> {
 
         MenuItem copy = new MenuItem("Copy");
         copy.setOnAction(event -> {
-            cellContent = getTreeItem();
+            cellContent = clone(getTreeItem());
         });
 
         MenuItem paste = new MenuItem("Paste");

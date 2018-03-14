@@ -263,7 +263,7 @@ public class guiController extends AnchorPane {
                 MenuItem copy = new MenuItem("Copy");
                 copy.setOnAction(event -> {
                     if (cell.getTreeItem().getParent().getValue().toString().endsWith(".txt")) {
-                        cContent = (GenericData) cell.getItem();
+                        cContent = ((GenericData) cell.getItem()).clone();
                         cParent = cell.getTreeItem().getParent().getParent().getValue().toString();
                     }
                 });
@@ -320,7 +320,7 @@ public class guiController extends AnchorPane {
             } else if (new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_DOWN).match(event)) {
                 if(selected.getParent() != null && selected.getParent().getValue().toString().endsWith(".txt")){
                     System.out.println("CTRL+C");
-                    cContent = (GenericData) selected.getValue();
+                    cContent = ((GenericData) selected.getValue()).clone();
                     cParent = selected.getParent().getParent().getValue().toString();
                 }
             } else if (new KeyCodeCombination(KeyCode.V, KeyCombination.CONTROL_DOWN).match(event)) {

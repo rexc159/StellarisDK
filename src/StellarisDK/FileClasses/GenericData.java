@@ -125,7 +125,7 @@ public abstract class GenericData {
         return data.getFullSize();
     }
 
-    public Object clone() {
+    public GenericData clone() {
         GenericData copy = createNew();
         copy.setType(type);
         copy.setData(data);

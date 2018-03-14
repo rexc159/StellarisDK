@@ -119,7 +119,7 @@ public abstract class AbstractUI extends Region {
             } else if (new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_DOWN).match(event)) {
                 if(selected.getParent() != null){
                     System.out.println("CTRL+C");
-                    copiedItem = selected;
+                    copiedItem = DataCell.clone(selected);
                 }else{
                     copiedItem = null;
                 }
