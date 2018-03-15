@@ -15,7 +15,7 @@ public class DataCell<T> extends TreeCell<T> {
 
     public DataCell() {
         super();
-
+        setGraphic(new TextField());
         this.setOnDragDetected(event -> {
             TreeItem item = this.getTreeItem();
             if (item != null && item.getParent() != null) {
@@ -99,12 +99,8 @@ public class DataCell<T> extends TreeCell<T> {
 
     private void startEditor() {
         super.startEdit();
-        if (getItem() instanceof DataEntry) {
-            if (((DataEntry) getItem()).isRequired()) {
-                textField = new TextField(((DataEntry) getItem()).getValue().toString());
-            } else {
-                textField = new TextField(getItem().toString());
-            }
+        if (getItem() instanceof DataEntry && ((DataEntry) getItem()).getValue() != null) {
+            textField = new TextField(((DataEntry) getItem()).getValue().toString());
         } else {
             textField = new TextField(getItem().toString());
         }
@@ -115,7 +111,7 @@ public class DataCell<T> extends TreeCell<T> {
                 cancelEdit();
             }
         });
-        if (getItem() instanceof DataEntry && ((DataEntry) getItem()).isRequired()) {
+        if (getItem() instanceof DataEntry && ((DataEntry) getItem()).getValue() != null) {
             setText(((DataEntry) getItem()).getKey() + ": ");
             setContentDisplay(ContentDisplay.RIGHT);
         } else {
@@ -128,13 +124,9 @@ public class DataCell<T> extends TreeCell<T> {
     @Override
     public void commitEdit(T newValue) {
         System.out.println(getItem().getClass());
-        if (getItem() instanceof DataEntry) {
-            if (((DataEntry) getItem()).isRequired()) {
+        if (getItem() instanceof DataEntry && ((DataEntry) getItem()).getValue() != null) {
                 ((DataEntry) getItem()).setValue(newValue);
                 super.commitEdit(getTreeItem().getValue());
-            } else {
-                super.commitEdit(newValue);
-            }
         } else {
             super.commitEdit(newValue);
         }

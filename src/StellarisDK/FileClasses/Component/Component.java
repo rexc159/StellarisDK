@@ -4,10 +4,13 @@ import StellarisDK.FileClasses.GenericData;
 import StellarisDK.FileClasses.Helper.DataEntry;
 import StellarisDK.GUI.CompUI;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class Component extends GenericData {
 
     @Override
-    public void setRequiredSet() {
+    public void setDataEntries() {
         DataEntry key = new DataEntry<>("key", "=", "new_component", 1111);
         DataEntry size = new DataEntry<>("size", "=", "size", 1111);
         DataEntry icon = new DataEntry<>("icon", "=", "new_component", 1111);
@@ -16,7 +19,7 @@ public class Component extends GenericData {
         DataEntry cost = new DataEntry<>("cost", "=", "new_component", 1111);
         DataEntry component_set = new DataEntry<>("component_set", "=", "new_component", 1111);
 
-        requiredSet = new DataEntry[]{key, size, icon, icon_frame, power, cost, component_set};
+        dataEntries = new ArrayList<>(Arrays.asList(key, size, icon, icon_frame, power, cost, component_set));
     }
 
     public Component() {

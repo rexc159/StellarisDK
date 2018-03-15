@@ -5,11 +5,6 @@ import StellarisDK.GUI.AmbientObjectUI;
 
 public class AmbientObject extends GenericData {
 
-    @Override
-    public void setRequiredSet() {
-        requiredSet = new DataEntry[]{};
-    }
-
     public AmbientObject() {
         super();
         this.type = new DataEntry("ambient_object", 1011);

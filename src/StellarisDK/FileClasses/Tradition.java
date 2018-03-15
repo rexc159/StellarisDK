@@ -7,11 +7,6 @@ public class Tradition extends GenericData {
 
     private boolean ap;
 
-    @Override
-    public void setRequiredSet() {
-        requiredSet = new DataEntry[]{};
-    }
-
     public Tradition(boolean ap) {
         super();
         if (ap) {

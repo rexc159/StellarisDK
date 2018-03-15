@@ -7,6 +7,7 @@ import StellarisDK.FileClasses.Helper.StellarisColor;
 import StellarisDK.GUI.AbstractUI;
 import javafx.scene.control.TreeItem;
 
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 
 /**
@@ -26,18 +27,18 @@ public abstract class GenericData {
 
     public AbstractUI ui;
 
-    protected DataEntry[] requiredSet;
+    protected ArrayList<DataEntry> dataEntries;
 
     protected DataEntry type;
 
     public GenericData() {
-        setRequiredSet();
+        setDataEntries();
         name = "New Item (Click to Edit)";
         data = new DataMap();
     }
 
     public GenericData(String input) {
-        setRequiredSet();
+        setDataEntries();
         data = (DataMap) load(input);
     }
 
@@ -80,7 +81,7 @@ public abstract class GenericData {
     }
 
     public void lockEntries() {
-        for (DataEntry entry : requiredSet) {
+        for (DataEntry entry : dataEntries) {
             setEntryLock(entry.getKey(), entry.getBinary());
         }
     }
@@ -132,11 +133,13 @@ public abstract class GenericData {
         return copy;
     }
 
-    public abstract void setRequiredSet();
+    public void setDataEntries(){
+        dataEntries = new ArrayList<>();
+    }
 
     public TreeItem getRequiredTreeSet() {
         TreeItem root = new TreeItem<>(type);
-        for (DataEntry entry : requiredSet) {
+        for (DataEntry entry : dataEntries) {
             TreeItem temp = new TreeItem<>(entry);
             if(!entry.isSingleEntry()){
                 temp.getChildren().add(new TreeItem<>("click_to_edit"));

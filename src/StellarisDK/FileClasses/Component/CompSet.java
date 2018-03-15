@@ -1,7 +1,6 @@
 package StellarisDK.FileClasses.Component;
 
 import StellarisDK.FileClasses.GenericData;
-import StellarisDK.FileClasses.Helper.DataEntry;
 import StellarisDK.GUI.CompSetUI;
 
 import java.util.regex.Matcher;
@@ -13,11 +12,6 @@ public class CompSet extends GenericData {
     private String icon;
     private String icon_frame = "1";
     protected final Pattern kv = Pattern.compile("(?m)^\\t?(\\w+) . ([^\\{#\\n]+)(#.+)*");
-
-    @Override
-    public void setRequiredSet() {
-        requiredSet = new DataEntry[]{};
-    }
 
     public CompSet() {
         super();

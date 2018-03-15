@@ -3,14 +3,17 @@ package StellarisDK.FileClasses;
 import StellarisDK.FileClasses.Helper.DataEntry;
 import StellarisDK.GUI.AgendaUI;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class Agenda extends GenericData {
 
     @Override
-    public void setRequiredSet() {
-        requiredSet = new DataEntry[]{
+    public void setDataEntries() {
+        dataEntries = new ArrayList<>(Arrays.asList(
                 new DataEntry<>("weight_modifier", 1001),
                 new DataEntry<>("modifier", 1001)
-        };
+        ));
     }
 
     public Agenda() {

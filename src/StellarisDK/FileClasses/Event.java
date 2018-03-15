@@ -5,11 +5,6 @@ import StellarisDK.GUI.EventUI;
 
 public class Event extends GenericData {
 
-    @Override
-    public void setRequiredSet() {
-        requiredSet = new DataEntry[]{};
-    }
-
     private String namespace;
 
     public Event() {

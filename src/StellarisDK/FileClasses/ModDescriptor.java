@@ -1,6 +1,5 @@
 package StellarisDK.FileClasses;
 
-import StellarisDK.FileClasses.Helper.DataEntry;
 import StellarisDK.FileClasses.Helper.DataMap;
 import StellarisDK.GUI.ModDescUI;
 
@@ -12,11 +11,6 @@ import java.util.Collections;
 import java.util.regex.Matcher;
 
 public class ModDescriptor extends GenericData {
-
-    @Override
-    public void setRequiredSet() {
-        requiredSet = new DataEntry[]{};
-    }
 
     public ModDescriptor() {
         data = new DataMap();
