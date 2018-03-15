@@ -101,8 +101,11 @@ public class DataCell<T> extends TreeCell<T> {
         super.startEdit();
         if (getItem() instanceof DataEntry && ((DataEntry) getItem()).getValue() != null) {
             textField = new TextField(((DataEntry) getItem()).getValue().toString());
+            setText(((DataEntry) getItem()).getKey() + ": ");
+            setContentDisplay(ContentDisplay.RIGHT);
         } else {
             textField = new TextField(getItem().toString());
+            setText(null);
         }
         textField.setOnKeyReleased(event -> {
             if (event.getCode() == KeyCode.ENTER) {
@@ -111,12 +114,6 @@ public class DataCell<T> extends TreeCell<T> {
                 cancelEdit();
             }
         });
-        if (getItem() instanceof DataEntry && ((DataEntry) getItem()).getValue() != null) {
-            setText(((DataEntry) getItem()).getKey() + ": ");
-            setContentDisplay(ContentDisplay.RIGHT);
-        } else {
-            setText(null);
-        }
         setGraphic(textField);
         textField.selectAll();
     }

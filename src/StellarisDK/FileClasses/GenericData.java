@@ -66,7 +66,14 @@ public abstract class GenericData {
         return name;
     }
 
-    public String getFirstValue(String key) {
+    public Object getFirstValue(String key) {
+        if (getKey(key))
+            return ((EntryArrayList) data.get(key)).get(0);
+        else
+            return null;
+    }
+
+    public String getFirstString(String key) {
         if (getKey(key))
             return ((EntryArrayList) data.get(key)).getFirstString();
         else
@@ -107,6 +114,12 @@ public abstract class GenericData {
             data.put(key, temp);
         } else {
             ((DataEntry) ((EntryArrayList) data.get(key)).get(index)).setValue(value);
+        }
+    }
+
+    public void removeValue(String key) {
+        if (data.containsKey(key)) {
+            data.remove(key);
         }
     }
 
@@ -219,19 +232,15 @@ public abstract class GenericData {
             EntryArrayList<DataEntry> temp;
             if (matcher.group(5) != null) {
                 if (matcher.group(7).contains("{")) {
-//                    ValueTriplet dat;
                     DataEntry entry;
                     Matcher color = DataPattern.color.matcher(matcher.group(7));
                     if (color.find()) {
                         try {
-//                            dat = new ValueTriplet<>(matcher.group(6).trim(), new StellarisColor(color.group(1).trim(), color.group(2).trim(), color.group(3).trim(), color.group(4).trim(), color.group(5).trim()), size++);
                             entry = new DataEntry<>(matcher.group(5).trim(), new StellarisColor(color.group(1).trim(), color.group(2).trim(), color.group(3).trim(), color.group(4).trim(), color.group(5).trim()), size++ , 1110);
                         } catch (NullPointerException e) {
-//                            dat = new ValueTriplet<>(matcher.group(6).trim(), new StellarisColor(color.group(1).trim(), color.group(2).trim(), color.group(3).trim(), color.group(4).trim()), size++);
                             entry = new DataEntry<>(matcher.group(5).trim(), new StellarisColor(color.group(1).trim(), color.group(2).trim(), color.group(3).trim(), color.group(4).trim()), size++ , 1110);
                         }
                     } else {
-//                        dat = new ValueTriplet<>(matcher.group(6).trim(), sLrecursion(matcher.group(7).trim()), size++);
                         entry = new DataEntry<>(matcher.group(5).trim(), sLrecursion(matcher.group(7).trim()), size++, 1010);
                     }
                     if (data.containsKey(matcher.group(5))) {
@@ -242,7 +251,6 @@ public abstract class GenericData {
                         data.put(matcher.group(5).trim(), temp);
                     }
                 } else {
-//                    ValueTriplet dat = new ValueTriplet<>(matcher.group(6).trim(), matcher.group(7).trim(), size++);
                     DataEntry entry = new DataEntry<>(matcher.group(5).trim(), matcher.group(6).trim(), matcher.group(7).trim(), size++, 1110);
                     if (data.containsKey(matcher.group(5).trim())) {
                         data.get(matcher.group(5).trim()).add(entry);
@@ -256,14 +264,11 @@ public abstract class GenericData {
                 temp = new EntryArrayList<>();
                 int order = size++;
                 DataMap secMap;
-//                ValueTriplet dat;
                 DataEntry entry;
                 if (!matcher.group(4).contains("=")) {
-//                    dat = new ValueTriplet<>(matcher.group(2).trim(), sLrecursion(matcher.group(4).trim().replaceAll("[\\t\\n\\r]", " ")), order);
                     entry = new DataEntry<>(matcher.group(1).trim(), sLrecursion(matcher.group(4).trim().replaceAll("[\\t\\n\\r]", " ")), order, 1010);
                 } else {
                     secMap = (DataMap) load(matcher.group(4).replaceAll("(?m)^\t", ""));
-//                    dat = new ValueTriplet<>(matcher.group(2).trim(), secMap, order);
                     entry = new DataEntry<>(matcher.group(1).trim(), secMap, order, 1010);
                 }
                 temp.add(entry);

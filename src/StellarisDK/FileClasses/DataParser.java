@@ -101,6 +101,8 @@ public class DataParser {
                         gData = new Tradition(tabby, obj.group(1), false);
                         break;
                     case "attitudes":
+                        gData = new Attitude(tabby, obj.group(1));
+                        break;
                     case "bombardment_stances":
                     case "buildable_pops":
                     case "building tags":

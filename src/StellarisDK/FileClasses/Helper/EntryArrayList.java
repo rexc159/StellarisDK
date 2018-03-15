@@ -3,8 +3,21 @@ package StellarisDK.FileClasses.Helper;
 import javafx.scene.control.TreeItem;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class EntryArrayList<T> extends ArrayList<T> {
+
+    public EntryArrayList() {
+        super();
+    }
+
+    public EntryArrayList(T entry) {
+        super();
+        this.add(entry);
+    }
+    public EntryArrayList(Collection<? extends T> c) {
+        super(c);
+    }
 
     public TreeItem toTreeItem(DataEntry key) {
         TreeItem root = new TreeItem<>(new DataEntry(key.getKey(), key.getBinary()));

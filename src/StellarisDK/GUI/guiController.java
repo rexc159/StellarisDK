@@ -211,9 +211,9 @@ public class guiController extends AnchorPane {
                 return cell;
             }
 
-            private MenuItem createItem(TreeCell cell, String type){
+            private MenuItem createItem(TreeCell cell, String type) {
                 MenuItem item = new MenuItem(type);
-                item.setOnAction(event ->{
+                item.setOnAction(event -> {
                     cell.getTreeItem().getChildren().add(createNew(type));
                 });
                 return item;
@@ -281,19 +281,19 @@ public class guiController extends AnchorPane {
                 cell.setOnContextMenuRequested(event -> {
                     cell.getContextMenu().getItems().clear();
                     create.getItems().clear();
-                    if(cContent == null){
+                    if (cContent == null) {
                         paste.setDisable(true);
-                    }else{
+                    } else {
                         paste.setDisable(false);
                     }
                     if (cell.getItem() != null && cell.getTreeItem().getParent() != null) {
                         if (cell.getTreeItem().getParent().getValue().equals("common") || cell.getItem().equals("events")) {
                             cell.getContextMenu().getItems().add(createNew);
                         } else if (cell.getItem().toString().endsWith(".txt")) {
-                            if(cell.getTreeItem().getParent().getValue().toString().equals("anomalies")){
+                            if (cell.getTreeItem().getParent().getValue().toString().equals("anomalies")) {
                                 cell.getContextMenu().getItems().addAll(create, edit, paste, delete);
-                                create.getItems().addAll(createItem(cell,"anomaly"), createItem(cell, "anomaly_category"));
-                            } else{
+                                create.getItems().addAll(createItem(cell, "anomaly"), createItem(cell, "anomaly_category"));
+                            } else {
                                 cell.getContextMenu().getItems().addAll(createNew, edit, paste, delete);
                             }
                         } else if (cell.getTreeItem().getParent().getValue().toString().endsWith(".txt")) {
@@ -309,27 +309,27 @@ public class guiController extends AnchorPane {
         });
 
         itemView.setOnKeyPressed(event -> {
-            TreeItem selected = (TreeItem)itemView.getSelectionModel().getSelectedItem();
+            TreeItem selected = (TreeItem) itemView.getSelectionModel().getSelectedItem();
             if (new KeyCodeCombination(KeyCode.X, KeyCombination.CONTROL_DOWN).match(event)) {
-                if(selected.getParent() != null && selected.getParent().getValue().toString().endsWith(".txt")){
+                if (selected.getParent() != null && selected.getParent().getValue().toString().endsWith(".txt")) {
                     System.out.println("CTRL+X");
                     cContent = (GenericData) selected.getValue();
                     cParent = selected.getParent().getParent().getValue().toString();
                     selected.getParent().getChildren().remove(selected);
                 }
             } else if (new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_DOWN).match(event)) {
-                if(selected.getParent() != null && selected.getParent().getValue().toString().endsWith(".txt")){
+                if (selected.getParent() != null && selected.getParent().getValue().toString().endsWith(".txt")) {
                     System.out.println("CTRL+C");
                     cContent = ((GenericData) selected.getValue()).clone();
                     cParent = selected.getParent().getParent().getValue().toString();
                 }
             } else if (new KeyCodeCombination(KeyCode.V, KeyCombination.CONTROL_DOWN).match(event)) {
-                    System.out.println("CTRL+V");
-                    if (cContent.getClass().equals(selected.getValue().getClass())) {
-                        selected.getParent().getChildren().add(new TreeItem<>(cContent.clone()));
-                    } else if (selected.getValue().toString().endsWith(".txt")) {
-                        if (selected.getParent().getValue().equals(cParent))
-                            selected.getChildren().add(new TreeItem<>(cContent.clone()));
+                System.out.println("CTRL+V");
+                if (cContent.getClass().equals(selected.getValue().getClass())) {
+                    selected.getParent().getChildren().add(new TreeItem<>(cContent.clone()));
+                } else if (selected.getValue().toString().endsWith(".txt")) {
+                    if (selected.getParent().getValue().equals(cParent))
+                        selected.getChildren().add(new TreeItem<>(cContent.clone()));
                 }
             } else if (new KeyCodeCombination(KeyCode.N, KeyCombination.CONTROL_DOWN).match(event)) {
                 System.out.println("CTRL+N");
@@ -370,7 +370,7 @@ public class guiController extends AnchorPane {
             case "ascension_perks":
                 return new TreeItem<>(new Tradition(false));
             case "attitudes":
-                break;
+                return new TreeItem<>(new Attitude());
             case "bombardment_stances":
                 break;
             case "buildable_pops":
@@ -572,7 +572,6 @@ public class guiController extends AnchorPane {
     private void loadEvents(String loadPath, TreeItem root, boolean load) {
         TreeItem<String> event = new TreeItem<>("events");
         root.getChildren().add(event);
-//        itemView.getRoot().getChildren().add(event);
         if (load)
             loadFiles(new File(loadPath + "\\events"), event);
     }
@@ -580,7 +579,6 @@ public class guiController extends AnchorPane {
     private void loadLocale(String loadPath, TreeItem root, boolean load) {
         TreeItem<String> locale = new TreeItem<>("localisation");
         root.getChildren().add(locale);
-//        itemView.getRoot().getChildren().add(locale);
         if (load) {
             try {
                 for (File file : new File(loadPath + "\\localisation").listFiles()) {

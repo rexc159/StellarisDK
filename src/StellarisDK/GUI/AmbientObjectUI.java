@@ -33,16 +33,16 @@ public class AmbientObjectUI extends AbstractUI {
 
     @Override
     public void load() {
-        name.setText(obj.getFirstValue(name.getId()));
-        tooltip.setText(obj.getFirstValue(tooltip.getId()));
-        description.setText(obj.getFirstValue(description.getId()));
-        entity.setText(obj.getFirstValue(entity.getId()));
-        if (obj.getFirstValue(show_name.getId()) != null && obj.getFirstValue(show_name.getId()).toLowerCase().equals("yes")) {
+        name.setText(obj.getFirstString(name.getId()));
+        tooltip.setText(obj.getFirstString(tooltip.getId()));
+        description.setText(obj.getFirstString(description.getId()));
+        entity.setText(obj.getFirstString(entity.getId()));
+        if (obj.getFirstString(show_name.getId()) != null && obj.getFirstString(show_name.getId()).toLowerCase().equals("yes")) {
             show_name.setSelected(true);
         } else {
             show_name.setSelected(false);
         }
-        if (obj.getFirstValue(selectable.getId()) != null && obj.getFirstValue(selectable.getId()).toLowerCase().equals("yes")) {
+        if (obj.getFirstString(selectable.getId()) != null && obj.getFirstString(selectable.getId()).toLowerCase().equals("yes")) {
             selectable.setSelected(true);
         } else {
             selectable.setSelected(false);

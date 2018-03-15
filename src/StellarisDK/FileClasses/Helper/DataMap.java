@@ -15,6 +15,13 @@ public class DataMap<V> extends HashMap<String, V> {
         return count;
     }
 
+    public Object getFirstValue(String key) {
+        if (get(key) != null)
+            return ((EntryArrayList) get(key)).get(0);
+        else
+            return null;
+    }
+
     public TreeItem<DataEntry> toTreeItem(DataEntry key) {
         TreeItem<DataEntry> root = new TreeItem<>(new DataEntry(key.getKey(), key.getBinary()));
         DataEntry[] objs = compressToPairArray();
