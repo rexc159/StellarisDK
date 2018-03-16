@@ -11,6 +11,7 @@ import javafx.scene.input.TransferMode;
 public class DataCell<T> extends TreeCell<T> {
 
     private TextField textField;
+    private Node editor;
     private static TreeItem cellContent;
 
     public DataCell() {
@@ -90,10 +91,44 @@ public class DataCell<T> extends TreeCell<T> {
     public void startEdit() {
         if ((getItem() instanceof DataEntry)) {
             if (((DataEntry) getItem()).isEditable()) {
-                startEditor();
+                startTestEditor();
             }
         } else {
             startEditor();
+        }
+    }
+
+    private void startTestEditor(){
+        super.startEdit();
+        if (getItem() instanceof DataEntry && ((DataEntry) getItem()).editor != null) {
+                editor = ((DataEntry) getItem()).editor;
+                setText(((DataEntry) getItem()).getKey() + ": ");
+                setGraphic(editor);
+                setContentDisplay(ContentDisplay.RIGHT);
+                editor.setOnKeyReleased(event -> {
+                    if (event.getCode() == KeyCode.ENTER) {
+                        commitEdit((T) "test");
+                    } else if (event.getCode() == KeyCode.ESCAPE) {
+                        cancelEdit();
+                    }
+                });
+        } else {
+            if (getItem() instanceof DataEntry && ((DataEntry) getItem()).getValue() != null) {
+                textField = new TextField(((DataEntry) getItem()).getValue().toString());
+                setText(((DataEntry) getItem()).getKey() + ": ");
+                setContentDisplay(ContentDisplay.RIGHT);
+            } else {
+                textField = new TextField(getItem().toString());
+                setText(null);
+            }
+            textField.setOnKeyReleased(event -> {
+                if (event.getCode() == KeyCode.ENTER) {
+                    commitEdit((T) textField.getText());
+                } else if (event.getCode() == KeyCode.ESCAPE) {
+                    cancelEdit();
+                }
+            });
+            setGraphic(textField);
         }
     }
 

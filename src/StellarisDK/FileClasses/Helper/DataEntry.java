@@ -1,5 +1,7 @@
 package StellarisDK.FileClasses.Helper;
 
+import javafx.scene.Node;
+import javafx.scene.control.Control;
 import javafx.scene.control.TreeItem;
 
 public class DataEntry<V> {
@@ -12,6 +14,16 @@ public class DataEntry<V> {
     private String operator = "";
     private V value;
     private int order = 0;
+
+    public Control editor;
+
+    public void setEditor(Control editor){
+        this.editor = editor;
+    }
+
+    public Node getEditor(){
+        return editor;
+    }
 
     public DataEntry(String key) {
         this.key = key;

@@ -2,6 +2,7 @@ package StellarisDK.FileClasses;
 
 import StellarisDK.FileClasses.Helper.DataEntry;
 import StellarisDK.GUI.ArmyUI;
+import javafx.scene.control.Spinner;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,6 +37,16 @@ public class Army extends GenericData {
         DataEntry on_unqueued = new DataEntry<>("on_unqueued", 1000);
         DataEntry show_tech_unlock_if = new DataEntry<>("show_tech_unlock_if", 1000);
         DataEntry prerequisites = new DataEntry<>("prerequisites", 1000);
+
+        health.editor = new Spinner<Double>(0,Integer.MAX_VALUE,1);
+        morale.editor = new Spinner<Double>(0,Integer.MAX_VALUE,1);
+        damage.editor = new Spinner<Double>(0,Integer.MAX_VALUE,1);
+        morale_damage.editor = new Spinner<Double>(0,Integer.MAX_VALUE,1);
+        collateral_damage.editor = new Spinner<Double>(0,Integer.MAX_VALUE,1);
+        war_exhaustion.editor = new Spinner<Double>(0,Integer.MAX_VALUE,1);
+        time.editor = new Spinner<Double>(0,Integer.MAX_VALUE,1);
+        maintenance.editor = new Spinner<Double>(0,Integer.MAX_VALUE,1);
+        icon_frame.editor = new Spinner<Double>(0,Integer.MAX_VALUE,1);
 
         this.dataEntries = new ArrayList<>(
                 Arrays.asList(damage, health, morale, morale_damage, collateral_damage, war_exhaustion,
