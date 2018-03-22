@@ -15,6 +15,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -40,7 +41,8 @@ public class guiController extends AnchorPane {
 
     public static TreeItem compSet;
 
-    private ArrayList<TreeItem> modList = new ArrayList<>();
+    private ArrayList<TreeItem> modList;
+    private ModLoader loader;
 
     private ModDescriptor mainMd;
 
@@ -283,8 +285,8 @@ public class guiController extends AnchorPane {
                 });
 
                 MenuItem close = new MenuItem("Unload Mod");
-                close.setOnAction(event ->{
-                    if(modList.contains(cell.getTreeItem())){
+                close.setOnAction(event -> {
+                    if (modList.contains(cell.getTreeItem())) {
                         modList.remove(cell.getTreeItem());
                     }
                     itemView.getRoot().getChildren().remove(cell.getTreeItem());
@@ -310,7 +312,7 @@ public class guiController extends AnchorPane {
                             }
                         } else if (cell.getTreeItem().getParent().getValue().toString().endsWith(".txt")) {
                             cell.getContextMenu().getItems().addAll(createNew, cut, copy, paste, delete);
-                        } else if (cell.getItem() instanceof ModDescriptor && !cell.getTreeItem().isLeaf()){
+                        } else if (cell.getItem() instanceof ModDescriptor && !cell.getTreeItem().isLeaf()) {
                             cell.getContextMenu().getItems().add(close);
                         }
                     }
@@ -514,42 +516,23 @@ public class guiController extends AnchorPane {
         open(mainMd);
     }
 
-    protected void openModV2() {
-        System.out.println(FileSystemView.getFileSystemView().getDefaultDirectory().getPath());
-        File modFolder = new File(FileSystemView.getFileSystemView().getDefaultDirectory().getPath() + "\\Paradox Interactive\\Stellaris\\mod");
-        for (File mod : modFolder.listFiles()) {
-            if(mod.isFile() && mod.getName().endsWith(".mod")){
-                modList.add(new TreeItem<>(new ModDescriptor(mod.getPath())));
-            }
-        }
-        ModLoader loader = new ModLoader(modList);
-        loader.load();
-        loader.setTree(itemView);
-        if (!mainWindow.getChildren().contains(loader))
-            mainWindow.getChildren().add(loader);
-    }
-
     @FXML
     protected void openMod() {
-        openModV2();
-//        FileChooser fc = new FileChooser();
-//        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Mod Descriptors (*.mod)", "*.mod"));
-//        fc.setTitle("Select Mod Descriptor");
-//        File modPath = fc.showOpenDialog(stage);
-//        if (modPath != null) {
-//            mainMd = new ModDescriptor(modPath.getPath());
-//            if (modRoot != null) {
-//                itemView.getRoot().getChildren().remove(modRoot);
-//            }
-//            modRoot = new TreeItem<>(mainMd);
-//            itemView.getRoot().getChildren().add(modRoot);
-//            modRoot.getChildren().add(new TreeItem<>(mainMd));
-//            itemView.getRoot().setExpanded(true);
-//            if (mainMd.getValue("path") != null) {
-//                mainLoadPath = modPath.getParentFile().getParent() + "\\" + (mainMd.getValue("path").toString().replaceAll("/", "\\\\"));
-//                loadMod(mainLoadPath, modRoot, true);
-//            }
-//        }
+        if(modList == null){
+            modList = new ArrayList<>();
+            File modFolder = new File(FileSystemView.getFileSystemView().getDefaultDirectory().getPath() + "\\Paradox Interactive\\Stellaris\\mod");
+            for (File mod : modFolder.listFiles()) {
+                if (mod.isFile() && mod.getName().endsWith(".mod")) {
+                    modList.add(new TreeItem<>(new ModDescriptor(mod.getPath())));
+                }
+            }
+            loader = new ModLoader(modList);
+            loader.load();
+            loader.setRoot(mainWindow);
+            loader.setTree(itemView);
+        }
+        if (!mainWindow.getChildren().contains(loader))
+            mainWindow.getChildren().add(loader);
     }
 
     @FXML
@@ -579,7 +562,7 @@ public class guiController extends AnchorPane {
         dialog.show();
     }
 
-    protected static void loadFiles(File files, TreeItem item) {
+    private static void loadFiles(File files, TreeItem item) {
         try {
             for (File file : files.listFiles()) {
                 System.out.println("Loading: " + file.getPath());
@@ -599,14 +582,14 @@ public class guiController extends AnchorPane {
         System.gc();
     }
 
-    protected static void loadEvents(String loadPath, TreeItem root, boolean load) {
+    private static void loadEvents(String loadPath, TreeItem root, boolean load) {
         TreeItem<String> event = new TreeItem<>("events");
         root.getChildren().add(event);
         if (load)
             loadFiles(new File(loadPath + "\\events"), event);
     }
 
-    protected static void loadLocale(String loadPath, TreeItem root, boolean load) {
+    private static void loadLocale(String loadPath, TreeItem root, boolean load) {
         TreeItem<String> locale = new TreeItem<>("localisation");
         root.getChildren().add(locale);
         if (load) {
@@ -625,7 +608,7 @@ public class guiController extends AnchorPane {
         }
     }
 
-    protected static void loadCommon(String loadPath, TreeItem root, boolean load) {
+    private static void loadCommon(String loadPath, TreeItem root, boolean load) {
         TreeItem<String> common = new TreeItem<>("common");
         root.getChildren().add(common);
 //        itemView.getRoot().getChildren().add(common);
@@ -737,31 +720,76 @@ public class guiController extends AnchorPane {
         }
     }
 
-    @FXML
-    protected void saveAll() {
-        if (mainMd != null && mainMd.getValue("path") != null) {
-            DirectoryChooser fc = new DirectoryChooser();
-            File main = fc.showDialog(stage);
-            if (main != null) {
-                String folder = mainMd.getDir();
-                main = new File(main.getPath(), folder);
+    private void saveMod(TreeItem root) {
+        if (itemView.getRoot().getChildren().contains(root)) {
+            if (((ModDescriptor) root.getValue()).getValue("path") != null) {
+                File modFolder = new File(FileSystemView.getFileSystemView().
+                        getDefaultDirectory().getPath() + "\\Paradox Interactive\\Stellaris\\mod");
+                String folder = ((ModDescriptor) root.getValue()).getDir();
+                File main = new File(modFolder.getPath(), folder);
                 if (main.exists()) {
                     DateTimeFormatter dTF = DateTimeFormatter.ofPattern("_yyyy-MM-dd_HH-mm-ss");
                     main.renameTo(new File(main.getParent(), folder + dTF.format(LocalDateTime.now())));
                     main = new File(main.getParent(), folder);
                 }
                 main.mkdir();
-                saveFiles(main, modRoot);
-                openWarningBox("Saving Complete! Remember to transfer resources from original folder.");
+                saveFiles(main, root);
             }
-        } else {
+        }
+    }
+
+    @FXML
+    protected void saveSelect() {
+        Stage dialog = new Stage();
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.initOwner(this.stage);
+        VBox box = new VBox();
+        for (TreeItem modList : modList) {
+            if(modList != null){
+                CheckBox temp = new CheckBox(modList.getValue().toString());
+                temp.setId(temp.getText());
+                box.getChildren().add(temp);
+            }
+        }
+        Button save = new Button("Export Selected");
+        box.getChildren().add(save);
+        save.setOnAction(event -> {
+            for(Node checkbox : box.getChildren()){
+                if(checkbox.getId() != null && ((CheckBox) checkbox).isSelected()){
+                    if (!itemView.getRoot().getChildren().contains(vanillaRoot)){
+                        saveMod((TreeItem)itemView.getRoot().getChildren().get(box.getChildren().indexOf(checkbox)));
+                    }else{
+                        saveMod((TreeItem)itemView.getRoot().getChildren().get(box.getChildren().indexOf(checkbox)+1));
+                    }
+                }
+            }
+            dialog.close();
+        });
+        dialog.setScene(new Scene(box));
+        dialog.show();
+    }
+
+    @FXML
+    protected void saveAll() {
+        boolean success = false;
+        if(modList != null){
+            for (TreeItem item : modList) {
+                saveMod(item);
+            }
+            success = true;
+        }
+        if(success){
+            openWarningBox("Saving Complete! Remember to transfer resources from original folders.");
+        }else{
             openWarningBox("No Mod Loaded/No Mod Path Defined!");
         }
     }
 
     @FXML
     protected void closeAll() {
-        itemView.getRoot().getChildren().remove(modRoot);
+        for (TreeItem mod : modList) {
+            itemView.getRoot().getChildren().remove(mod);
+        }
         modList = new ArrayList<>();
         modRoot = null;
         System.gc();

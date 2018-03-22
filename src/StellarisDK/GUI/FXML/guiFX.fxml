@@ -18,10 +18,11 @@
                         <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem mnemonicParsing="false" onAction="#openFile" text="Open File (Debug Option)" />
                         <MenuItem mnemonicParsing="false" onAction="#openLocale" text="Open Locale (Debug Option)" />
-                        <MenuItem mnemonicParsing="false" onAction="#openMod" text="Open Mod" />
+                        <MenuItem mnemonicParsing="false" onAction="#openMod" text="Load Mods" />
                   <MenuItem mnemonicParsing="false" onAction="#loadVanilla" text="Load Vanilla Stellaris Data" />
                         <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="false" onAction="#saveAll" text="Export Mod" />
+                        <MenuItem mnemonicParsing="false" onAction="#saveSelect" text="Export..." />
+                  <MenuItem mnemonicParsing="false" onAction="#saveAll" text="Export All" />
                         <MenuItem mnemonicParsing="false" onAction="#closeAll" text="Close All Mods" />
                         <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem mnemonicParsing="false" text="Settings (Not Implemented)" />
