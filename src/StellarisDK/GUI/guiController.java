@@ -6,6 +6,7 @@ import StellarisDK.FileClasses.Anomaly.Anomaly;
 import StellarisDK.FileClasses.Anomaly.AnomalyCategory;
 import StellarisDK.FileClasses.Component.CompSet;
 import StellarisDK.FileClasses.Component.Component;
+import StellarisDK.FileClasses.Helper.DataComparator;
 import com.sun.javafx.scene.control.skin.LabeledText;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -30,6 +31,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.TreeSet;
 
 import static StellarisDK.FileClasses.DataParser.parseToConsole;
 
@@ -131,7 +133,7 @@ public class guiController extends AnchorPane {
                                 setGraphic(txt);
                             } else {
                                 setText(getItem().toString());
-                                setGraphic(null);
+                                setGraphic(getTreeItem().getGraphic());
                             }
                         }
                     }
@@ -793,6 +795,41 @@ public class guiController extends AnchorPane {
         modList = new ArrayList<>();
         modRoot = null;
         System.gc();
+    }
+
+    @FXML
+    protected void testComp() {
+        for (int i = 0; i < DataLoc.common.size(); i++) {
+            ArrayList<TreeItem> conflict = new ArrayList<>();
+            TreeSet<TreeItem> comparator = new TreeSet<>(new DataComparator());
+            ArrayList repeater = new ArrayList();
+
+            for (Object item : itemView.getRoot().getChildren()) {
+                if (!((TreeItem) ((TreeItem) ((TreeItem) item).getChildren().get(0)).getChildren().get(i)).isLeaf()) {
+                    for (Object file : ((TreeItem) ((TreeItem) ((TreeItem) item).getChildren().get(0)).getChildren().get(i)).getChildren()) {
+                        if (((TreeItem) file).getValue().toString().endsWith(".txt")) {
+                            for (Object obj : ((TreeItem) file).getChildren()) {
+                                if (((TreeItem) obj).isLeaf()) {
+                                    conflict.add((TreeItem) obj);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            conflict.forEach(e -> {
+                if (!comparator.add(e)) {
+                    repeater.add(e);
+                    comparator.stream().filter(k -> k.getValue().toString().equals(e.getValue().toString()) && !repeater.contains(k))
+                            .forEach(x -> repeater.add(x));
+                }
+            });
+            repeater.forEach(e -> {
+                ((TreeItem) e).setGraphic(new Label("[CONFLICT]"));
+            });
+            repeater.forEach(System.out::println);
+        }
     }
 
     @FXML

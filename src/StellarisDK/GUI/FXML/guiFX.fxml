@@ -41,7 +41,8 @@
                 </Menu>
             <Menu mnemonicParsing="false" text="Debug Options">
               <items>
-                <MenuItem mnemonicParsing="false" onAction="#exportTest" text="Export Test" />
+                  <MenuItem mnemonicParsing="false" onAction="#testComp" text="Comp Test"/>
+                  <MenuItem mnemonicParsing="false" onAction="#exportTest" text="Export Test"/>
               </items>
             </Menu>
             </menus>

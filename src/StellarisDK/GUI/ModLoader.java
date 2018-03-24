@@ -44,6 +44,7 @@ public class ModLoader extends AbstractUI {
                         "\\Paradox Interactive\\Stellaris\\" +
                         (((ModDescriptor) item.getValue()).getValue("path").toString().replaceAll("/", "\\\\"));
                 guiController.loadMod(mainLoadPath, item, true);
+                item.getChildren().add(new TreeItem<>(item.getValue()));
             }else{
                 modList.set(modList.indexOf(item), null);
             }
