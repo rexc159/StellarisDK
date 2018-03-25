@@ -42,6 +42,19 @@ public class DataParser {
         }
     }
 
+    public static boolean bracketCheck(String input) {
+        Matcher test = Pattern.compile("(\\{)|(\\})").matcher(input);
+        int tester = 0;
+        while (test.find()) {
+            if (test.group(1) != null) {
+                tester++;
+            } else if (test.group(2) != null) {
+                tester--;
+            }
+        }
+        return tester == 0;
+    }
+
     /*
         Either follow the extremely long stack of elifs, or just use the folder name as reference
         which is way easier anyway.
@@ -80,6 +93,7 @@ public class DataParser {
                 String tabby = obj.group(2).replaceAll(" {4}", "\t");
                 GenericData gData;
                 String search = file.getParent().split("\\\\")[file.getParent().split("\\\\").length-1];
+                System.out.println(bracketCheck(tabby));
                 switch (search) {
                     case "agendas":
                         gData = new Agenda(tabby, obj.group(1));

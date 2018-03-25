@@ -42,6 +42,7 @@
             <Menu mnemonicParsing="false" text="Debug Options">
               <items>
                   <MenuItem mnemonicParsing="false" onAction="#testComp" text="Check Mod Compatibility"/>
+                  <MenuItem mnemonicParsing="false" onAction="#checkSum" text="Check File Bracket"/>
               </items>
             </Menu>
             </menus>

@@ -38,7 +38,6 @@ import static StellarisDK.FileClasses.DataParser.parseToConsole;
 
 public class guiController extends AnchorPane {
     private Stage stage;
-    private String mainLoadPath;
     private File path;
 
     public static TreeItem compSet;
@@ -47,8 +46,6 @@ public class guiController extends AnchorPane {
     private ModLoader loader;
 
     private ModDescriptor mainMd;
-
-    private GenericData test;
 
     private TreeItem modRoot;
     private TreeItem vanillaRoot = new TreeItem<>("Stellaris");
@@ -805,6 +802,19 @@ public class guiController extends AnchorPane {
         modList = new ArrayList<>();
         modRoot = null;
         System.gc();
+    }
+
+    @FXML
+    protected void checkSum() {
+        FileChooser fc = new FileChooser();
+        File main = fc.showOpenDialog(stage);
+        if (main != null) {
+            try {
+                DataParser.parseAll(main);
+            } catch (IOException | NullPointerException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @FXML
