@@ -294,6 +294,16 @@ public class guiController extends AnchorPane {
                     itemView.getRoot().getChildren().remove(cell.getTreeItem());
                 });
 
+                MenuItem export = new MenuItem("Export File");
+                export.setOnAction(event -> {
+                    FileChooser fc = new FileChooser();
+                    fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text File (*.txt)", "*.txt"));
+                    File temp = fc.showSaveDialog(stage);
+                    if (temp != null) {
+                        saveFiles(temp, cell.getTreeItem());
+                    }
+                });
+
                 cell.setOnContextMenuRequested(event -> {
                     cell.getContextMenu().getItems().clear();
                     create.getItems().clear();
@@ -310,7 +320,7 @@ public class guiController extends AnchorPane {
                                 cell.getContextMenu().getItems().addAll(create, edit, paste, delete);
                                 create.getItems().addAll(createItem(cell, "anomaly"), createItem(cell, "anomaly_category"));
                             } else {
-                                cell.getContextMenu().getItems().addAll(createNew, edit, paste, delete);
+                                cell.getContextMenu().getItems().addAll(createNew, export, edit, paste, delete);
                             }
                         } else if (cell.getTreeItem().getParent().getValue().toString().endsWith(".txt")) {
                             cell.getContextMenu().getItems().addAll(createNew, cut, copy, paste, delete);
@@ -520,7 +530,7 @@ public class guiController extends AnchorPane {
 
     @FXML
     protected void openMod() {
-        if(modList == null){
+        if (modList == null) {
             modList = new ArrayList<>();
             File modFolder = new File(FileSystemView.getFileSystemView().getDefaultDirectory().getPath() + "\\Paradox Interactive\\Stellaris\\mod");
             for (File mod : modFolder.listFiles()) {
@@ -747,7 +757,7 @@ public class guiController extends AnchorPane {
         dialog.initOwner(this.stage);
         VBox box = new VBox();
         for (TreeItem modList : modList) {
-            if(modList != null){
+            if (modList != null) {
                 CheckBox temp = new CheckBox(modList.getValue().toString());
                 temp.setId(temp.getText());
                 box.getChildren().add(temp);
@@ -756,12 +766,12 @@ public class guiController extends AnchorPane {
         Button save = new Button("Export Selected");
         box.getChildren().add(save);
         save.setOnAction(event -> {
-            for(Node checkbox : box.getChildren()){
-                if(checkbox.getId() != null && ((CheckBox) checkbox).isSelected()){
-                    if (!itemView.getRoot().getChildren().contains(vanillaRoot)){
-                        saveMod((TreeItem)itemView.getRoot().getChildren().get(box.getChildren().indexOf(checkbox)));
-                    }else{
-                        saveMod((TreeItem)itemView.getRoot().getChildren().get(box.getChildren().indexOf(checkbox)+1));
+            for (Node checkbox : box.getChildren()) {
+                if (checkbox.getId() != null && ((CheckBox) checkbox).isSelected()) {
+                    if (!itemView.getRoot().getChildren().contains(vanillaRoot)) {
+                        saveMod((TreeItem) itemView.getRoot().getChildren().get(box.getChildren().indexOf(checkbox)));
+                    } else {
+                        saveMod((TreeItem) itemView.getRoot().getChildren().get(box.getChildren().indexOf(checkbox) + 1));
                     }
                 }
             }
@@ -774,15 +784,15 @@ public class guiController extends AnchorPane {
     @FXML
     protected void saveAll() {
         boolean success = false;
-        if(modList != null){
+        if (modList != null) {
             for (TreeItem item : modList) {
                 saveMod(item);
             }
             success = true;
         }
-        if(success){
+        if (success) {
             openWarningBox("Saving Complete! Remember to transfer resources from original folders.");
-        }else{
+        } else {
             openWarningBox("No Mod Loaded/No Mod Path Defined!");
         }
     }
@@ -809,7 +819,9 @@ public class guiController extends AnchorPane {
                     for (Object file : ((TreeItem) ((TreeItem) ((TreeItem) item).getChildren().get(0)).getChildren().get(i)).getChildren()) {
                         if (((TreeItem) file).getValue().toString().endsWith(".txt")) {
                             for (Object obj : ((TreeItem) file).getChildren()) {
+
                                 if (((TreeItem) obj).isLeaf()) {
+                                    ((TreeItem) obj).setGraphic(null);
                                     conflict.add((TreeItem) obj);
                                 }
                             }
@@ -829,22 +841,6 @@ public class guiController extends AnchorPane {
                 ((TreeItem) e).setGraphic(new Label("[CONFLICT]"));
             });
             repeater.forEach(System.out::println);
-        }
-    }
-
-    @FXML
-    protected void exportTest() {
-        FileChooser fc = new FileChooser();
-        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text File (*.txt)", "*.txt"));
-        File temp = fc.showSaveDialog(stage);
-        if (temp != null) {
-            try {
-                FileWriter fw = new FileWriter(temp);
-                fw.write(test.export());
-                fw.close();
-            } catch (IOException e) {
-                System.out.println("Export Failed.");
-            }
         }
     }
 
