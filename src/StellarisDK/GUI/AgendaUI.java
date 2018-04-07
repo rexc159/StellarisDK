@@ -9,4 +9,5 @@ public class AgendaUI extends AbstractUI {
         window.setText("Agenda Editor");
         this.obj = obj;
     }
+
 }

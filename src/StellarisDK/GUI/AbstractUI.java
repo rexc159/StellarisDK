@@ -133,10 +133,14 @@ public abstract class AbstractUI extends Region {
                 }
             } else if (new KeyCodeCombination(KeyCode.N, KeyCombination.CONTROL_DOWN).match(event)) {
                 System.out.println("CTRL+N");
-                if (!((DataEntry) selected.getValue()).isSingleEntry()) {
-                    selected.getChildren().add(new TreeItem<>("Click_to_Edit"));
-                }else {
-                    selected.getParent().getChildren().add(new TreeItem<>("Click_to_Edit"));
+                if (selected.getValue() instanceof DataEntry) {
+                    if (!((DataEntry) selected.getValue()).isSingleEntry()) {
+                        selected.getChildren().add(new TreeItem<>("Click_to_Edit"));
+                    } else {
+                        selected.getParent().getChildren().add(new TreeItem<>("Click_to_Edit"));
+                    }
+                } else {
+                    selected.getChildren().add(new TreeItem("Click_to_Edit"));
                 }
             } else if (event.getCode() == KeyCode.DELETE) {
                 if (selected.getParent() != null || !((DataEntry) selected.getValue()).isRequired())

@@ -25,13 +25,13 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import javax.swing.filechooser.FileSystemView;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.TreeSet;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import static StellarisDK.FileClasses.DataParser.parseToConsole;
 
@@ -42,8 +42,8 @@ public class guiController extends AnchorPane {
 
     public static TreeItem compSet;
 
-    private ArrayList<TreeItem> modList;
-    private ModLoader loader;
+    private ArrayList<TreeItem> modList = new ArrayList<>();
+    private ModLoader modLoader = new ModLoader(modList);
 
     private ModDescriptor mainMd;
 
@@ -68,6 +68,13 @@ public class guiController extends AnchorPane {
             loader.load();
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+
+        File modFolder = new File(FileSystemView.getFileSystemView().getDefaultDirectory().getPath() + "\\Paradox Interactive\\Stellaris\\mod");
+        for (File mod : modFolder.listFiles()) {
+            if (mod.isFile() && mod.getName().endsWith(".mod")) {
+                modList.add(new TreeItem<>(new ModDescriptor(mod.getPath())));
+            }
         }
 
         itemView.setRoot(new TreeItem<>("root"));
@@ -297,7 +304,7 @@ public class guiController extends AnchorPane {
                     fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text File (*.txt)", "*.txt"));
                     File temp = fc.showSaveDialog(stage);
                     if (temp != null) {
-                        saveFiles(temp, cell.getTreeItem());
+                        saveFiles(temp, cell.getTreeItem(), cell.getTreeItem());
                     }
                 });
 
@@ -377,6 +384,9 @@ public class guiController extends AnchorPane {
             }
             event.consume();
         });
+
+        modLoader.setRoot(mainWindow);
+        modLoader.setTree(itemView);
     }
 
     private TreeItem createNew(String type) {
@@ -527,21 +537,9 @@ public class guiController extends AnchorPane {
 
     @FXML
     protected void openMod() {
-        if (modList == null) {
-            modList = new ArrayList<>();
-            File modFolder = new File(FileSystemView.getFileSystemView().getDefaultDirectory().getPath() + "\\Paradox Interactive\\Stellaris\\mod");
-            for (File mod : modFolder.listFiles()) {
-                if (mod.isFile() && mod.getName().endsWith(".mod")) {
-                    modList.add(new TreeItem<>(new ModDescriptor(mod.getPath())));
-                }
-            }
-            loader = new ModLoader(modList);
-            loader.load();
-            loader.setRoot(mainWindow);
-            loader.setTree(itemView);
-        }
-        if (!mainWindow.getChildren().contains(loader))
-            mainWindow.getChildren().add(loader);
+        modLoader.load();
+        if (!mainWindow.getChildren().contains(modLoader))
+            mainWindow.getChildren().add(modLoader);
     }
 
     @FXML
@@ -678,7 +676,7 @@ public class guiController extends AnchorPane {
             mainWindow.getChildren().add(obj.ui);
     }
 
-    private void saveFiles(File saveLoc, TreeItem current) {
+    private void saveFiles(File saveLoc, TreeItem current, TreeItem root) {
         boolean output = false;
         String temp = "";
         for (Object item : current.getChildren()) {
@@ -698,11 +696,11 @@ public class guiController extends AnchorPane {
                 temp = ((Locale) ((TreeItem) item).getValue()).export();
             } else if (((TreeItem) item).getChildren().size() != 0) {
                 if (((TreeItem) item).getValue().equals("Constants") || ((TreeItem) item).getValue().equals("Namespace")) {
-                    saveFiles(saveLoc, (TreeItem) item);
+                    saveFiles(saveLoc, (TreeItem) item, root);
                 } else {
                     saveLoc.mkdir();
                     File test = new File(saveLoc.getPath() + "\\" + ((TreeItem) item).getValue());
-                    saveFiles(test, (TreeItem) item);
+                    saveFiles(test, (TreeItem) item, root);
                 }
             }
         }
@@ -711,8 +709,8 @@ public class guiController extends AnchorPane {
             File out = new File(saveLoc.getPath());
             try {
                 if (out.isDirectory()) {
-                    FileWriter fw = new FileWriter(new File(out.getParent() + "\\" + modRoot.getValue() + ".mod"));
-                    fw.write(mainMd.export());
+                    FileWriter fw = new FileWriter(new File(out.getParent() + "\\" + root.getValue().toString().replaceAll("[\\\\/:*?\"<>|]", "") + ".mod"));
+                    fw.write(((ModDescriptor) root.getValue()).export());
                     fw.close();
                 } else {
                     if (!out.exists()) {
@@ -742,8 +740,38 @@ public class guiController extends AnchorPane {
                     main = new File(main.getParent(), folder);
                 }
                 main.mkdir();
-                saveFiles(main, root);
+                saveFiles(main, root, root);
             }
+        }
+    }
+
+    protected static void extractZip(TreeItem root) {
+        if (((ModDescriptor) root.getValue()).getValue("archive") != null) {
+            byte[] buffer = new byte[2048];
+            try (FileInputStream archive = new FileInputStream(((ModDescriptor) root.getValue()).getValue("archive").toString().replaceAll("/", "\\\\"))) {
+                ZipInputStream zis = new ZipInputStream(archive);
+                ZipEntry entry = zis.getNextEntry();
+                while (entry != null) {
+                    if (!entry.getName().equals("descriptor.mod")) {
+                        File file = new File("mods/" + root.getValue().toString() + "/" + entry.getName());
+                        file.getParentFile().mkdirs();
+                        System.out.println(file.getAbsolutePath());
+                        FileOutputStream fos = new FileOutputStream(file);
+                        int size;
+                        while ((size = zis.read(buffer)) > 0) {
+                            fos.write(buffer, 0, size);
+                        }
+                        fos.close();
+                    }
+                    entry = zis.getNextEntry();
+                }
+                zis.closeEntry();
+                zis.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            loadMod("mods/" + root.getValue().toString() + "/", root, true);
+            root.getChildren().add(new TreeItem<>(root.getValue()));
         }
     }
 
@@ -753,9 +781,9 @@ public class guiController extends AnchorPane {
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.initOwner(this.stage);
         VBox box = new VBox();
-        for (TreeItem modList : modList) {
-            if (modList != null) {
-                CheckBox temp = new CheckBox(modList.getValue().toString());
+        for (Object mod : itemView.getRoot().getChildren()) {
+            if (mod != null && !((TreeItem) mod).getValue().equals("Stellaris")) {
+                CheckBox temp = new CheckBox(((TreeItem) mod).getValue().toString());
                 temp.setId(temp.getText());
                 box.getChildren().add(temp);
             }

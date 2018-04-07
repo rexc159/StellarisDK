@@ -13,7 +13,7 @@ public class DataPattern {
 
     // Pattern matches for single value variable
     // i.e. key, size, power
-    public static final Pattern kv = Pattern.compile("(?m)^\\t?(\\w+)(\\s?[=<>]+\\s?)([^\\s\\{#\\n]+)(#.+)*");
+    public static final Pattern kv = Pattern.compile("(?m)^\\t?(\\w+)(\\s?[=<>]+\\s?)([^\\{#\\n]+)(#.+)*$");
 
     // Pattern matches for single lines objects
     // Group 1-3:   Special match for color

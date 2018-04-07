@@ -212,10 +212,14 @@ public class DataCell<T> extends TreeCell<T> {
         ContextMenu contextMenu = new ContextMenu();
         MenuItem createNew = new MenuItem("New..");
         createNew.setOnAction(event -> {
-            if (!((DataEntry) getItem()).isSingleEntry()) {
+            if (getItem() instanceof DataEntry) {
+                if (!((DataEntry) getItem()).isSingleEntry()) {
+                    getTreeItem().getChildren().add(new TreeItem("Click_to_Edit"));
+                } else {
+                    getTreeItem().getParent().getChildren().add(new TreeItem("Click_to_Edit"));
+                }
+            } else {
                 getTreeItem().getChildren().add(new TreeItem("Click_to_Edit"));
-            }else{
-                getTreeItem().getParent().getChildren().add(new TreeItem("Click_to_Edit"));
             }
         });
         MenuItem edit = new MenuItem("Rename");

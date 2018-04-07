@@ -25,28 +25,41 @@ public class ModLoader extends AbstractUI {
 
     @Override
     public void load() {
-        for (TreeItem modList : modList) {
-            CheckBox temp = new CheckBox(modList.getValue().toString());
-            temp.setId(temp.getText());
-            list.getChildren().add(temp);
+        if (list.getChildren().size() == 0) {
+            for (TreeItem modList : modList) {
+                CheckBox temp = new CheckBox(modList.getValue().toString());
+                temp.setId(temp.getText());
+                list.getChildren().add(temp);
+            }
+            Button load = new Button("Load Selected");
+            load.setOnAction(event -> removeUnchecked());
+            list.getChildren().add(load);
         }
-        Button load = new Button("Load Selected");
-        load.setOnAction(event -> removeUnchecked());
-        list.getChildren().add(load);
+    }
+
+    public void load(ArrayList<TreeItem> modList) {
+        this.modList = modList;
+        if (list.getChildren().size() > 0) {
+            list.getChildren().remove(0, list.getChildren().size());
+        }
+        load();
     }
 
     private void removeUnchecked() {
         for (TreeItem item : modList) {
+            item.getChildren().clear();
             itemView.getRoot().getChildren().remove(item);
             if (((CheckBox) list.getChildren().get(modList.indexOf(item))).isSelected()) {
                 itemView.getRoot().getChildren().add(item);
-                String mainLoadPath = FileSystemView.getFileSystemView().getDefaultDirectory().getPath() +
-                        "\\Paradox Interactive\\Stellaris\\" +
-                        (((ModDescriptor) item.getValue()).getValue("path").toString().replaceAll("/", "\\\\"));
-                guiController.loadMod(mainLoadPath, item, true);
-                item.getChildren().add(new TreeItem<>(item.getValue()));
-            }else{
-                modList.set(modList.indexOf(item), null);
+                if ((((ModDescriptor) item.getValue()).getValue("path") != null)) {
+                    String mainLoadPath = FileSystemView.getFileSystemView().getDefaultDirectory().getPath() +
+                            "\\Paradox Interactive\\Stellaris\\" +
+                            (((ModDescriptor) item.getValue()).getValue("path").toString().replaceAll("/", "\\\\"));
+                    guiController.loadMod(mainLoadPath, item, true);
+                    item.getChildren().add(new TreeItem<>(item.getValue()));
+                } else {
+                    guiController.extractZip(item);
+                }
             }
         }
         root.getChildren().remove(this);
